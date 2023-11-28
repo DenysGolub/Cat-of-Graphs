@@ -91,6 +91,16 @@ namespace Main.Classes
                 {
                     temp.Add($"line_{item}_{node}");
                 }
+                else if (canv.Children.Contains(canv.Children.OfType<Shape>().FirstOrDefault(l => l.Name == $"line_{node}_{item}")))
+                {
+                    temp.Add($"line_{node}_{item}");
+                }
+                else if (canv.Children.Contains(canv.Children.OfType<Shape>().FirstOrDefault(l => l.Name == $"line_{item}_{node}")))
+                {
+                    temp.Add($"line_{item}_{node}");
+                }
+
+
             }
 
             return temp;

@@ -6,9 +6,15 @@ using System.Threading.Tasks;
 
 namespace Main.Enumerators
 {
-    enum GraphType
+    public enum GraphType
     {
-        Directed = 0,
-        Undirected = 1
+        Directed = 1,
+        Undirected = 2
+
+    }
+    public enum MatrixType
+    {
+        Adjacence = 0,
+        Incidence = 1
     }
 }

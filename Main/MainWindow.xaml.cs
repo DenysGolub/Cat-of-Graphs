@@ -12,6 +12,8 @@ using Gu.Wpf.DataGrid2D;
 using Main.Classes;
 using System.Web;
 using Xceed.Wpf.Toolkit;
+using Main.Windows;
+using Main.Enumerators;
 
 namespace Main
 {
@@ -20,8 +22,8 @@ namespace Main
     /// </summary>
     public partial class MainWindow : Window
     {
-        AdjacenceList adjacenceListUndirected = new AdjacenceList();
-        AdjacenceList adjacenceListDirected = new AdjacenceList();
+        AdjacenceList adjacenceListUndirected = new AdjacenceList(GraphType.Undirected);
+        AdjacenceList adjacenceListDirected = new AdjacenceList(GraphType.Directed);
 
         Point DragStartPoint, DragEndPoint, ObjectStartLocation;
         object ClickedObject;
@@ -34,7 +36,76 @@ namespace Main
 
         bool vis, edit, add_ellipse, remove, move, color;
 
+        private void IncMatrixWindow_Click(object sender, RoutedEventArgs e)
+        {
+            if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
+            {
+                new MatrixShow(adjacenceListUndirected, DrawingCanvas_Undirected, GraphType.Undirected).Show();
+            }
+            else
+            {
+                new MatrixShow(adjacenceListDirected, DrawingCanvas_Directed, GraphType.Directed).Show();
+            }
+        }
 
+        private void AdjMatrixWindow_Click(object sender, RoutedEventArgs e)
+        {
+            if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
+            {
+                new MatrixShow(adjacenceListUndirected).Show();
+            }
+            else
+            {
+                new MatrixShow(adjacenceListDirected).Show();
+            }
+        }
+
+        private void ChangeGraphToDirected(object sender, RoutedEventArgs e)
+        {
+           /* OperationWindow operwin_inst = Application.Current.Windows.OfType<OperationWindow>().FirstOrDefault();
+
+            if (operwin_inst != null)
+            {
+                operwin_inst.UndCanv.Visibility = Visibility.Collapsed;
+                operwin_inst.DirCanv.Visibility = Visibility.Visible;
+            }*/
+            DrawingCanvas_Undirected.Visibility = Visibility.Collapsed;
+            DrawingCanvas_Directed.Visibility = Visibility.Visible;
+            //DrawingCanvas_Directed.Cursor = new Cursor(Assembly.GetExecutingAssembly().GetManifestResourceStream("WpfApp1.Resources.Cursors.cursor_dir.cur"));
+
+/*            click_dir.IsChecked = true;
+            click_undir.IsChecked = false;*/
+            //MatrixOfIncidentyDirected(lineNamesDirected);
+            //adjacence.ConverterTo2DArray(ref Dictionary_DirectedGraphs, DrawingCanvas_Directed);
+
+            var c = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFACD1FF"));
+            c.Opacity = 0.5;
+            DirGraph_Button.Background = c;
+            UndGraph_Button.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+            ClickedObject = null;
+        }
+
+        private void ChangeGraphToUndirected(object sender, RoutedEventArgs e)
+        {
+   /*         OperationWindow operwin_inst = Application.Current.Windows.OfType<OperationWindow>().FirstOrDefault();
+
+            if (operwin_inst != null)
+            {
+                operwin_inst.DirCanv.Visibility = Visibility.Collapsed;
+                operwin_inst.UndCanv.Visibility = Visibility.Visible;
+            }*/
+            /*click_undir.IsChecked = true;
+            click_dir.IsChecked = false;*/
+
+            DrawingCanvas_Directed.Visibility = Visibility.Collapsed;
+            DrawingCanvas_Undirected.Visibility = Visibility.Visible;
+
+            color_active.Opacity = 0.5;
+            UndGraph_Button.Background = color_active;
+            DirGraph_Button.Background = color_disable;
+
+            ClickedObject = null;
+        }
         public MainWindow()
         {
             InitializeComponent();
@@ -401,35 +472,34 @@ namespace Main
 
 
 
-     /*   private void DrawingCanvas_Directed_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void DrawingCanvas_Directed_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
 
             var mouseWasDownOn = e.Source as FrameworkElement;
 
             string elementName = mouseWasDownOn.Name;
 
-            if (color == true && (e.OriginalSource is Ellipse || e.OriginalSource is Shape))
+
+            if (color == true && (e.OriginalSource is Ellipse || e.OriginalSource is Line))
             {
                 if (e.Source is Ellipse)
                 {
                     var elem = e.Source as Ellipse;
 
-                    if (colorPicker2.SelectedColor.HasValue)
+                    if (ColorDirected.SelectedColor.HasValue)
                     {
                         // Set the fill color of the ellipse to the selected color from the ColorPicker
-                        elem.Fill = new SolidColorBrush(colorPicker2.SelectedColor.Value);
+                        elem.Fill = new SolidColorBrush(ColorDirected.SelectedColor.Value);
                     }
                 }
-                else if (e.Source is Shape)
+                else if (e.Source is Line)
                 {
-                    var elem = e.Source as Shape;
+                    var elem = e.Source as Line;
 
-                    if (colorPicker2.SelectedColor.HasValue)
+                    if (ColorDirected.SelectedColor.HasValue)
                     {
                         // Set the fill color of the ellipse to the selected color from the ColorPicker
-                        elem.Stroke = new SolidColorBrush(colorPicker2.SelectedColor.Value);
-                        elem.Fill = new SolidColorBrush(colorPicker2.SelectedColor.Value);
-
+                        elem.Stroke = new SolidColorBrush(ColorDirected.SelectedColor.Value);
                     }
                 }
             }
@@ -463,33 +533,26 @@ namespace Main
                             Point center2 = new Point(Canvas.GetLeft(sEllipse) + sEllipse.Width / 2, Canvas.GetTop(sEllipse) + sEllipse.Height / 2);
 
 
-                            var intersectionPoint1 = (Point)CalculateIntersection(center1, fEllipse.Width / 2, center2);
-                            var intersectionPoint2 = (Point)CalculateIntersection(center2, sEllipse.Width / 2, center1);
+                            var intersectionPoint1 = (Point)DataFromGraph.CalculateIntersection(center1, fEllipse.Width / 2, center2);
+                            var intersectionPoint2 = (Point)DataFromGraph.CalculateIntersection(center2, sEllipse.Width / 2, center1);
 
+                            string f_node = firstEllipseName.Substring(firstEllipseName.IndexOf("_") + 1);
+                            string s_node = secondEllipseName.Substring(secondEllipseName.IndexOf("_") + 1);
+                            Shape line = DataFromGraph.DrawLinkArrow(intersectionPoint1, intersectionPoint2);
+                            line.Name = $"line_{f_node}_{s_node}";
 
-                            Shape line = DrawLinkArrow(intersectionPoint1, intersectionPoint2);
-
-
-
-
-                            string numb_firs_ellip = firstEllipseName.Substring(firstEllipseName.IndexOf("_") + 1);
-                            string numb_second_ellip = secondEllipseName.Substring(secondEllipseName.IndexOf("_") + 1);
-
-                            string lineName = "line_" + numb_firs_ellip + "_" + numb_second_ellip;
-
-                            if (!lineNamesDirected.Contains(lineName))
-                            {
-                                line.Name = lineName;
-                                lineNamesDirected.Add(lineName);
+                            if (!DrawingCanvas_Directed.Children.Cast<FrameworkElement>()
+                      .Any(x => x.Name != null && x.Name.ToString() == $"line_{int.Parse(f_node)}_{int.Parse(s_node)}")) 
+                      {
+                                adjacenceListDirected.AddEdge(Convert.ToInt32(f_node), Convert.ToInt32(s_node));
                                 DrawingCanvas_Directed.Children.Add(line);
-                                adjacence.AddConnection(ref Dictionary_DirectedGraphs, sEllipse.Name, line.Name);
                             }
 
 
-                            // Reset the variables for the next connection
+
                             firstEllipseName = null;
                             secondEllipseName = null;
-                            DrawingCanvas_Directed.InvalidateVisual();
+                            DrawingCanvas_Undirected.InvalidateVisual();
                         }
                     }
                     else
@@ -498,7 +561,6 @@ namespace Main
                         secondEllipseName = null;
                     }
                 }
-
 
                 DragStartPoint.X = e.GetPosition(this).X;
                 DragStartPoint.Y = e.GetPosition(this).Y;
@@ -511,14 +573,14 @@ namespace Main
             }
             else if (remove == true || add_ellipse == true)
             {
-
-                if (e.OriginalSource is Ellipse && remove == true)
+                if (e.OriginalSource is Ellipse && remove == true) // remove
                 {
                     Ellipse clickedEllips = (Ellipse)e.OriginalSource;
                     DrawingCanvas_Directed.Children.Remove(clickedEllips);
+                    var list_lines = DataFromGraph.GetConnectedEdges(ref DrawingCanvas_Directed, adjacenceListDirected, clickedEllips.Name.NodesNames());
 
-                    adjacence.RemoveEllipse(ref Dictionary_DirectedGraphs, clickedEllips.Name);
-                    //adjacence.ConverterTo2DArray(ref Dictionary_DirectedGraphs, DrawingCanvas_Directed);
+
+                    adjacenceListDirected.RemoveNode(clickedEllips.Name.NodesNames());
 
                     string textBoxName = "Text" + clickedEllips.Name;  // Name of the TextBox to remove
 
@@ -531,54 +593,42 @@ namespace Main
                     }
 
 
-
-                    List<string> list_lines = lineNamesDirected.ToList();
-
                     foreach (string lineName in list_lines)
                     {
                         // Retrieve the line by its name
                         Shape storedLine = DrawingCanvas_Directed.Children.OfType<Shape>().FirstOrDefault(l => l.Name == lineName);
 
-                        string name_el = clickedEllips.Name;
-                        string click_el_name = name_el.Substring(name_el.IndexOf("_") + 1);
 
                         if (storedLine != null)
                         {
-                            string name_line = storedLine.Name;
 
-                            string name_of_first_ellipse = name_line.Substring(name_line.IndexOf("_") + 1, name_line.LastIndexOf("_") - name_line.IndexOf("_") - 1);
-                            string name_of_second_ellipse = name_line.Substring(name_line.LastIndexOf("_") + 1);
+                            DrawingCanvas_Directed.Children.Remove(storedLine);
 
-                            if (name_of_first_ellipse == click_el_name || name_of_second_ellipse == click_el_name)
-                            {
-                                DrawingCanvas_Directed.Children.Remove(storedLine);
-                                lineNamesDirected.Remove(storedLine.Name);
-                            }
                         }
                     }
-                    Dictionary_DirectedGraphs = UpdateName.DictionaryNames(Dictionary_DirectedGraphs, clickedEllips.Name);
-                    UpdateName.CanvasNames(clickedEllips.Name, DrawingCanvas_Directed);
-                    lineNamesDirected = UpdateName.LineNames(lineNamesDirected, clickedEllips.Name);
+
+                    NamesUpdate updating = new NamesUpdate();
+                    updating.UpdateNodes(adjacenceListDirected, clickedEllips.Name.NodesNames());
+
+
+                    updating.UpdateCanvas(ref DrawingCanvas_Directed, clickedEllips.Name.NodesNames());
+
+
                 }
                 else if (e.OriginalSource is Shape && remove == true) //remove
                 {
                     Shape clickedLine = (Shape)e.OriginalSource;
-                    lineNamesDirected.Remove(clickedLine.Name);
+                    clickedLine.Name.EdgesNames(out int f_node, out int s_node);
+                    adjacenceListDirected.RemoveEdge(f_node, s_node);
                     DrawingCanvas_Directed.Children.Remove(clickedLine);
-                    adjacence.RemoveConnection(ref Dictionary_DirectedGraphs, clickedLine.Name);
-                    lineNamesDirected.Remove(clickedLine.Name);
-
-
                 }
                 else if (add_ellipse == true) //add
                 {
 
-                    int availableIndex = GetEllipseCount(DrawingCanvas_Directed);
-                    string newEllipseName = $"Ellipse_{availableIndex}";
-
 
                     Ellipse AAACircle = new Ellipse()
                     {
+                        Name = $"Ellipse_{adjacenceListDirected.CountNodes + 1}",
                         Height = 50,
                         Width = 50,
                         Stroke = Brushes.Black,
@@ -587,18 +637,10 @@ namespace Main
 
                     };
 
-
-                    int ellipseCount = GetEllipseCount(DrawingCanvas_Directed);
-
-                    AAACircle.Name = "Ellipse_" + availableIndex;
-
-                    int el = AAACircle.Name.IndexOf("_");
-                    string el1 = AAACircle.Name.Substring(el + 1);
-
                     TextBlock textBlock = new TextBlock()
                     {
                         Name = "Text" + AAACircle.Name,
-                        Text = el1,
+                        Text = (adjacenceListDirected.CountNodes + 1).ToString(),
                         HorizontalAlignment = HorizontalAlignment.Center,
                         VerticalAlignment = VerticalAlignment.Center,
                         FontSize = 16,
@@ -606,13 +648,11 @@ namespace Main
 
                     };
 
-
-
                     Canvas.SetLeft(AAACircle, Mouse.GetPosition(DrawingCanvas_Directed).X);
                     Canvas.SetTop(AAACircle, Mouse.GetPosition(DrawingCanvas_Directed).Y);
 
 
-                    Point center1_for_text = AllignOfText(AAACircle, ellipseCount);
+                    Point center1_for_text = DataFromGraph.AllignOfText(AAACircle, (adjacenceListDirected.CountNodes + 1).ToString());
 
 
 
@@ -621,10 +661,12 @@ namespace Main
 
                     DrawingCanvas_Directed.Children.Add(AAACircle);
                     DrawingCanvas_Directed.Children.Add(textBlock);
-                    adjacence.AddEllipse(ref Dictionary_DirectedGraphs, AAACircle.Name);
-                    //adjacence.ConverterTo2DArray(ref Dictionary_DirectedGraphs, DrawingCanvas_Directed);
+                    adjacenceListDirected.AddNode(AAACircle.Name.NodesNames());
+
+
                 }
             }
+
         }
 
         private void DrawingCanvas_Directed_PreviewMouseMove(object sender, MouseEventArgs e)
@@ -638,13 +680,15 @@ namespace Main
             double deltaX = DragEndPoint.X - DragStartPoint.X;
             double deltaY = DragEndPoint.Y - DragStartPoint.Y;
 
-            if (ClickedObject is Ellipse && move == true)
+
+
+            if (move == true && ClickedObject is Ellipse)
             {
                 Ellipse c = ClickedObject as Ellipse;
                 Canvas.SetLeft(c, ObjectStartLocation.X + deltaX);
                 Canvas.SetTop(c, ObjectStartLocation.Y + deltaY);
 
-                Point center1_for_text = AllignOfText(c, c.Name);
+                Point center1_for_text = DataFromGraph.AllignOfText(c, c.Name);
 
 
 
@@ -659,11 +703,7 @@ namespace Main
                     Canvas.SetTop(textBlock, center1_for_text.Y);
                 }
 
-
-
-
-
-
+                var lineNamesDirected = DataFromGraph.GetConnectedEdges(ref DrawingCanvas_Directed, adjacenceListDirected, c.Name.NodesNames());
                 foreach (string lineName in lineNamesDirected)
                 {
                     // Retrieve the line by its name
@@ -672,17 +712,22 @@ namespace Main
                     if (storedLine != null)
                     {
                         string name_line = storedLine.Name;
+
                         string name_of_first_ellipse = name_line.Substring(name_line.IndexOf("_") + 1, name_line.LastIndexOf("_") - name_line.IndexOf("_") - 1);
                         string name_of_second_ellipse = name_line.Substring(name_line.LastIndexOf("_") + 1);
 
                         Ellipse sEllipse = DrawingCanvas_Directed.Children.OfType<Ellipse>().FirstOrDefault(e => e.Name == "Ellipse_" + name_of_second_ellipse);
+
+                        // Find the first ellipse
                         Ellipse fEllipse = DrawingCanvas_Directed.Children.OfType<Ellipse>().FirstOrDefault(e => e.Name == "Ellipse_" + name_of_first_ellipse);
 
                         Point center1 = new Point(Canvas.GetLeft(fEllipse) + fEllipse.Width / 2, Canvas.GetTop(fEllipse) + fEllipse.Height / 2);
                         Point center2 = new Point(Canvas.GetLeft(sEllipse) + sEllipse.Width / 2, Canvas.GetTop(sEllipse) + sEllipse.Height / 2);
 
-                        var intersectionPoint1 = (Point)CalculateIntersection(center1, fEllipse.Width / 2, center2);
-                        var intersectionPoint2 = (Point)CalculateIntersection(center2, sEllipse.Width / 2, center1);
+
+
+                        var intersectionPoint1 = (Point)DataFromGraph.CalculateIntersection(center1, fEllipse.Width / 2, center2);
+                        var intersectionPoint2 = (Point)DataFromGraph.CalculateIntersection(center2, sEllipse.Width / 2, center1);
 
                         Brush color_line = storedLine.Fill;
 
@@ -692,7 +737,7 @@ namespace Main
 
 
                         // Redraw the line with updated coordinates
-                        storedLine = DrawLinkArrow(intersectionPoint1, intersectionPoint2);
+                        storedLine = DataFromGraph.DrawLinkArrow(intersectionPoint1, intersectionPoint2);
                         storedLine.Name = lineName;
                         storedLine.Fill = color_line;
                         storedLine.Stroke = color_line;
@@ -701,9 +746,7 @@ namespace Main
                         DrawingCanvas_Directed.Children.Add(storedLine);
                     }
                 }
-
                 DrawingCanvas_Directed.InvalidateVisual();
-
             }
             else
             {
@@ -715,6 +758,6 @@ namespace Main
         {
             ClickedObject = null;
 
-        }*/
+        }
     }
 }

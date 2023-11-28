@@ -1,9 +1,12 @@
 ﻿using Main.Enumerators;
+using Main.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows;
 
 namespace Main.Classes
 {
@@ -34,56 +37,87 @@ namespace Main.Classes
                     }
             }*/
 
-            for (int height_dict = 0; height_dict < adjacence_list.Keys.Count; height_dict++)
+            for (int height_dict = 1; height_dict <= adjacence_list.Keys.Count; height_dict++)
             {
-                for (int height_contains = 0; height_contains < adjacence_list.Keys.Count; height_contains++)
+                for (int height_contains = 1; height_contains <= adjacence_list.Keys.Count; height_contains++)
                 {
                     if (adjacence_list[height_dict].Contains(height_contains))
                     {
-                        adjacence_matrix[height_dict, height_contains] = 1;
+                        adjacence_matrix[height_dict-1, height_contains-1] = 1;
                     }
                 }
             }
 
             return adjacence_matrix;
         }
-       /// <summary>
-       /// Converts and adjacence list to Matrix of Incidence
-       /// </summary>
-       /// <param name="adjacence_list"></param>
-       /// <returns>2D array (matrix) from adjacence list</returns>
-        public static sbyte[,] ToIncidenceMatrix(this Dictionary<int, HashSet<int>> adjacence_list, GraphType type)
+        static public List<string> GetLines(this Dictionary<int, HashSet<int>> adjacence_list, ref Canvas canvas)
         {
-            sbyte[,] incidence_matrix = new sbyte[adjacence_list.Keys.Count, adjacence_list.Values.Sum(hash=>hash.Count)];
-            sbyte[,] adjadence_matrix = adjacence_list.ToAdjacenceMatrix();
+            var list = new List<string>();
+
+            var matrix = adjacence_list.ToAdjacenceMatrix();
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    if (canvas.Children.Cast<FrameworkElement>()
+                      .Any(x => x.Name != null && x.Name.ToString() == $"line_{i + 1}_{j + 1}"))
+                    {
+                        list.Add($"line_{i + 1}_{j + 1}");
+                    }
+                }
+            }
+
+            return list;
+        }
+        /// <summary>
+        /// Converts and adjacence list to Matrix of Incidence
+        /// </summary>
+        /// <param name="adjacence_list"></param>
+        /// <returns>2D array (matrix) from adjacence list</returns>
+        public static sbyte[,] ToIncidenceMatrix(this Dictionary<int, HashSet<int>> adjacence_list, GraphType type, ref Canvas canv, out List<string> lineNames)
+        {
+            lineNames = adjacence_list.GetLines(ref canv);
+            sbyte[,] incidence_matrix = new sbyte[adjacence_list.Keys.Count, lineNames.Count];
             int count = 0;
 
-            switch (type)
-            {
-                case GraphType.Directed:
+                    switch (type)
                     {
+                        case GraphType.Directed:
+                            {
+                                foreach(string line in lineNames)
+                                {
+                                    line.EdgesNames(out int f_node, out int s_node);
+
+                                    if (f_node == s_node)
+                                    {
+                                        incidence_matrix[f_node - 1, count] = 2;
+                                    }
+                                    else
+                                    {
+                                        incidence_matrix[f_node - 1, count] = -1;
+                                        incidence_matrix[s_node - 1, count] = 1;
+                                    }
+                                    count++;
+                                }
                         break;
                     }
                 case GraphType.Undirected:
-                    {
-                        for (int first_node = 0; first_node < adjadence_matrix.GetLength(0); first_node++)
-                        {
-                            for (int second_node = 0; second_node < adjadence_matrix.GetLength(1); second_node++)
                             {
-                                if (adjadence_matrix[first_node, second_node] == 1)
-                                {
-                                    incidence_matrix[first_node, count] = 1;
-                                    incidence_matrix[second_node, count] = 1;
-                                    count++;
-                                }
-                            }
+                        foreach (string line in lineNames)
+                        {
+
+                            line.EdgesNames(out int f_node, out int s_node);
+
+                            incidence_matrix[f_node - 1, count] = 1;
+                            incidence_matrix[s_node - 1, count] = 1;
+                            count++;
                         }
                         break;
-                    }
-                default:
-                    {
-                        break;
-                    }
+                            }
+                        default:
+                            {
+                                break;
+                            }
             }
             return incidence_matrix;
         }
