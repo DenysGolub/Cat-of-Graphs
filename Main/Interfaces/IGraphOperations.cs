@@ -14,10 +14,5 @@ namespace Main.Interfaces
         void Intersection();
         void CircleSum();
         void CartesianProduct();
-        void ResizeArray()
-        {
-
-        }
-        
     }
 }

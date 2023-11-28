@@ -3,10 +3,104 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:dataGrid2D="http://gu.se/DataGrid2D"
         xmlns:local="clr-namespace:Main"
+        
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Cat of Graphs" Height="424" Width="771" WindowState="Maximized">
     <Grid>
+        <DockPanel Background="Transparent" LastChildFill="False">
+            <Menu Background="Transparent" DockPanel.Dock="Top">
+                <MenuItem Header="Файл"></MenuItem>
+                <MenuItem Header="Граф"></MenuItem>
+                <MenuItem Header="Матриці"></MenuItem>
+                <MenuItem Header="Операції"></MenuItem>
+                <MenuItem Header="Допомога"></MenuItem>
+            </Menu>
+        </DockPanel>
+        <Canvas Background="White" x:Name="DrawingCanvas_Undirected" 
+                PreviewMouseLeftButtonDown="DrawingCanvas_Undirected_PreviewMouseLeftButtonDown"
+                PreviewMouseMove="DrawingCanvas_Undirected_PreviewMouseMove"
+                PreviewMouseLeftButtonUp="DrawingCanvas_Undirected_PreviewMouseLeftButtonUp" Margin="0,24,0,0">
+        </Canvas>
+
+        <toolkit:ColorPicker
+     Name="ColorUndirected"
+     Height="30"
+     DisplayColorAndName="True" 
+     Visibility ="Collapsed" Canvas.Left="3" Canvas.Top="213" RenderTransformOrigin="-0.438,-1.779" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,212,0,0"/>
+
+        <Canvas x:Name="DrawingCanvas_Directed" Visibility ="Collapsed" Background="White"
+ PreviewMouseLeftButtonDown="DrawingCanvas_Directed_PreviewMouseLeftButtonDown"
+ PreviewMouseMove="DrawingCanvas_Directed_PreviewMouseMove"
+ PreviewMouseLeftButtonUp="DrawingCanvas_Directed_PreviewMouseLeftButtonUp">
+
+            
+        </Canvas>
+
+        <toolkit:ColorPicker
+    Name="ColorDirected"
+    Height="30"
+    DisplayColorAndName="True"
+    Visibility ="Collapsed" Canvas.Left="3" Canvas.Top="213" RenderTransformOrigin="-0.438,-1.779" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,212,0,0"/>
+
+        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Height="250" Width="35" Margin="0,28,0,0" >
+            <Button x:Name="UndGraph_Button" Margin="3">
+                <Button.Background>
+                    <SolidColorBrush Color = "#FFACD1FF" Opacity="0.5"></SolidColorBrush>
+                </Button.Background>
+                <StackPanel>
+                    <Image RenderOptions.BitmapScalingMode="HighQuality" 
+    RenderOptions.EdgeMode="Aliased" Source ="/Resources/MenuIcons/Graph/un_graph.png"></Image>
+                </StackPanel>
+
+            </Button>
+
+            <Button x:Name="DirGraph_Button" Background ="White" Margin="3">
+                <StackPanel>
+                    <Image RenderOptions.BitmapScalingMode="HighQuality" 
+    RenderOptions.EdgeMode="Aliased" Source ="/Resources/MenuIcons/Graph/dir_graph.png"></Image>
+                </StackPanel>
+
+            </Button>
+
+            <Button x:Name="AddEllipse" Background="White" Margin="3" Click="AddEllipse_Click">
+                <StackPanel>
+                    <Image Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality" 
+    RenderOptions.EdgeMode="Aliased" Source ="/Resources/MenuIcons/Graph/add.png"></Image>
+                </StackPanel>
+
+            </Button>
+
+            <Button x:Name="MoveEllipse" Background="White" Margin="3" Click="MoveEllipse_Click">
+
+                <StackPanel>
+                    <Image Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality" 
+    RenderOptions.EdgeMode="Aliased" Source ="/Resources/MenuIcons/Graph/move.png"></Image>
+                </StackPanel>
+
+            </Button>
+
+            <Button x:Name="Delete" Background="White" Margin="3" Click="Delete_Click">
+                <StackPanel>
+                    <Image Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality" 
+    RenderOptions.EdgeMode="Aliased" Source ="/Resources/MenuIcons/Graph/delete.png"></Image>
+                </StackPanel>
+
+            </Button>
+
+            <Button x:Name="Color_Button" Background="White" Margin="3">
+                <StackPanel>
+                    <Image Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality"  
+    RenderOptions.EdgeMode="Aliased" Source ="/Resources/MenuIcons/Graph/color.png"></Image>
+                </StackPanel>
+
+            </Button>
+
+
+        </StackPanel>
+
 
     </Grid>
 </Window>

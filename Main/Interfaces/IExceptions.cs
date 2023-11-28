@@ -7,6 +7,9 @@ using System.Windows.Media;
 
 namespace Main.Interfaces
 {
+    /// <summary>
+    /// Interface for exceptions that may appear during runtime
+    /// </summary>
     internal interface IExceptions
     {
         void MatrixEmpty();

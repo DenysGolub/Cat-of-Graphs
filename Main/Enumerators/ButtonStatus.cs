@@ -8,7 +8,13 @@ namespace Main.Enumerators
 {
     enum ButtonStatus
     {
-        Disable = 0,//#FFFFFF
-        Active = 1 //#FFACD1FF
+        /// <summary>
+        /// Color: #FFFFFF
+        /// </summary>
+        Disable = 0,
+        /// <summary>
+        /// Color: #FFACD1FF
+        /// </summary>
+        Active = 1 
     }
 }

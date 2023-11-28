@@ -9,8 +9,46 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\MenuIcons\cartesian.png" />
+    <None Remove="Resources\MenuIcons\Graph\add.png" />
+    <None Remove="Resources\MenuIcons\Graph\color.png" />
+    <None Remove="Resources\MenuIcons\Graph\delete.png" />
+    <None Remove="Resources\MenuIcons\Graph\direct_graph.png" />
+    <None Remove="Resources\MenuIcons\Graph\dir_graph.png" />
+    <None Remove="Resources\MenuIcons\Graph\move.png" />
+    <None Remove="Resources\MenuIcons\Graph\pen.png" />
+    <None Remove="Resources\MenuIcons\Graph\remove.png" />
+    <None Remove="Resources\MenuIcons\Graph\trash_can.png" />
+    <None Remove="Resources\MenuIcons\Graph\un_graph.png" />
+    <None Remove="Resources\MenuIcons\intersection.png" />
+    <None Remove="Resources\MenuIcons\union.png" />
+    <None Remove="Resources\MenuIcons\xor.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Structs\" />
-    <Folder Include="Resources\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.1" />
+    <PackageReference Include="Gu.Wpf.DataGrid2D" Version="0.2.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\MenuIcons\cartesian.png" />
+    <Resource Include="Resources\MenuIcons\Graph\add.png" />
+    <Resource Include="Resources\MenuIcons\Graph\color.png" />
+    <Resource Include="Resources\MenuIcons\Graph\delete.png" />
+    <Resource Include="Resources\MenuIcons\Graph\direct_graph.png" />
+    <Resource Include="Resources\MenuIcons\Graph\dir_graph.png" />
+    <Resource Include="Resources\MenuIcons\Graph\move.png" />
+    <Resource Include="Resources\MenuIcons\Graph\pen.png" />
+    <Resource Include="Resources\MenuIcons\Graph\remove.png" />
+    <Resource Include="Resources\MenuIcons\Graph\trash_can.png" />
+    <Resource Include="Resources\MenuIcons\Graph\un_graph.png" />
+    <Resource Include="Resources\MenuIcons\intersection.png" />
+    <Resource Include="Resources\MenuIcons\union.png" />
+    <Resource Include="Resources\MenuIcons\xor.png" />
   </ItemGroup>
 
 </Project>
