@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace Main.Classes
 {
-    static class SetArrayToMatrixTable
+    class ClickEvents
     {
-        public static void SetArrayToTable(sbyte[,]matrix)
-        {
-             
-        }
+
     }
 }

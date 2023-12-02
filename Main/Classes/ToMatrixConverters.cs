@@ -20,22 +20,6 @@ namespace Main.Classes
         public static sbyte[,] ToAdjacenceMatrix(this Dictionary<int, HashSet<int>> adjacence_list)
         {
             sbyte[,] adjacence_matrix = new sbyte[adjacence_list.Keys.Count, adjacence_list.Keys.Count]; 
-            /*switch (type)
-            {
-                case GraphType.Directed:
-                    {
-                  
-                        break;
-                    }
-                case GraphType.Undirected:
-                    {
-                        break;
-                    }
-                default:
-                    {
-                        break;
-                    }
-            }*/
 
             for (int height_dict = 1; height_dict <= adjacence_list.Keys.Count; height_dict++)
             {

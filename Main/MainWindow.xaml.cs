@@ -32,8 +32,6 @@ namespace Main
         string firstEllipseName, secondEllipseName;
         bool isLeftMouseDown = false;
 
-        Line line = null;
-
         bool vis, edit, add_ellipse, remove, move, color;
 
         private void IncMatrixWindow_Click(object sender, RoutedEventArgs e)
@@ -224,10 +222,10 @@ namespace Main
                 {
                     Ellipse clickedEllips = (Ellipse)e.OriginalSource;
                     DrawingCanvas_Undirected.Children.Remove(clickedEllips);
-                    var list_lines = DataFromGraph.GetConnectedEdges(ref DrawingCanvas_Undirected, adjacenceListUndirected, clickedEllips.Name.NodesNames());
+                    var list_lines = DataFromGraph.GetConnectedEdges(ref DrawingCanvas_Undirected, adjacenceListUndirected, clickedEllips.Name.SingleNodeName(), GraphType.Undirected);
 
 
-                    adjacenceListUndirected.RemoveNode(clickedEllips.Name.NodesNames());
+                    adjacenceListUndirected.RemoveNode(clickedEllips.Name.SingleNodeName());
 
                     string textBoxName = "Text" + clickedEllips.Name;  // Name of the TextBox to remove
 
@@ -252,7 +250,7 @@ namespace Main
 
                             name_line.EdgesNames(out int f_node, out int s_node);
 
-                            if (f_node == clickedEllips.Name.NodesNames()|| s_node == clickedEllips.Name.NodesNames())
+                            if (f_node == clickedEllips.Name.SingleNodeName()|| s_node == clickedEllips.Name.SingleNodeName())
                             {
                                 DrawingCanvas_Undirected.Children.Remove(storedLine);
                             }
@@ -260,10 +258,10 @@ namespace Main
                     }
 
                         NamesUpdate updating = new NamesUpdate();
-                    updating.UpdateNodes(adjacenceListUndirected, clickedEllips.Name.NodesNames());
+                    updating.UpdateNodes(adjacenceListUndirected, clickedEllips.Name.SingleNodeName());
 
 
-                    updating.UpdateCanvas(ref DrawingCanvas_Undirected, clickedEllips.Name.NodesNames());
+                    updating.UpdateCanvas(ref DrawingCanvas_Undirected, clickedEllips.Name.SingleNodeName());
 
 
                 }
@@ -316,7 +314,7 @@ namespace Main
 
                     DrawingCanvas_Undirected.Children.Add(AAACircle);
                     DrawingCanvas_Undirected.Children.Add(textBlock);
-                    adjacenceListUndirected.AddNode(AAACircle.Name.NodesNames());
+                    adjacenceListUndirected.AddNode(AAACircle.Name.SingleNodeName());
 
 
                 }
@@ -358,7 +356,7 @@ namespace Main
                     Canvas.SetTop(textBlock, center1_for_text.Y);
                 }
 
-                var lineNamesUndirected = DataFromGraph.GetConnectedEdges(ref DrawingCanvas_Undirected, adjacenceListUndirected, c.Name.NodesNames());
+                var lineNamesUndirected = DataFromGraph.GetConnectedEdges(ref DrawingCanvas_Undirected, adjacenceListUndirected, c.Name.SingleNodeName(), GraphType.Undirected);
                 foreach (string lineName in lineNamesUndirected)
                 {
                     // Retrieve the line by its name
@@ -577,10 +575,10 @@ namespace Main
                 {
                     Ellipse clickedEllips = (Ellipse)e.OriginalSource;
                     DrawingCanvas_Directed.Children.Remove(clickedEllips);
-                    var list_lines = DataFromGraph.GetConnectedEdges(ref DrawingCanvas_Directed, adjacenceListDirected, clickedEllips.Name.NodesNames());
+                    var list_lines = DataFromGraph.GetConnectedEdges(ref DrawingCanvas_Directed, adjacenceListDirected, clickedEllips.Name.SingleNodeName(), GraphType.Directed);
 
 
-                    adjacenceListDirected.RemoveNode(clickedEllips.Name.NodesNames());
+                    adjacenceListDirected.RemoveNode(clickedEllips.Name.SingleNodeName());
 
                     string textBoxName = "Text" + clickedEllips.Name;  // Name of the TextBox to remove
 
@@ -608,10 +606,10 @@ namespace Main
                     }
 
                     NamesUpdate updating = new NamesUpdate();
-                    updating.UpdateNodes(adjacenceListDirected, clickedEllips.Name.NodesNames());
+                    updating.UpdateNodes(adjacenceListDirected, clickedEllips.Name.SingleNodeName());
 
 
-                    updating.UpdateCanvas(ref DrawingCanvas_Directed, clickedEllips.Name.NodesNames());
+                    updating.UpdateCanvas(ref DrawingCanvas_Directed, clickedEllips.Name.SingleNodeName());
 
 
                 }
@@ -661,7 +659,7 @@ namespace Main
 
                     DrawingCanvas_Directed.Children.Add(AAACircle);
                     DrawingCanvas_Directed.Children.Add(textBlock);
-                    adjacenceListDirected.AddNode(AAACircle.Name.NodesNames());
+                    adjacenceListDirected.AddNode(AAACircle.Name.SingleNodeName());
 
 
                 }
@@ -703,7 +701,7 @@ namespace Main
                     Canvas.SetTop(textBlock, center1_for_text.Y);
                 }
 
-                var lineNamesDirected = DataFromGraph.GetConnectedEdges(ref DrawingCanvas_Directed, adjacenceListDirected, c.Name.NodesNames());
+                var lineNamesDirected = DataFromGraph.GetConnectedEdges(ref DrawingCanvas_Directed, adjacenceListDirected, c.Name.SingleNodeName(), GraphType.Directed);
                 foreach (string lineName in lineNamesDirected)
                 {
                     // Retrieve the line by its name

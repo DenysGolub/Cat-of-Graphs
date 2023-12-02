@@ -9,10 +9,11 @@ namespace Main.Interfaces
 {
     internal interface IGraphOperations
     {
-        void Addition();
-        void Unity();
-        void Intersection();
-        void CircleSum();
-        void CartesianProduct();
+        Dictionary<int, HashSet<int>> Addition(Dictionary<int, HashSet<int>> dict);
+        Dictionary<int, HashSet<int>> Unity(Dictionary<int, HashSet<int>> dict_g1, Dictionary<int, HashSet<int>> dict_g2);
+        Dictionary<int, HashSet<int>> Intersection(Dictionary<int, HashSet<int>> dict_g1, Dictionary<int, HashSet<int>> dict_g2);
+        Dictionary<int, HashSet<int>> CircleSum(Dictionary<int, HashSet<int>> dict_g1, Dictionary<int, HashSet<int>> dict_g2);
+        Dictionary<string, HashSet<string>> CartesianProduct(Dictionary<int, HashSet<int>> dict_g1, Dictionary<int, HashSet<int>> dict_g2);
+       
     }
 }

@@ -35,7 +35,7 @@ namespace Main.Classes
                 adjacence_list[first_node].Add(second_node);
                 adjacence_list[second_node].Add(first_node);
             }
-            else
+            else if(type==GraphType.Directed)
             {
                 adjacence_list[first_node].Add(second_node);
                 adjacence_list[second_node].Add(first_node);
@@ -76,18 +76,6 @@ namespace Main.Classes
             }
         }
 
-        /*private void RemoveConnectedEdges(int node)
-        {
-            for(int i=0; i<adjacence_list.Keys.Count; i++)
-            {
-                if (adjacence_list[i].Contains(node))
-                {
-                    adjacence_list[i].Remove(node);
-                }
-            }
-        }*/
-
-        
         public sbyte[,] ToAdjacenceMatrix()
         {
             return adjacence_list.ToAdjacenceMatrix();

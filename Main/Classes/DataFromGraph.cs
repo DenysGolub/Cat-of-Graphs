@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Shapes;
 using System.Windows;
 using System.Windows.Media;
+using Main.Enumerators;
 
 namespace Main.Classes
 {
@@ -77,28 +78,40 @@ namespace Main.Classes
             return point2 - translate;
         }
 
-        static public HashSet<string> GetConnectedEdges(ref Canvas canv, AdjacenceList adj, int node)
+        static public HashSet<string> GetConnectedEdges(ref Canvas canv, AdjacenceList adj, int node, GraphType g_type)
         {
             var temp = new HashSet<string>();
 
             foreach(var item in adj.GetList[node])
             {
-                if(canv.Children.Contains(canv.Children.OfType<Line>().FirstOrDefault(l => l.Name == $"line_{node}_{item}")))
+                switch (g_type)
                 {
-                    temp.Add($"line_{node}_{item}");
+                    case GraphType.Directed:
+                        if (canv.Children.Contains(canv.Children.OfType<Shape>().FirstOrDefault(l => l.Name == $"line_{node}_{item}")))
+                        {
+                            temp.Add($"line_{node}_{item}");
+                        }
+                        if (canv.Children.Contains(canv.Children.OfType<Shape>().FirstOrDefault(l => l.Name == $"line_{item}_{node}")))
+                        {
+                            temp.Add($"line_{item}_{node}");
+                        }
+                        break;
+                    case GraphType.Undirected:
+                        if (canv.Children.Contains(canv.Children.OfType<Line>().FirstOrDefault(l => l.Name == $"line_{node}_{item}")))
+                        {
+                            temp.Add($"line_{node}_{item}");
+                        }
+                        else if (canv.Children.Contains(canv.Children.OfType<Line>().FirstOrDefault(l => l.Name == $"line_{item}_{node}")))
+                        {
+                            temp.Add($"line_{item}_{node}");
+                        }
+                        break;
+                    default:
+                        break;
                 }
-                else if (canv.Children.Contains(canv.Children.OfType<Line>().FirstOrDefault(l => l.Name == $"line_{item}_{node}")))
-                {
-                    temp.Add($"line_{item}_{node}");
-                }
-                else if (canv.Children.Contains(canv.Children.OfType<Shape>().FirstOrDefault(l => l.Name == $"line_{node}_{item}")))
-                {
-                    temp.Add($"line_{node}_{item}");
-                }
-                else if (canv.Children.Contains(canv.Children.OfType<Shape>().FirstOrDefault(l => l.Name == $"line_{item}_{node}")))
-                {
-                    temp.Add($"line_{item}_{node}");
-                }
+                
+
+                
 
 
             }

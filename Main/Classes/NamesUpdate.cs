@@ -13,80 +13,63 @@ namespace Main.Classes
 {
     class NamesUpdate : INamesUpdate
     {
-        public void UpdateCanvas(ref Canvas canvas, int node)
+        public void UpdateCanvas(ref Canvas canvas, int node_deleted)
         {
-            Regex regex = new Regex(@"_(\d*)");
-
           
             foreach (UIElement element in canvas.Children)
             {
                 if (element is Ellipse ellipse)
                 {
-                    Match m_current = regex.Match(ellipse.Name);
+                    int node_current = ellipse.Name.SingleNodeName();
 
-                    string ellips_current = m_current.Groups[1].Value;
-
-                    if (Convert.ToInt32(ellips_current) > node)
+                    if (node_current> node_deleted)
                     {
-                        ellipse.Name = $"Ellipse_{Convert.ToInt32(ellips_current) - 1}";
+                        ellipse.Name = $"Ellipse_{Convert.ToInt32(node_current) - 1}";
                     }
                 }
                 else if (element is TextBlock text)
                 {
-                    Match text_m_current = regex.Match(text.Name);
 
-                    string text_current = text_m_current.Groups[1].Value;
+                    int text_current = text.Name.SingleNodeName();
 
-                    if (Convert.ToInt32(text_current) > Convert.ToInt32(node))
+                    if (text_current > node_deleted)
                     {
-                        text.Name = $"TextEllipse_{Convert.ToInt32(text_current) - 1}";
-                        text.Text = $"{Convert.ToInt32(text_current) - 1}";
+                        text.Name = $"TextEllipse_{text_current - 1}";
+                        text.Text = $"{text_current - 1}";
                     }
                 }
                 else if (element is Line line)
                 {
-                    Regex line_m_current = new Regex(@"_(\d*)_(\d*)");
+                    line.Name.EdgesNames(out int first_node, out int second_node);
 
-                    string name_line = line.Name;
-                    Match match_line_name = line_m_current.Match(name_line);
-
-                    string first_el = match_line_name.Groups[1].Value;
-                    string second_el = match_line_name.Groups[2].Value;
-
-                    if ((Convert.ToInt32(first_el) > node) && (Convert.ToInt32(second_el) > node))
+                    if (first_node>node_deleted && second_node>node_deleted)
                     {
-                        line.Name = $"line_{Convert.ToInt32(first_el) - 1}_{Convert.ToInt32(second_el) - 1}";
+                        line.Name = $"line_{first_node - 1}_{second_node - 1}";
                     }
-                    else if (Convert.ToInt32(first_el) > node)
+                    else if (first_node>node_deleted)
                     {
-                        line.Name = $"line_{Convert.ToInt32(first_el) - 1}_{second_el}";
+                        line.Name = $"line_{first_node - 1}_{second_node}";
                     }
-                    else if (Convert.ToInt32(second_el) > node)
+                    else if (second_node > node_deleted)
                     {
-                        line.Name = $"line_{first_el}_{Convert.ToInt32(second_el) - 1}";
+                        line.Name = $"line_{first_node}_{second_node - 1}";
                     }
                 }
                 else if (element is Shape shape)
                 {
-                    Regex line_m_current = new Regex(@"_(\d*)_(\d*)");
+                    shape.Name.EdgesNames(out int first_node, out int second_node);
 
-                    string name_line = shape.Name;
-                    Match match_line_name = line_m_current.Match(name_line);
-
-                    string first_el = match_line_name.Groups[1].Value;
-                    string second_el = match_line_name.Groups[2].Value;
-
-                    if ((Convert.ToInt32(first_el) > node) && (Convert.ToInt32(second_el) > node))
+                    if (first_node > node_deleted && second_node > node_deleted)
                     {
-                        shape.Name = $"line_{Convert.ToInt32(first_el) - 1}_{Convert.ToInt32(second_el) - 1}";
+                        shape.Name = $"line_{first_node - 1}_{second_node - 1}";
                     }
-                    else if (Convert.ToInt32(first_el) > node)
+                    else if (first_node > node_deleted)
                     {
-                        shape.Name = $"line_{Convert.ToInt32(first_el) - 1}_{second_el}";
+                        shape.Name = $"line_{first_node - 1}_{second_node}";
                     }
-                    else if (Convert.ToInt32(second_el) > node)
+                    else if (second_node > node_deleted)
                     {
-                        shape.Name = $"line_{first_el}_{Convert.ToInt32(second_el) - 1}";
+                        shape.Name = $"line_{first_node}_{second_node - 1}";
                     }
                 }
             }

@@ -9,12 +9,21 @@ namespace Main.Classes
 {
     static class NamesParser
     {
-        static public int NodesNames(this string node)
+        static public int SingleNodeName(this string node)
         {
             Regex regex = new Regex(@"_(\d*)");
             Match m = regex.Match(node);
 
             return Convert.ToInt32(m.Groups[1].Value);
+        }
+        static public void DoubleNodeName(this string node, out int first_node, out int second_node)
+        {
+            Regex regex = new Regex(@"(\d*),(\d*)");
+            Match m = regex.Match(node);
+
+            first_node = int.Parse(m.Groups[1].Value);
+            second_node = int.Parse(m.Groups[2].Value);
+
         }
         static public void EdgesNames(this string edge, out int first_node, out int second_node)
         {

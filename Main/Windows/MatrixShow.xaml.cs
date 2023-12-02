@@ -23,7 +23,7 @@ namespace Main.Windows
     /// </summary>
     public partial class MatrixShow : Window
     {
-        public MatrixShow()
+        public MatrixShow() 
         {
             InitializeComponent();
         }
@@ -38,6 +38,7 @@ namespace Main.Windows
 
             matrix.SetRowHeadersSource(list.GetList.Keys.ToArray());
             matrix.SetColumnHeadersSource(list.GetList.Keys.ToArray());
+            Title = "Матриця суміжності";
 
         }
 
@@ -52,6 +53,7 @@ namespace Main.Windows
             matrix.SetRowHeadersSource(list.GetList.Keys.ToArray());
 
             matrix.SetColumnHeadersSource(lines);
+            Title = "Матриця інцидентності";
         }
 
         private void Window_Closed(object sender, EventArgs e)
