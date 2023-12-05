@@ -23,6 +23,7 @@
     <None Remove="Resources\MenuIcons\intersection.png" />
     <None Remove="Resources\MenuIcons\union.png" />
     <None Remove="Resources\MenuIcons\xor.png" />
+    <None Remove="Resources\splash.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,6 +50,10 @@
     <Resource Include="Resources\MenuIcons\intersection.png" />
     <Resource Include="Resources\MenuIcons\union.png" />
     <Resource Include="Resources\MenuIcons\xor.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <SplashScreen Include="Resources\splash.jpg" />
   </ItemGroup>
 
 	<Target Name="RemoveSatelliteAssemblies" AfterTargets="ResolveAssemblyReferences">

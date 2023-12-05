@@ -87,16 +87,16 @@ namespace Main.Classes
                     }
                 case GraphType.Undirected:
                             {
-                        foreach (string line in lineNames)
-                        {
+                                foreach (string line in lineNames)
+                                {
 
-                            line.EdgesNames(out int f_node, out int s_node);
+                                    line.EdgesNames(out int f_node, out int s_node);
 
-                            incidence_matrix[f_node - 1, count] = 1;
-                            incidence_matrix[s_node - 1, count] = 1;
-                            count++;
-                        }
-                        break;
+                                    incidence_matrix[f_node - 1, count] = 1;
+                                    incidence_matrix[s_node - 1, count] = 1;
+                                    count++;
+                                }
+                                break;
                             }
                         default:
                             {
