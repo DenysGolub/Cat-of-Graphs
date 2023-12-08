@@ -4,9 +4,59 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Main.Windows"
+        xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="SecondGraph" Height="450" Width="800">
+        Title="SecondGraph" Height="450" Width="800" Loaded="Window_Loaded">
     <Grid>
+        <DockPanel Background="Transparent" LastChildFill="False">
+            <Menu Background="Transparent" DockPanel.Dock="Top">
+                <MenuItem Header="Файл"></MenuItem>
+                <MenuItem Header="Матриця">
+                    <MenuItem Click="AdjMatrixWindow_Click" Header="суміжності"></MenuItem>
+                    <MenuItem Click="IncMatrixWindow_Click" Header="інцидентності"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="Побудувати"></MenuItem>
+                <MenuItem Header="Допомога"></MenuItem>
+            </Menu>
+        </DockPanel>
+        <Canvas Background="White" x:Name="DrawingCanvas_Undirected" Margin="0,24,0,0">
+        </Canvas>
+
+        <Canvas Margin="0,24,0,0" x:Name="DrawingCanvas_Directed" Visibility ="Collapsed" Background="White"/>
+
+
         
+
+        <StackPanel x:Name="MenuStackPanel" HorizontalAlignment="Left" VerticalAlignment="Top" Height="250" Width="35" Margin="0,28,0,0" >
+
+
+            <Button x:FieldModifier="public" x:Name="AddEllipse" Background="White" Margin="3">
+                <StackPanel>
+                    <Image Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality" 
+    RenderOptions.EdgeMode="Aliased" Source ="/Resources/MenuIcons/Graph/add.png"></Image>
+                </StackPanel>
+
+            </Button>
+
+            <Button x:FieldModifier="public" x:Name="MoveEllipse" Background="White" Margin="3">
+
+                <StackPanel>
+                    <Image Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality" 
+    RenderOptions.EdgeMode="Aliased" Source ="/Resources/MenuIcons/Graph/move.png"></Image>
+                </StackPanel>
+
+            </Button>
+
+            <Button x:FieldModifier="public" x:Name="Delete" Background="White" Margin="3">
+                <StackPanel>
+                    <Image Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality" 
+    RenderOptions.EdgeMode="Aliased" Source ="/Resources/MenuIcons/Graph/delete.png"></Image>
+                </StackPanel>
+
+            </Button>
+        </StackPanel>
+
+
     </Grid>
+
 </Window>

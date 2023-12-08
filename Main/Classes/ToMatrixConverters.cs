@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
+using System.Security.Permissions;
 
 namespace Main.Classes
 {
@@ -45,6 +46,24 @@ namespace Main.Classes
                 {
                     if (canvas.Children.Cast<FrameworkElement>()
                       .Any(x => x.Name != null && x.Name.ToString() == $"line_{i + 1}_{j + 1}"))
+                    {
+                        list.Add($"line_{i + 1}_{j + 1}");
+                    }
+                }
+            }
+
+            return list;
+        }
+        static public List<string> GetLines(this Dictionary<int, HashSet<int>> adjacence_list)
+        {
+            var list = new List<string>();
+
+            var matrix = adjacence_list.ToAdjacenceMatrix();
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    if (matrix[i, j] == 1)
                     {
                         list.Add($"line_{i + 1}_{j + 1}");
                     }

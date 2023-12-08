@@ -109,11 +109,17 @@ namespace Main.Classes
                     default:
                         break;
                 }
-                
-
-                
-
-
+              
+            }
+            if(g_type == GraphType.Directed)
+            {
+                foreach (var key in adj.GetList)
+                {
+                    if (adj.GetList[key.Key].Contains(node))
+                    {
+                        temp.Add($"line_{key.Key}_{node}");
+                    }
+                }
             }
 
             return temp;

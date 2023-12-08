@@ -14,6 +14,8 @@ using System.Web;
 using Xceed.Wpf.Toolkit;
 using Main.Windows;
 using Main.Enumerators;
+using Main.Structs;
+using Main.Interfaces;
 
 namespace Main
 {
@@ -22,12 +24,28 @@ namespace Main
     /// </summary>
     public partial class MainWindow : Window
     {
+        public delegate void ChangeGraphType(object sender, MyEventArgs e);
+
+        public class MyEventArgs : EventArgs
+        {
+            public string AdditionalData { get; }
+
+            public MyEventArgs(string additionalData)
+            {
+                AdditionalData = additionalData;
+            }
+        }
+        public event ChangeGraphType SomethingChanged;
+
+
         AdjacenceList adjacenceListUndirected = new AdjacenceList(GraphType.Undirected);
         AdjacenceList adjacenceListDirected = new AdjacenceList(GraphType.Directed);
+        GraphOperationsCanvas graph_operations = new GraphOperationsCanvas();
 
         Events.CanvasEvents.Undirected undirected_events = new Events.CanvasEvents.Undirected();
         Events.CanvasEvents.Directed directed_events = new Events.CanvasEvents.Directed();
         Events events = new Events();
+        MenuColors colors = new MenuColors();
 
        
         public MainWindow()
@@ -89,56 +107,101 @@ namespace Main
             AddEllipse.Click += (sender, e) => events.AddMode();
             Color_Button.Click += (sender, e) => events.ColorMode();
             
+
+
         }
-
-
 
         private void ChangeGraphToDirected(object sender, RoutedEventArgs e)
         {
-           
-            DrawingCanvas_Undirected.Visibility = Visibility.Collapsed;
             DrawingCanvas_Directed.Visibility = Visibility.Visible;
+            DrawingCanvas_Undirected.Visibility = Visibility.Collapsed;
 
-            var c = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFACD1FF"));
-            c.Opacity = 0.5;
-            DirGraph_Button.Background = c;
-            UndGraph_Button.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+            colors.ActiveColor.Opacity = 0.5;
+            UndGraph_Button.Background = colors.DisableColor;
+            DirGraph_Button.Background = colors.ActiveColor;
+            ChangeModeInSecondGraph();
         }
 
         private void ChangeGraphToUndirected(object sender, RoutedEventArgs e)
         {
-
             DrawingCanvas_Directed.Visibility = Visibility.Collapsed;
             DrawingCanvas_Undirected.Visibility = Visibility.Visible;
 
-            color_active.Opacity = 0.5;
-            UndGraph_Button.Background = color_active;
-            DirGraph_Button.Background = color_disable;
-
+            colors.ActiveColor.Opacity = 0.5;
+            UndGraph_Button.Background = colors.ActiveColor;
+            DirGraph_Button.Background = colors.DisableColor;
+            ChangeModeInSecondGraph();
         }
 
 
+        private void ChangeModeInSecondGraph()
+        {
+            var s_graph = Application.Current.Windows.OfType<SecondGraph>().FirstOrDefault();
 
+            if(s_graph == null)
+            {
+                return;
+            }
 
-        SolidColorBrush color_disable = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-        SolidColorBrush color_active = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFACD1FF"));
-
-     
-
-       
+            if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
+            {
+                
+               s_graph.SecondGraphsEventsInstance.ChangeToUndirectedSecond();
+            }
+            else
+            {
+                s_graph.SecondGraphsEventsInstance.ChangeToDirectedSecond();
+            }
+        }
 
         
+        private Dictionary<int, HashSet<int>> CurrentVisibleGraphData(out Canvas canvas, out GraphType g_type)
+        {
+            if(DrawingCanvas_Undirected.Visibility == Visibility.Visible)
+            {
+                canvas = DrawingCanvas_Undirected;
+                g_type = GraphType.Undirected;
+                return adjacenceListUndirected.GetList;
+            }
+            else
+            {
+                canvas = DrawingCanvas_Directed;
+                g_type= GraphType.Directed;
+                return adjacenceListDirected.GetList;
+            }
+        }
 
+        
+        private void Addition_Click(object sender, RoutedEventArgs e)
+        {
+            var adj_list = CurrentVisibleGraphData(out Canvas canvas, out GraphType g_type);
 
+            SetCanvasForAddition(g_type);
+        }
 
-
-
-
-
-
-
-
-
-     
+        private void SetCanvasForAddition(GraphType g_type)
+        {
+            if (g_type == GraphType.Undirected)
+            {
+                ///При використанні out для класа AdjacenceList під час переміщення вершин на полотні
+                ///списки суміжності не мають ребер. out and Class питання
+                DrawingCanvas_Undirected = graph_operations.Addition(adjacenceListUndirected.GetList, ref DrawingCanvas_Undirected, g_type, out AdjacenceList adjacenceList);
+                DrawingCanvas_Undirected.InvalidateVisual();
+                adjacenceListUndirected.GetList = adjacenceList.GetList;
+            }
+            else if (g_type == GraphType.Directed)
+            {
+                DrawingCanvas_Directed = graph_operations.Addition(adjacenceListDirected.GetList, ref DrawingCanvas_Directed, g_type, out AdjacenceList adjacenceList);
+                DrawingCanvas_Undirected.InvalidateVisual();
+                adjacenceListDirected.GetList = adjacenceList.GetList; 
+            }
+        }
+        private void Unity_Click(object sender, RoutedEventArgs e)
+        {
+            SecondGraph window = new SecondGraph();
+            window.Owner = this;
+            window.Show();
+            ChangeModeInSecondGraph();
+        }
     }
 }

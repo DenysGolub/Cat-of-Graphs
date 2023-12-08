@@ -38,8 +38,6 @@ namespace Main.Classes
             else if(type==GraphType.Directed)
             {
                 adjacence_list[first_node].Add(second_node);
-                adjacence_list[second_node].Add(first_node);
-
             }
         }
 
@@ -50,16 +48,21 @@ namespace Main.Classes
 
         public void RemoveEdge(int first_node, int second_node)
         {
-            foreach(KeyValuePair<int,HashSet<int>> kvp in adjacence_list)
+
+            if (type == GraphType.Undirected)
             {
-                if (adjacence_list[kvp.Key].Contains(first_node))
+                if (adjacence_list[first_node].Contains(second_node))
                 {
-                    adjacence_list[kvp.Key].Remove(first_node);
+                    adjacence_list[first_node].Remove(second_node);
                 }
-                else if (adjacence_list[kvp.Key].Contains(second_node))
+                else if (adjacence_list[second_node].Contains(first_node))
                 {
-                    adjacence_list[kvp.Key].Remove(second_node);
+                    adjacence_list[second_node].Remove(first_node);
                 }
+            }
+            else if (type == GraphType.Directed)
+            {
+                adjacence_list[first_node].Remove(second_node);
             }
         }
 

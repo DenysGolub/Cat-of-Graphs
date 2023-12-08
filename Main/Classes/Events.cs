@@ -1,5 +1,6 @@
 ﻿using Main.Enumerators;
 using Main.Interfaces;
+using Main.Windows;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -31,7 +32,7 @@ namespace Main.Classes
         }
     }
 
-    class Events //Class B
+    public class Events //Class B
     {
        
 
@@ -57,6 +58,15 @@ namespace Main.Classes
         {
             OnSomethingChanged(new MyEventArgs("ColorMode"));
         }
+
+        public void ChangeToUndirectedSecond()
+        {
+            OnSomethingChanged(new MyEventArgs("ChangeToUndirectedGraph"));
+        }
+        public void ChangeToDirectedSecond()
+        {
+            OnSomethingChanged(new MyEventArgs("ChangeToDirectedGraph"));
+        }
         protected virtual void OnSomethingChanged(MyEventArgs e)
         {
             SomethingChanged?.Invoke(this, e);
@@ -64,6 +74,7 @@ namespace Main.Classes
 
         public class CanvasEvents //Class A
         {
+            
             SolidColorBrush color_disable = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
             SolidColorBrush color_active = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFACD1FF"));
 
@@ -72,6 +83,11 @@ namespace Main.Classes
             {
                 // Subscribe to the event
                 classB.SomethingChanged += HandleSomethingChanged;
+            }
+
+            public void SubscribeToChangesInSecondGraphs(Events wnd)
+            {
+                wnd.SomethingChanged += HandleChangedInSecondGraph;
             }
 
             private void HandleSomethingChanged(object sender, MyEventArgs e)
@@ -153,6 +169,71 @@ namespace Main.Classes
                     }
                 }
             }
+
+            private void HandleChangedInSecondGraph(object sender, MyEventArgs e)
+            {
+                SecondGraph wnd = Application.Current.Windows.OfType<SecondGraph>().FirstOrDefault();
+
+                if (e.AdditionalData == "AddMode")
+                {
+                    Edit = true;
+                    Remove = false;
+                    Move = false;
+                    Color = false;
+
+                    color_active.Opacity = 0.5;
+
+                    wnd.AddEllipse.Background = color_active;
+                    wnd.Delete.Background = color_disable;
+                    wnd.MoveEllipse.Background = color_disable;
+                }
+                else if (e.AdditionalData == "MoveMode")
+                {
+                    Edit = false;
+                    Remove = false;
+                    Move = true;
+                    Color = false;
+
+
+                    color_active.Opacity = 0.5;
+
+                    wnd.AddEllipse.Background = color_disable;
+                    wnd.Delete.Background = color_disable;
+                    wnd.MoveEllipse.Background = color_active;
+
+                }
+                else if (e.AdditionalData == "DeleteMode")
+                {
+                    Edit = false;
+                    Remove = true;
+                    Move = false;
+                    Color = false;
+
+                    color_active.Opacity = 0.5;
+
+                    wnd.AddEllipse.Background = color_disable;
+                    wnd.Delete.Background = color_active;
+                    wnd.MoveEllipse.Background = color_disable;
+                }
+                else if (e.AdditionalData == "ChangeToDirectedGraph")
+                {
+
+                    wnd.DrawingCanvas_Directed.Visibility = Visibility.Visible;
+                    wnd.DrawingCanvas_Undirected.Visibility = Visibility.Collapsed;
+
+                }
+                else if (e.AdditionalData == "ChangeToUndirectedGraph")
+                {
+
+                    wnd.DrawingCanvas_Directed.Visibility = Visibility.Collapsed;
+                    wnd.DrawingCanvas_Undirected.Visibility = Visibility.Visible;
+
+                }
+
+
+            }
+
+
 
             bool add_ellipse, remove, move, color;
 
@@ -477,7 +558,7 @@ namespace Main.Classes
                 Canvas canvas;
                 AdjacenceList _adjacenceList;
                 ColorPicker _colorpicker;
-
+                
                 public Canvas Canvas { get => canvas; set => canvas=value; }
                 
                 public AdjacenceList AdjacenceList { get => _adjacenceList; set => _adjacenceList=value; }

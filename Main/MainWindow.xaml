@@ -14,11 +14,16 @@
             <Menu Background="Transparent" DockPanel.Dock="Top">
                 <MenuItem Header="Файл"></MenuItem>
                 <MenuItem Header="Граф"></MenuItem>
-                <MenuItem Header="Матриці">
+                <MenuItem Header="Матриця">
                     <MenuItem Click="AdjMatrixWindow_Click" Header="суміжності"></MenuItem>
                     <MenuItem Click="IncMatrixWindow_Click" Header="інцидентності"></MenuItem>
                 </MenuItem>
-                <MenuItem Header="Операції"></MenuItem>
+                <MenuItem Header="Операції">
+                    <MenuItem Click="Addition_Click" Header="Доповнення"></MenuItem>
+                    <MenuItem Click="Unity_Click" Header="Об'єднання"></MenuItem>
+
+
+                </MenuItem>
                 <MenuItem Header="Допомога"></MenuItem>
             </Menu>
         </DockPanel>

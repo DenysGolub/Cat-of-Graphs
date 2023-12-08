@@ -12,6 +12,7 @@ namespace Main.Enumerators
         Undirected = 2
 
     }
+
     public enum MatrixType
     {
         Adjacence = 0,

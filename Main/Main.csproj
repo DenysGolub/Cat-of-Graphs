@@ -27,10 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Structs\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.1" />
     <PackageReference Include="Gu.Wpf.DataGrid2D" Version="0.2.4" />
   </ItemGroup>
