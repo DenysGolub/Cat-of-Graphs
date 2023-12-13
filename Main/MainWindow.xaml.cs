@@ -47,12 +47,38 @@ namespace Main
         Events events = new Events();
         MenuColors colors = new MenuColors();
 
-       
+
+        public Canvas GraphCanvas
+        {
+            get
+            {
+                if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
+                {
+                    return DrawingCanvas_Undirected;
+                }
+                return DrawingCanvas_Directed;
+            }
+        }
+        public AdjacenceList GraphAdjacenceList
+        {
+            get
+            {
+                if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
+                {
+                    return adjacenceListUndirected;
+                }
+                return adjacenceListDirected;
+            }
+        }
+        public GraphType graphType { get; set; }
+
         public MainWindow()
         {
 
             InitializeComponent();
-            
+            graphType = GraphType.Undirected;
+
+
         }
 
 
@@ -119,6 +145,7 @@ namespace Main
             colors.ActiveColor.Opacity = 0.5;
             UndGraph_Button.Background = colors.DisableColor;
             DirGraph_Button.Background = colors.ActiveColor;
+            graphType = GraphType.Directed;
             ChangeModeInSecondGraph();
         }
 
@@ -130,6 +157,7 @@ namespace Main
             colors.ActiveColor.Opacity = 0.5;
             UndGraph_Button.Background = colors.ActiveColor;
             DirGraph_Button.Background = colors.DisableColor;
+            graphType = GraphType.Undirected;
             ChangeModeInSecondGraph();
         }
 
@@ -198,10 +226,50 @@ namespace Main
         }
         private void Unity_Click(object sender, RoutedEventArgs e)
         {
-            SecondGraph window = new SecondGraph();
+            SecondGraph window = WindowsInstances.SecondGraphInst();
+            window.Title = "Режим об'єднання графів";
+            window.CurrentOperation = CurrentGraphOperation.Unity;
+            window.Type = graphType;
             window.Owner = this;
             window.Show();
-            ChangeModeInSecondGraph();
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            for (int intCounter = App.Current.Windows.Count - 1; intCounter >= 0; intCounter--)
+            {
+                App.Current.Windows[intCounter].Close();
+            }
+        }
+
+        private void Intersection_Click(object sender, RoutedEventArgs e)
+        {
+            SecondGraph window = WindowsInstances.SecondGraphInst();
+            window.Title = "Режим перетину графів";
+            window.CurrentOperation = CurrentGraphOperation.Intersection;
+            window.Type = graphType;
+            window.Owner = this;
+            window.Show();
+        }
+
+        private void CircleSum_Click(object sender, RoutedEventArgs e)
+        {
+            SecondGraph window = WindowsInstances.SecondGraphInst();
+            window.Title = "Режим кільцевої суми графів";
+            window.CurrentOperation = CurrentGraphOperation.CircleSum;
+            window.Type = graphType;
+            window.Owner = this;
+            window.Show();
+        }
+
+        private void CartesianProduct_Click(object sender, RoutedEventArgs e)
+        {
+            SecondGraph window = WindowsInstances.SecondGraphInst();
+            window.Title = "Режим декартового добутку графів";
+            window.CurrentOperation = CurrentGraphOperation.CartesianProduct;
+            window.Type = graphType;
+            window.Owner = this;
+            window.Show();
         }
     }
 }

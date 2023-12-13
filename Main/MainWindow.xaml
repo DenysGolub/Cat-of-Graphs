@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:Main"
         
         mc:Ignorable="d"
-        Title="Cat of Graphs" Height="424" Width="771" WindowState="Maximized" Loaded="Window_Loaded">
+        Title="Cat of Graphs" Height="424" Width="771" WindowState="Maximized" Loaded="Window_Loaded" Closed="Window_Closed">
     <Grid>
         <DockPanel Background="Transparent" LastChildFill="False">
             <Menu Background="Transparent" DockPanel.Dock="Top">
@@ -21,8 +21,9 @@
                 <MenuItem Header="Операції">
                     <MenuItem Click="Addition_Click" Header="Доповнення"></MenuItem>
                     <MenuItem Click="Unity_Click" Header="Об'єднання"></MenuItem>
-
-
+                    <MenuItem Click="Intersection_Click" Header="Перетин"></MenuItem>
+                    <MenuItem Click="CircleSum_Click" Header="Кільцева сума"></MenuItem>
+                    <MenuItem Click="CartesianProduct_Click" Header="Декартовий добуток"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="Допомога"></MenuItem>
             </Menu>

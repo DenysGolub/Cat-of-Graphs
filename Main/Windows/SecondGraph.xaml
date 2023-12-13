@@ -15,7 +15,7 @@
                     <MenuItem Click="AdjMatrixWindow_Click" Header="суміжності"></MenuItem>
                     <MenuItem Click="IncMatrixWindow_Click" Header="інцидентності"></MenuItem>
                 </MenuItem>
-                <MenuItem Header="Побудувати"></MenuItem>
+                <MenuItem Click="ShowResultGraph" Header="Побудувати"></MenuItem>
                 <MenuItem Header="Допомога"></MenuItem>
             </Menu>
         </DockPanel>

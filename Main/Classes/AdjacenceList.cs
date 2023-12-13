@@ -14,6 +14,10 @@ namespace Main.Classes
     {
         Dictionary<int, HashSet<int>> adjacence_list = new Dictionary<int, HashSet<int>>();
         GraphType type;
+        public AdjacenceList()
+        {
+
+        }
         public AdjacenceList(GraphType type)
         {
             this.type = type;
@@ -21,7 +25,7 @@ namespace Main.Classes
         public HashSet<int> this[int index]
         {
             get { return adjacence_list[index]; }
-            //set { adjacence_list[index] = value; }
+            set { adjacence_list[index] = value; }
         }
 
         public int CountNodes => adjacence_list.Count;
@@ -54,11 +58,9 @@ namespace Main.Classes
                 if (adjacence_list[first_node].Contains(second_node))
                 {
                     adjacence_list[first_node].Remove(second_node);
-                }
-                else if (adjacence_list[second_node].Contains(first_node))
-                {
                     adjacence_list[second_node].Remove(first_node);
                 }
+                
             }
             else if (type == GraphType.Directed)
             {

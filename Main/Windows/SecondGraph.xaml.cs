@@ -24,15 +24,59 @@ namespace Main.Windows
     {
         AdjacenceList adjacenceListUndirected = new AdjacenceList(GraphType.Undirected);
         AdjacenceList adjacenceListDirected = new AdjacenceList(GraphType.Directed);
+        GraphOperationsCanvas graph_operations = new GraphOperationsCanvas();
 
         Events.CanvasEvents.Undirected undirected_events = new Events.CanvasEvents.Undirected();
         Events.CanvasEvents.Directed directed_events = new Events.CanvasEvents.Directed();
         Events events = new Events();
-
+        GraphType _type;
         public Events SecondGraphsEventsInstance => events;
+        public Canvas SecondGraphCanvas
+        {
+            get
+            {
+                if(DrawingCanvas_Undirected.Visibility==Visibility.Visible)
+                {
+                    return DrawingCanvas_Undirected;
+                }
+                return DrawingCanvas_Directed;
+            }
+        }
+        public AdjacenceList SecondGraphAdjacenceList
+        {
+            get
+            {
+                if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
+                {
+                    return adjacenceListUndirected;
+                }
+                return adjacenceListDirected;
+            }
+        }
+        public GraphType Type
+        {
+            get { return _type; }
+            set
+            {
+                if (value == GraphType.Undirected)
+                {
+                    DrawingCanvas_Directed.Visibility = Visibility.Collapsed;
+                    DrawingCanvas_Undirected.Visibility = Visibility.Visible;
+                }
+                else if (value == GraphType.Directed)
+                {
+                    DrawingCanvas_Directed.Visibility = Visibility.Visible;
+                    DrawingCanvas_Undirected.Visibility = Visibility.Collapsed;
+                }
+                _type = value;
+            }
+        }
+        public CurrentGraphOperation CurrentOperation { get; set; }
         public SecondGraph()
         {
             InitializeComponent();
+            Closed += (sender, e) => WindowsInstances.WindowClosed(sender, e);
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -84,5 +128,46 @@ namespace Main.Windows
             }
         }
 
+        private void ShowResultGraph(object sender, RoutedEventArgs e)
+        {
+            MainWindow wnd = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
+
+            Canvas result_graph=null;
+            OperationResult window=WindowsInstances.ResultWindowInst();
+
+           
+
+            if (CurrentOperation==CurrentGraphOperation.Unity)
+            {
+                Canvas bigger_canvas = wnd.GraphAdjacenceList.GetList.Keys.Count > SecondGraphAdjacenceList.GetList.Keys.Count ? wnd.GraphCanvas : SecondGraphCanvas;
+                window.Title = "Результат об'єднання графів";
+
+                result_graph = graph_operations.Unity(bigger_canvas, wnd.GraphAdjacenceList.GetList, SecondGraphAdjacenceList.GetList, Type, out AdjacenceList unity);
+            }
+            else if(CurrentOperation==CurrentGraphOperation.Intersection)
+            {
+                Canvas smaller_canvas = wnd.GraphAdjacenceList.GetList.Keys.Count < SecondGraphAdjacenceList.GetList.Keys.Count ? wnd.GraphCanvas : SecondGraphCanvas;
+                window.Title = "Результат перетину графів";
+
+                result_graph = graph_operations.Intersection(smaller_canvas, wnd.GraphAdjacenceList.GetList, SecondGraphAdjacenceList.GetList, Type, out AdjacenceList intersection);
+            }
+            else if(CurrentOperation==CurrentGraphOperation.CircleSum)
+            {
+                Canvas bigger_canvas = wnd.GraphAdjacenceList.GetList.Keys.Count > SecondGraphAdjacenceList.GetList.Keys.Count ? wnd.GraphCanvas : SecondGraphCanvas;
+                window.Title = "Результат кільцевої суми графів";
+
+                result_graph = graph_operations.CircleSum(bigger_canvas, wnd.GraphAdjacenceList.GetList, SecondGraphAdjacenceList.GetList, Type, out AdjacenceList circlesum);
+            }
+            else if (CurrentOperation == CurrentGraphOperation.CartesianProduct)
+            {
+                window.Title = "Результат декартового добутку графів";
+
+                result_graph = graph_operations.CartesianProduct(wnd.GraphAdjacenceList.GetList, SecondGraphAdjacenceList.GetList, Type);
+            }
+
+            window.SetCanvas(result_graph);
+            window.Owner = this;
+            window.Show();
+        }
     }
 }

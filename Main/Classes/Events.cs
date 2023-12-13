@@ -220,13 +220,14 @@ namespace Main.Classes
 
                     wnd.DrawingCanvas_Directed.Visibility = Visibility.Visible;
                     wnd.DrawingCanvas_Undirected.Visibility = Visibility.Collapsed;
-
+                    wnd.Type = GraphType.Directed;
                 }
                 else if (e.AdditionalData == "ChangeToUndirectedGraph")
                 {
 
                     wnd.DrawingCanvas_Directed.Visibility = Visibility.Collapsed;
                     wnd.DrawingCanvas_Undirected.Visibility = Visibility.Visible;
+                    wnd.Type = GraphType.Undirected;
 
                 }
 
