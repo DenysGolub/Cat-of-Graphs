@@ -6,10 +6,26 @@
         xmlns:local="clr-namespace:Main.Windows"
         mc:Ignorable="d"
         xmlns:dataGrid2D="http://gu.se/DataGrid2D"
-        Title="MatrixShow" SizeToContent="WidthAndHeight" Closed="Window_Closed">
+        Title="Матриця суміжності" SizeToContent="WidthAndHeight" Closed="Window_Closed">
     <Grid>
         <DataGrid x:Name="matrix" dataGrid2D:ItemsSource.Array2D="{Binding Data2D}"
           dataGrid2D:ItemsSource.ColumnHeadersSource="{Binding ColumnHeaders}"
-          dataGrid2D:ItemsSource.RowHeadersSource="{Binding RowHeaders}" />
+          dataGrid2D:ItemsSource.RowHeadersSource="{Binding RowHeaders}"
+          CanUserSortColumns="False"
+                  CellEditEnding="matrix_ValueInCellChanged"
+                  
+                  SelectionUnit="Cell">
+
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="NodeAdd" Header="Додати вершину" Click="AddNode_Click"/>
+                    <MenuItem x:Name="NodeDel" Header="Видалити вершину" Click="DeleteNode_Click"></MenuItem>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            
+        </DataGrid>
+
+
     </Grid>
+    
 </Window>

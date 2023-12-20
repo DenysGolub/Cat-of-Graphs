@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Shapes;
 
 namespace Main.Classes
 {
@@ -105,6 +106,18 @@ namespace Main.Classes
                 return true;
             }
 
+            return false;
+        }
+        public static bool Edge(Canvas canvas, int first_node, int second_node)
+        {
+            if(canvas.Children.Contains(canvas.Children.OfType<Line>().FirstOrDefault(e => e.Name == $"line_{first_node}_{second_node}")))
+            {
+                return true;
+            }
+            else if(canvas.Children.Contains(canvas.Children.OfType<Line>().FirstOrDefault(e => e.Name == $"line_{second_node}_{first_node}")))
+            {
+                return true;
+            }
             return false;
         }
     }

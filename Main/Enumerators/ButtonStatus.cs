@@ -15,6 +15,6 @@ namespace Main.Enumerators
         /// <summary>
         /// Color: #FFACD1FF
         /// </summary>
-        Active = 1 
+        Active = 1
     }
 }

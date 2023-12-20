@@ -73,7 +73,7 @@ namespace Main.Classes
             return list;
         }
         /// <summary>
-        /// Converts and adjacence list to Matrix of Incidence
+        /// Converts an adjacence list to Matrix of Incidence
         /// </summary>
         /// <param name="adjacence_list"></param>
         /// <returns>2D array (matrix) from adjacence list</returns>

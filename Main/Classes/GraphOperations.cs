@@ -22,6 +22,12 @@ namespace Main.Classes
 {
     class GraphOperations : IGraphOperations
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <param name="g_type"></param>
+        /// <returns>AdjacenceList instance which is addition to input AdjacenceList</returns>
         public AdjacenceList Addition(Dictionary<int, HashSet<int>> dict, GraphType g_type)
         {
             var addition_dict = new AdjacenceList(g_type);
@@ -187,9 +193,7 @@ namespace Main.Classes
                         unity_dict[key].Add(item);
                     }
                 }
-               
             }
-
             return unity_dict;
         }
         private Dictionary<string, HashSet<string>> GetAllPairsForCartesian(Dictionary<int, HashSet<int>> dict_g1, Dictionary<int, HashSet<int>> dict_g2)
@@ -554,7 +558,6 @@ namespace Main.Classes
                 canvas.Children.Remove(canvas.Children.OfType<Line>().FirstOrDefault(e => e.Name == edge));
                 canvas.Children.Remove(canvas.Children.OfType<Shape>().FirstOrDefault(e => e.Name == edge));
                 lines.Remove(edge);
-
             }
 
             foreach (var edge in lines)

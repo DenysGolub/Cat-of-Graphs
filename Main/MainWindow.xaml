@@ -13,7 +13,6 @@
         <DockPanel Background="Transparent" LastChildFill="False">
             <Menu Background="Transparent" DockPanel.Dock="Top">
                 <MenuItem Header="Файл"></MenuItem>
-                <MenuItem Header="Граф"></MenuItem>
                 <MenuItem Header="Матриця">
                     <MenuItem Click="AdjMatrixWindow_Click" Header="суміжності"></MenuItem>
                     <MenuItem Click="IncMatrixWindow_Click" Header="інцидентності"></MenuItem>

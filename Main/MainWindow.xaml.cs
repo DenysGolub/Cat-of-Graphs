@@ -16,6 +16,10 @@ using Main.Windows;
 using Main.Enumerators;
 using Main.Structs;
 using Main.Interfaces;
+using System;
+using Xceed.Wpf.AvalonDock.Layout;
+using System.DirectoryServices.ActiveDirectory;
+using System.Xml.Linq;
 
 namespace Main
 {
@@ -25,6 +29,8 @@ namespace Main
     public partial class MainWindow : Window
     {
         public delegate void ChangeGraphType(object sender, MyEventArgs e);
+
+        public delegate void FromCanvasToMatrixDelegate();
 
         public class MyEventArgs : EventArgs
         {
@@ -36,7 +42,7 @@ namespace Main
             }
         }
         public event ChangeGraphType SomethingChanged;
-
+        
 
         AdjacenceList adjacenceListUndirected = new AdjacenceList(GraphType.Undirected);
         AdjacenceList adjacenceListDirected = new AdjacenceList(GraphType.Directed);
@@ -47,7 +53,21 @@ namespace Main
         Events events = new Events();
         MenuColors colors = new MenuColors();
 
+        public Events.CanvasEvents.Undirected EventsUndir
+        {
+            get
+            {
+                return undirected_events;
+            }
+        }
 
+        public Events.CanvasEvents.Directed EventsDir
+        {
+            get
+            {
+                return directed_events;
+            }
+        }
         public Canvas GraphCanvas
         {
             get
@@ -85,6 +105,8 @@ namespace Main
 
         private void IncMatrixWindow_Click(object sender, RoutedEventArgs e)
         {
+            MatrixShow win = WindowsInstances.MatrixWindowInst(this);
+            win.Owner = this;
             if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
             {
                 new MatrixShow(adjacenceListUndirected, DrawingCanvas_Undirected, GraphType.Undirected).Show();
@@ -97,14 +119,224 @@ namespace Main
 
         private void AdjMatrixWindow_Click(object sender, RoutedEventArgs e)
         {
+            MatrixShow win = WindowsInstances.MatrixWindowInst(this);
+            win.Owner = this;
+            win.AddNodeDelegate += AddNodeToCanvas;
+            win.AddEdgeDelegate += AddEdgeToCanvas;
+            win.DeleteNodeDelegate += DeleteNodeCanvas;
+            win.DeleteEdgeDelegate += DeleteEdgeCanvas;
             if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
             {
-                new MatrixShow(adjacenceListUndirected).Show();
+
+                win.Matrix = adjacenceListUndirected;
+                win.TypeGraph = GraphType.Undirected;
+
             }
             else
             {
-                new MatrixShow(adjacenceListDirected).Show();
+                win.Matrix = adjacenceListDirected;
+                win.TypeGraph = GraphType.Directed;
+
             }
+            win.Show();
+        }
+
+        private void DeleteEdgeCanvas(string x, string y)
+        {
+            Canvas canvas;
+            AdjacenceList dict;
+
+            if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
+            {
+                adjacenceListUndirected.RemoveEdge(int.Parse(x), int.Parse(y));
+                DrawingCanvas_Undirected.Children.Remove(DrawingCanvas_Undirected.Children.OfType<Line>().FirstOrDefault(e => e.Name == $"line_{x}_{y}"));
+                DrawingCanvas_Undirected.Children.Remove(DrawingCanvas_Undirected.Children.OfType<Line>().FirstOrDefault(e => e.Name == $"line_{y}_{x}"));
+
+            }
+            else
+            {
+                adjacenceListDirected.RemoveEdge(int.Parse(x), int.Parse(y));
+                DrawingCanvas_Directed.Children.Remove(DrawingCanvas_Directed.Children.OfType<Shape>().FirstOrDefault(e => e.Name == $"line_{x}_{y}"));
+            }
+        }
+
+        private void AddEdgeToCanvas(string f_node, string s_node)
+        {
+            Canvas canvas;
+            AdjacenceList dict;
+
+            if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
+            {
+                dict = adjacenceListUndirected;
+                canvas = DrawingCanvas_Undirected;
+            }
+            else
+            {
+                dict = adjacenceListDirected;
+                canvas = DrawingCanvas_Directed;
+            }
+
+            bool shapeExistsEllips1 = canvas.Children.OfType<Shape>().Any(shape => shape.Name == $"Ellipse_{f_node}");
+
+            bool shapeExistsEllips2 = canvas.Children.OfType<Shape>().Any(shape => shape.Name == $"Ellipse_{s_node}");
+            if (shapeExistsEllips1 && shapeExistsEllips2)
+            {
+
+                Ellipse sEllipse = canvas.Children.OfType<Ellipse>().FirstOrDefault(e => e.Name == $"Ellipse_{s_node}");
+
+                // Find the first ellipse
+                Ellipse fEllipse = canvas.Children.OfType<Ellipse>().FirstOrDefault(e => e.Name == $"Ellipse_{f_node}");
+
+                Point center1 = new Point(Canvas.GetLeft(fEllipse) + fEllipse.Width / 2, Canvas.GetTop(fEllipse) + fEllipse.Height / 2);
+                Point center2 = new Point(Canvas.GetLeft(sEllipse) + sEllipse.Width / 2, Canvas.GetTop(sEllipse) + sEllipse.Height / 2);
+
+
+                var intersectionPoint1 = (Point)DataFromGraph.CalculateIntersection(center1, fEllipse.Width / 2, center2);
+                var intersectionPoint2 = (Point)DataFromGraph.CalculateIntersection(center2, sEllipse.Width / 2, center1);
+                dynamic line;
+
+
+                if (DrawingCanvas_Directed.Visibility == Visibility.Visible)
+                {
+                    line = DataFromGraph.DrawLinkArrow(intersectionPoint1, intersectionPoint2);
+                    line.Name = $"line_{f_node}_{s_node}";
+
+                    if (!canvas.Children.Cast<FrameworkElement>()
+          .Any(x => x.Name != null && x.Name.ToString() == $"line_{int.Parse(f_node)}_{int.Parse(s_node)}"))
+                    {
+                        canvas.Children.Add(line);
+                        dict.AddEdge(int.Parse(f_node), int.Parse(s_node));
+
+                    }
+                }
+                else
+                {
+                    line = new Line()
+                    {
+                        Name = $"line_{f_node}_{s_node}",
+                        X1 = intersectionPoint1.X,
+                        Y1 = intersectionPoint1.Y,
+                        X2 = intersectionPoint2.X,
+                        Y2 = intersectionPoint2.Y,
+                        Stroke = System.Windows.Media.Brushes.Black,
+                        StrokeThickness = 2,
+                        Fill = System.Windows.Media.Brushes.Black,
+                    };
+
+
+                    if (ContainingChecker.Edge(canvas, Convert.ToInt32(f_node), Convert.ToInt32(s_node)) == false && f_node != s_node)
+                    {
+                        canvas.Children.Add(line);
+                        dict.AddEdge(int.Parse(f_node), int.Parse(s_node));
+
+                    }
+                }
+
+            }
+        }
+        private void AddNodeToCanvas()
+        {
+            Canvas canvas;
+            AdjacenceList dict;
+
+            if(DrawingCanvas_Undirected.Visibility == Visibility.Visible)
+            {
+                dict = adjacenceListUndirected;
+                canvas = DrawingCanvas_Undirected;
+            }
+            else
+            {
+                dict = adjacenceListDirected;
+                canvas = DrawingCanvas_Directed;
+            }
+
+            Ellipse AAACircle = new Ellipse()
+            {
+                Name = $"Ellipse_{dict.CountNodes}",
+                Height = 50,
+                Width = 50,
+                Stroke = Brushes.Black,
+                StrokeThickness = 1,
+                Fill = Brushes.White,
+
+            };
+
+            TextBlock textBlock = new TextBlock()
+            {
+                Name = "Text" + AAACircle.Name,
+                Text = (dict.CountNodes).ToString(),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                FontSize = 16,
+                FontFamily = new FontFamily("Arial"),
+
+            };
+
+
+            // The farthest left the dot can be
+            double minLeft = 0;
+            // The farthest right the dot can be without it going off the screen
+            double maxLeft = canvas.ActualWidth - AAACircle.Width;
+            // The farthest up the dot can be
+            double minTop = 0;
+            // The farthest down the dot can be without it going off the screen
+            double maxTop = canvas.ActualHeight - AAACircle.Height;
+
+
+            double left = RandomBetween(minLeft, maxLeft);
+            double top = RandomBetween(minTop, maxTop);
+
+
+            Canvas.SetLeft(AAACircle, left);
+            Canvas.SetTop(AAACircle, top);
+
+            Point center1_for_text = DataFromGraph.AllignOfText(AAACircle, (dict.CountNodes).ToString());
+
+            Canvas.SetLeft(textBlock, center1_for_text.X);
+            Canvas.SetTop(textBlock, center1_for_text.Y);
+
+            canvas.Children.Add(AAACircle);
+            canvas.Children.Add(textBlock);
+            canvas.InvalidateVisual();
+        }
+
+        private void DeleteNodeCanvas(int node, HashSet<string> lines)
+        {
+            NamesUpdate update = new NamesUpdate();
+
+            if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
+            {
+                DrawingCanvas_Undirected.Children.Remove(DrawingCanvas_Undirected.Children.OfType<Ellipse>().FirstOrDefault(e => e.Name == $"Ellipse_{node}"));
+                DrawingCanvas_Undirected.Children.Remove(DrawingCanvas_Undirected.Children.OfType<TextBlock>().FirstOrDefault(e => e.Name == $"TextEllipse_{node}"));
+
+                foreach (string s in lines)
+                {
+                    DrawingCanvas_Undirected.Children.Remove(DrawingCanvas_Undirected.Children.OfType<Line>().FirstOrDefault(e => e.Name == s));
+                }
+                update.UpdateCanvas(ref DrawingCanvas_Undirected, node);
+
+
+
+            }
+            else
+            {
+                DrawingCanvas_Directed.Children.Remove(DrawingCanvas_Directed.Children.OfType<Ellipse>().FirstOrDefault(e => e.Name == $"Ellipse_{node}"));
+                DrawingCanvas_Directed.Children.Remove(DrawingCanvas_Directed.Children.OfType<TextBlock>().FirstOrDefault(e => e.Name == $"TextEllipse_{node}"));
+
+                foreach (string s in lines)
+                {
+                    DrawingCanvas_Directed.Children.Remove(DrawingCanvas_Directed.Children.OfType<Shape>().FirstOrDefault(e => e.Name == s));
+                }
+                update.UpdateCanvas(ref DrawingCanvas_Directed, node);
+
+
+
+
+            }
+        }
+        private double RandomBetween(double min, double max)
+        {
+            return new Random().NextDouble() * (max - min) + min;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -216,6 +448,7 @@ namespace Main
                 DrawingCanvas_Undirected = graph_operations.Addition(adjacenceListUndirected.GetList, ref DrawingCanvas_Undirected, g_type, out AdjacenceList adjacenceList);
                 DrawingCanvas_Undirected.InvalidateVisual();
                 adjacenceListUndirected.GetList = adjacenceList.GetList;
+
             }
             else if (g_type == GraphType.Directed)
             {
@@ -223,6 +456,12 @@ namespace Main
                 DrawingCanvas_Undirected.InvalidateVisual();
                 adjacenceListDirected.GetList = adjacenceList.GetList; 
             }
+            MatrixShow win = WindowsInstances.MatrixWindowInst(this);
+            if (win.Matrix != null)
+            {
+                win.UpdateMatrix();
+            }
+
         }
         private void Unity_Click(object sender, RoutedEventArgs e)
         {

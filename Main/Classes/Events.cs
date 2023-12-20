@@ -74,7 +74,6 @@ namespace Main.Classes
 
         public class CanvasEvents //Class A
         {
-            
             SolidColorBrush color_disable = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
             SolidColorBrush color_active = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFACD1FF"));
 
@@ -269,6 +268,7 @@ namespace Main.Classes
 
                 public void PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
                 {
+                    MatrixShow win = WindowsInstances.MatrixWindowInst(WindowsInstances.MainWinInst());
 
                     var mouseWasDownOn = e.Source as FrameworkElement;
 
@@ -461,6 +461,10 @@ namespace Main.Classes
 
                         }
                     }
+                    if (win.Matrix != null)
+                    {
+                        win.UpdateMatrix();
+                    }
                 }
 
                 public void PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -565,10 +569,12 @@ namespace Main.Classes
                 public AdjacenceList AdjacenceList { get => _adjacenceList; set => _adjacenceList=value; }
                 public ColorPicker ColorPicker { get => _colorpicker; set => _colorpicker = value; }
 
-               
+
                 public void PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
                 {
-                   
+                    MatrixShow win = WindowsInstances.MatrixWindowInst(WindowsInstances.MainWinInst());
+
+
                     var mouseWasDownOn = e.Source as FrameworkElement;
 
                     string elementName = mouseWasDownOn.Name;
@@ -776,6 +782,10 @@ namespace Main.Classes
 
 
                         }
+                    }
+                    if (win.Matrix != null)
+                    {
+                        win.UpdateMatrix();
                     }
                 }
 

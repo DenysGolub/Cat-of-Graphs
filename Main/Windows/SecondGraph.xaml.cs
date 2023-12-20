@@ -112,20 +112,24 @@ namespace Main.Windows
             }
             else
             {
+
                 new MatrixShow(adjacenceListDirected, DrawingCanvas_Directed, GraphType.Directed).Show();
             }
         }
 
         private void AdjMatrixWindow_Click(object sender, RoutedEventArgs e)
         {
+            MatrixShow win = WindowsInstances.MatrixWindowInst(this);
+            win.Owner = this;
             if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
             {
-                new MatrixShow(adjacenceListUndirected).Show();
+                win.Matrix = adjacenceListUndirected;
             }
             else
             {
                 new MatrixShow(adjacenceListDirected).Show();
             }
+            win.Show();
         }
 
         private void ShowResultGraph(object sender, RoutedEventArgs e)

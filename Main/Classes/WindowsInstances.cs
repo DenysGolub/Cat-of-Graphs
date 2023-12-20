@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Xceed.Wpf.Toolkit.PropertyGrid;
 
 namespace Main.Classes
 {
@@ -79,7 +80,41 @@ namespace Main.Classes
             return Application.Current.Windows.OfType<OperationResult>().SingleOrDefault();
         }
 
+        static public bool MatrixWindowExist(Window wnd, out int win_index)
+        {
+            try
+            {
+                for (int i = 0; i < wnd.OwnedWindows.Count; i++)
+                {
+                    if (wnd.OwnedWindows[i] is MatrixShow)
+                    {
+                        win_index = i;
+                        return true;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+            win_index = -1;
+            return false;
+
+        }
+        static public MatrixShow MatrixWindowInst(Window wnd)
+        {
+
+            if(!MatrixWindowExist(wnd, out int index))
+            {
+                return new MatrixShow();
+            }
+
+            return (MatrixShow)wnd.OwnedWindows[index];
+           
+        }
+
     }
+        
 
     static class SetWindowInfo
     {
