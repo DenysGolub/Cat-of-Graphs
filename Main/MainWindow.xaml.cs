@@ -20,6 +20,7 @@ using System;
 using Xceed.Wpf.AvalonDock.Layout;
 using System.DirectoryServices.ActiveDirectory;
 using System.Xml.Linq;
+using System.Windows.Interop;
 
 namespace Main
 {
@@ -98,23 +99,91 @@ namespace Main
             InitializeComponent();
             graphType = GraphType.Undirected;
 
+            this.Loaded += (s, e) =>
+            {
+                MainWindow.WindowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
+                HwndSource.FromHwnd(MainWindow.WindowHandle)?.AddHook(new HwndSourceHook(HandleMessages));
+            };
 
         }
 
 
+        public static IntPtr WindowHandle { get; private set; }
+
+        internal static void HandleParameter(string[] args)
+        {
+            if (args.Length == 1)
+            {
+                string p = args[0];
+                if (Application.Current?.MainWindow is MainWindow mainWindow)
+                {
+                    //mainWindow.LoadFromFile(p);
+                }
+            }
+            if (args.Length > 1)
+            {
+                string p = string.Join(" ", args);
+                if (Application.Current?.MainWindow is MainWindow mainWindow)
+                {
+                    //mainWindow.LoadFromFile(p);
+                }
+            }
+            ///ДОРОБИТИ ФАЙЛОВУ СИСТЕМУ. ПЕРЕВОД ЗА МОЖЛИВОСТІ ТЕЖ
+        }
+
+        private static IntPtr HandleMessages
+        (IntPtr handle, int message, IntPtr wParameter, IntPtr lParameter, ref Boolean handled)
+        {
+            var data = UnsafeNative.GetMessage(message, lParameter);
+            if (data != null)
+            {
+                if (Application.Current.MainWindow == null)
+                    return IntPtr.Zero;
+
+                if (Application.Current.MainWindow.WindowState == System.Windows.WindowState.Minimized)
+                {
+                    Application.Current.MainWindow.WindowState = System.Windows.WindowState.Maximized;
+                }
+
+                UnsafeNative.SetForegroundWindow(new WindowInteropHelper
+                                                (Application.Current.MainWindow).Handle);
+
+                var args = data.Split(' ');
+                HandleParameter(args);
+                handled = true;
+            }
+
+            return IntPtr.Zero;
+        }
+
 
         private void IncMatrixWindow_Click(object sender, RoutedEventArgs e)
         {
-            MatrixShow win = WindowsInstances.MatrixWindowInst(this);
-            win.Owner = this;
+            IncidenceMatrix win = WindowsInstances.MatrixIncidenceWindowInst(this);
+
             if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
             {
-                new MatrixShow(adjacenceListUndirected, DrawingCanvas_Undirected, GraphType.Undirected).Show();
+                win = new IncidenceMatrix(adjacenceListUndirected, DrawingCanvas_Undirected, GraphType.Undirected);
+
+                //win.Matrix = adjacenceListUndirected;
+                win.TypeGraph = GraphType.Undirected;
+
             }
             else
             {
-                new MatrixShow(adjacenceListDirected, DrawingCanvas_Directed, GraphType.Directed).Show();
+                win = new IncidenceMatrix(adjacenceListDirected, DrawingCanvas_Directed, GraphType.Directed);
+
+                //win.Matrix = adjacenceListDirected;
+                win.TypeGraph = GraphType.Directed;
+
             }
+            win.AddNodeDelegate += AddNodeToCanvas;
+            win.DeleteNodeDelegate += DeleteNodeCanvas;
+            win.AddEdgeDelegate += AddEdgeToCanvas;
+            win.DeleteEdgeDelegate += DeleteEdgeCanvas;
+            win.Owner = this;
+
+            win.Show();
         }
 
         private void AdjMatrixWindow_Click(object sender, RoutedEventArgs e)

@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ApplicationDefinition Remove="App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Resources\MenuIcons\cartesian.png" />
     <None Remove="Resources\MenuIcons\Graph\add.png" />
     <None Remove="Resources\MenuIcons\Graph\color.png" />
@@ -29,6 +33,12 @@
   <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.1" />
     <PackageReference Include="Gu.Wpf.DataGrid2D" Version="0.2.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

@@ -1,14 +1,12 @@
 ﻿using Gu.Wpf.DataGrid2D;
 using Main.Classes;
 using Main.Enumerators;
-using Main.Interfaces;
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,22 +16,18 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace Main.Windows
 {
-    public delegate void AddNode();
-    public delegate void DelNode(int node, HashSet<string> lines);
-
-    public delegate void Edge(string x, string y);
-    public delegate void DelEdge(string x, string y);
-    public delegate void UpdateMatrix();
-
+   
 
     /// <summary>
-    /// Interaction logic for MatrixShow.xaml
+    /// Interaction logic for IncidenceMatrix.xaml
     /// </summary>
-    public partial class MatrixShow : Window
+    public partial class IncidenceMatrix : Window
     {
+
         public event AddNode AddNodeDelegate;
         public event Edge AddEdgeDelegate;
 
@@ -42,13 +36,24 @@ namespace Main.Windows
 
 
         public event UpdateMatrix Update;
+        private NamesUpdate update = new NamesUpdate();
+        Canvas canv;
 
         AdjacenceList matrix_array;
         GraphType type;
-
-        private NamesUpdate update = new NamesUpdate();
         public GraphType TypeGraph { get { return type; } set { type = value; } }
-       
+
+        public Canvas Canvas
+        {
+            get
+            {
+                return canv;
+            }
+            set
+            {
+                canv = value;
+            }
+        }
         public AdjacenceList Matrix
         {
             get
@@ -57,37 +62,22 @@ namespace Main.Windows
             }
             set
             {
-                matrix_array = value;
-                matrix.SetArray2D(matrix_array.ToAdjacenceMatrix());
+                matrix.SetArray2D(matrix_array.ToIncidenceMatrix(type, ref canv, out List<string> lines));
                 matrix.SetRowHeadersSource(matrix_array.GetList.Keys.ToArray());
-                matrix.SetColumnHeadersSource(matrix_array.GetList.Keys.ToArray());
+                matrix.SetColumnHeadersSource(lines);
             }
         }
-        public MatrixShow() 
+
+        public IncidenceMatrix()
         {
-            InitializeComponent();
-            NodeAdd.AddHandler(MenuItem.ClickEvent, new RoutedEventHandler(UpdateMatrix));
-            NodeDel.AddHandler(MenuItem.ClickEvent, new RoutedEventHandler(UpdateMatrix));
 
         }
 
-        public MatrixShow(AdjacenceList list)
-        {
-            InitializeComponent();
-            //var array = list.ToAdjacenceMatrix();
-           
-
-        }
-
-        public MatrixShow(GraphType type)
-        {
-            this.type = type;
-        }
-
-        public MatrixShow(AdjacenceList list, Canvas c, GraphType g_type)
+        public IncidenceMatrix(AdjacenceList list, Canvas c, GraphType g_type)
         {
             InitializeComponent();
             var array = list.ToIncidenceMatrix(g_type, ref c, out List<string> lines);
+            matrix_array = list;
             matrix.SetArray2D(array);
 
 
@@ -97,48 +87,17 @@ namespace Main.Windows
             matrix.SetColumnHeadersSource(lines);
             type = g_type;
             Title = "Матриця інцидентності";
+            NodeAdd.AddHandler(MenuItem.ClickEvent, new RoutedEventHandler(UpdateMatrix));
+            NodeDel.AddHandler(MenuItem.ClickEvent, new RoutedEventHandler(UpdateMatrix));
+            EdgeAdd.AddHandler(MenuItem.ClickEvent, new RoutedEventHandler(UpdateMatrix));
+            EdgeDel.AddHandler(MenuItem.ClickEvent, new RoutedEventHandler(UpdateMatrix));
+
+
+
+            canv = c;
+
         }
 
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-        }
-
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
-        
-        private void matrix_ValueInCellChanged(object sender, DataGridCellEditEndingEventArgs e)
-        {
-            
-
-            DataGridColumn col1 = e.Column;
-            DataGridRow row1 = e.Row;
-            if (((TextBox)e.EditingElement).Text == "1")
-            {
-
-                /*            var b = new MatrixChangesControl();
-                            b.Change(col1, row1, this);*/
-
-
-
-                if (AddEdgeDelegate != null)
-                {
-                    AddEdgeDelegate(e.Row.Header.ToString(), e.Column.Header.ToString());
-                }
-            }
-            else if (((TextBox)e.EditingElement).Text == "0")
-            {
-                if (DeleteEdgeDelegate != null)
-                {
-                    DeleteEdgeDelegate(e.Row.Header.ToString(), e.Column.Header.ToString());
-                }
-            }
-        }
-
-        
         private void AddNode_Click(object sender, RoutedEventArgs e)
         {
             matrix_array.AddNode(matrix_array.CountNodes + 1);
@@ -149,33 +108,35 @@ namespace Main.Windows
             }
         }
 
+
         private void UpdateMatrix(object sender, RoutedEventArgs e)
         {
-            matrix.SetArray2D(matrix_array.ToAdjacenceMatrix());
+            matrix.SetArray2D(matrix_array.ToIncidenceMatrix(type, ref canv, out List<string>lines));
             matrix.SetRowHeadersSource(matrix_array.GetList.Keys.ToArray());
-            matrix.SetColumnHeadersSource(matrix_array.GetList.Keys.ToArray());
+            matrix.SetColumnHeadersSource(lines);
 
         }
+
         public void UpdateMatrix()
         {
             try
             {
-                matrix.SetArray2D(matrix_array.ToAdjacenceMatrix());
+                matrix.SetArray2D(matrix_array.ToIncidenceMatrix(type, ref canv, out List<string> lines));
                 matrix.SetRowHeadersSource(matrix_array.GetList.Keys.ToArray());
-                matrix.SetColumnHeadersSource(matrix_array.GetList.Keys.ToArray());
+                matrix.SetColumnHeadersSource(lines);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
         }
-
         private void DeleteNode_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 var canv = type == GraphType.Undirected ? WindowsInstances.MainWinInst().DrawingCanvas_Undirected : WindowsInstances.MainWinInst().DrawingCanvas_Directed;
-                var drv = matrix.CurrentCell.Column.Header;
+                var drv = matrix.Items.IndexOf(matrix.CurrentItem)+1;
+
                 var lines = DataFromGraph.GetConnectedEdges(ref canv, matrix_array, int.Parse(drv.ToString()), type);
                 matrix_array.RemoveNode(int.Parse(drv.ToString()));
                 update.UpdateNodes(matrix_array, int.Parse(drv.ToString()));
@@ -185,9 +146,36 @@ namespace Main.Windows
                     DeleteNodeDelegate(int.Parse(drv.ToString()), lines);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
+                
+            }
+        }
 
+        private void AddEdge_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new InputBox();
+            if (dialog.ShowDialog() == true)
+            {
+                Match match = Regex.Match(dialog.ResponseText, @"(\d{1,}) (\d{1,})");
+                if(match.Success)
+                {
+                    if (AddEdgeDelegate != null)
+                    {
+                        AddEdgeDelegate(match.Groups[1].Value, match.Groups[2].Value);
+                    }
+                }
+            }
+        }
+
+        private void DeleteEdge_Click(object sender, RoutedEventArgs e)
+        {
+            var drv = matrix.CurrentCell.Column.Header.ToString();
+
+            drv.EdgesNames(out int f_node, out int s_node);
+            if (DeleteEdgeDelegate != null)
+            {
+                DeleteEdgeDelegate(f_node.ToString(), s_node.ToString());
             }
         }
     }

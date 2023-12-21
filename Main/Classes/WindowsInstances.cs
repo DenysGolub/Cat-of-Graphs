@@ -15,7 +15,6 @@ namespace Main.Classes
         static MainWindow _mainwin= Application.Current.Windows.OfType<MainWindow>().SingleOrDefault();
         static SecondGraph _sgraph;
         static OperationResult _resgraph;
-        static MatrixShow _matrixwin;
         public static MainWindow MainWinInst()
         {
             return _mainwin;
@@ -113,14 +112,54 @@ namespace Main.Classes
            
         }
 
+
+        static public bool MatrixIncidenceWindowExist(Window wnd, out int win_index)
+        {
+            try
+            {
+                for (int i = 0; i < wnd.OwnedWindows.Count; i++)
+                {
+                    if (wnd.OwnedWindows[i] is IncidenceMatrix)
+                    {
+                        win_index = i;
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            win_index = -1;
+            return false;
+
+        }
+        static public IncidenceMatrix MatrixIncidenceWindowInst(Window wnd)
+        {
+
+            if (!MatrixIncidenceWindowExist(wnd, out int index))
+            {
+                return new IncidenceMatrix();
+            }
+
+            return (IncidenceMatrix)wnd.OwnedWindows[index];
+
+        }
+
     }
-        
+
+
 
     static class SetWindowInfo
     {
-       /* public static OperationResult SetCurrentOperation(OperationResult win, CurrentGraphOperation oper)
-        {
+        /* public static OperationResult SetCurrentOperation(OperationResult win, CurrentGraphOperation oper)
+         {
 
-        }*/
+         }*/
     }
+
 }
+
+
+    
+

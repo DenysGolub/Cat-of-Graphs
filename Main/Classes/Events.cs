@@ -269,6 +269,7 @@ namespace Main.Classes
                 public void PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
                 {
                     MatrixShow win = WindowsInstances.MatrixWindowInst(WindowsInstances.MainWinInst());
+                    IncidenceMatrix inc_win = WindowsInstances.MatrixIncidenceWindowInst(WindowsInstances.MainWinInst());
 
                     var mouseWasDownOn = e.Source as FrameworkElement;
 
@@ -465,6 +466,11 @@ namespace Main.Classes
                     {
                         win.UpdateMatrix();
                     }
+
+                    if (inc_win.Matrix != null)
+                    {
+                        inc_win.UpdateMatrix();
+                    }
                 }
 
                 public void PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -574,6 +580,7 @@ namespace Main.Classes
                 {
                     MatrixShow win = WindowsInstances.MatrixWindowInst(WindowsInstances.MainWinInst());
 
+                    IncidenceMatrix inc_win = WindowsInstances.MatrixIncidenceWindowInst(WindowsInstances.MainWinInst());
 
                     var mouseWasDownOn = e.Source as FrameworkElement;
 
@@ -786,6 +793,10 @@ namespace Main.Classes
                     if (win.Matrix != null)
                     {
                         win.UpdateMatrix();
+                    }
+                    if (inc_win.Matrix != null)
+                    {
+                        inc_win.UpdateMatrix();
                     }
                 }
 
