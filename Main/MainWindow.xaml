@@ -12,7 +12,11 @@
     <Grid>
         <DockPanel Background="Transparent" LastChildFill="False">
             <Menu Background="Transparent" DockPanel.Dock="Top">
-                <MenuItem Header="Файл"></MenuItem>
+                <MenuItem Header="Файл">
+                    <MenuItem Header="Новий" Click="NewFile_Click"></MenuItem>
+                    <MenuItem Header="Відкрити" Click="OpenFile_Click"></MenuItem>
+                    <MenuItem Header="Зберегти як" Click="SaveFile_Click"></MenuItem>
+                </MenuItem>
                 <MenuItem Header="Матриця">
                     <MenuItem Click="AdjMatrixWindow_Click" Header="суміжності"></MenuItem>
                     <MenuItem Click="IncMatrixWindow_Click" Header="інцидентності"></MenuItem>

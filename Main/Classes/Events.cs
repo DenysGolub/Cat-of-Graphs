@@ -62,11 +62,18 @@ namespace Main.Classes
         public void ChangeToUndirectedSecond()
         {
             OnSomethingChanged(new MyEventArgs("ChangeToUndirectedGraph"));
+            MainWindow wnd = (MainWindow)Application.Current.MainWindow;
+
+           
         }
         public void ChangeToDirectedSecond()
         {
             OnSomethingChanged(new MyEventArgs("ChangeToDirectedGraph"));
+
+            MainWindow wnd = (MainWindow)Application.Current.MainWindow;
+
         }
+            
         protected virtual void OnSomethingChanged(MyEventArgs e)
         {
             SomethingChanged?.Invoke(this, e);
@@ -87,7 +94,7 @@ namespace Main.Classes
             public void SubscribeToChangesInSecondGraphs(Events wnd)
             {
                 wnd.SomethingChanged += HandleChangedInSecondGraph;
-            }
+            } 
 
             private void HandleSomethingChanged(object sender, MyEventArgs e)
             {
@@ -160,10 +167,12 @@ namespace Main.Classes
 
                     if(wnd.DrawingCanvas_Directed.Visibility == Visibility.Visible)
                     {
+                        wnd.ColorUndirected.Visibility = Visibility.Collapsed;
                         wnd.ColorDirected.Visibility = Visibility.Visible;
                     }
                     else
                     {
+                        wnd.ColorDirected.Visibility = Visibility.Collapsed;
                         wnd.ColorUndirected.Visibility = Visibility.Visible;
                     }
                 }
@@ -231,6 +240,8 @@ namespace Main.Classes
                 }
 
 
+
+
             }
 
 
@@ -276,7 +287,7 @@ namespace Main.Classes
                     string elementName = mouseWasDownOn.Name;
 
 
-                    if (color == true && (e.OriginalSource is Ellipse || e.OriginalSource is Line))
+                    if (color == true && (e.OriginalSource is Ellipse || e.OriginalSource is Shape))
                     {
                         if (e.Source is Ellipse)
                         {
@@ -288,14 +299,15 @@ namespace Main.Classes
                                 elem.Fill = new SolidColorBrush(ColorPicker.SelectedColor.Value);
                             }
                         }
-                        else if (e.Source is Line)
+                        else if (e.Source is Shape)
                         {
-                            var elem = e.Source as Line;
+                            var elem = e.Source as Shape;
 
                             if (ColorPicker.SelectedColor.HasValue)
                             {
                                 // Set the fill color of the ellipse to the selected color from the ColorPicker
                                 elem.Stroke = new SolidColorBrush(ColorPicker.SelectedColor.Value);
+                                elem.Fill = new SolidColorBrush(ColorPicker.SelectedColor.Value);
                             }
                         }
                     }

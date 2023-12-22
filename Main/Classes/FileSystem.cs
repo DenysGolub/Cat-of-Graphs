@@ -1,15 +1,56 @@
-﻿using System;
+﻿using Main.Enumerators;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Markup;
 
 namespace Main.Classes
 {
-    class FileSystem
+    static class FileSystem
     {
+        static public void NullData(ref Canvas canv, ref AdjacenceList list)
+        {
+            var @new = new AdjacenceList(list.Type).GetList;
+            list.GetList = @new;
+            canv.Children.Clear();
+        }
+
+        static public void Save(Canvas canv, GraphType type)
+        {
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+            dlg.FileName = "GraphCanvas"; // Default file name
+            if (type == GraphType.Undirected)
+            {
+                dlg.DefaultExt = ".cogu"; // Default file extension
+                dlg.Filter = "Файли неорієнтованого графа (*.cogu)|*.cogu|All files (*.*)|*.*";
+
+            }
+            else if (type == GraphType.Directed)
+            {
+                dlg.DefaultExt = ".cogd"; // Default file extension
+                dlg.Filter = "Файли орієнтованого графа (*.cogd)|*.cogd|All files (*.*)|*.*";
+
+            }
+            // Show save file dialog box
+            Nullable<bool> result = dlg.ShowDialog();
+            string filename = dlg.FileName;
+
+            // Process save file dialog box results
+            if (result == true)
+            {
+                FileStream fs = File.Open(dlg.FileName, FileMode.Create);
+                XamlWriter.Save(canv, fs);
+                fs.Close();
+            }
+        }
+
     }
 
     internal static class UnsafeNative

@@ -31,7 +31,7 @@ namespace Main.Classes
 
         public int CountNodes => adjacence_list.Count;
 
-        
+        public GraphType Type => type;
         public Dictionary<int, HashSet<int>> GetList { get { return adjacence_list; } set { adjacence_list = value; } }
         public void AddEdge(int first_node, int second_node)
         {

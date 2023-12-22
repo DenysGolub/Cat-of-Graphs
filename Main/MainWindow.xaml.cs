@@ -21,6 +21,9 @@ using Xceed.Wpf.AvalonDock.Layout;
 using System.DirectoryServices.ActiveDirectory;
 using System.Xml.Linq;
 using System.Windows.Interop;
+using System.IO;
+using System.Windows.Markup;
+using Microsoft.Win32;
 
 namespace Main
 {
@@ -117,7 +120,7 @@ namespace Main
                 string p = args[0];
                 if (Application.Current?.MainWindow is MainWindow mainWindow)
                 {
-                    //mainWindow.LoadFromFile(p);
+                    mainWindow.Load(p);
                 }
             }
             if (args.Length > 1)
@@ -125,7 +128,7 @@ namespace Main
                 string p = string.Join(" ", args);
                 if (Application.Current?.MainWindow is MainWindow mainWindow)
                 {
-                    //mainWindow.LoadFromFile(p);
+                    mainWindow.Load(p);
                 }
             }
             ///ДОРОБИТИ ФАЙЛОВУ СИСТЕМУ. ПЕРЕВОД ЗА МОЖЛИВОСТІ ТЕЖ
@@ -447,6 +450,11 @@ namespace Main
             UndGraph_Button.Background = colors.DisableColor;
             DirGraph_Button.Background = colors.ActiveColor;
             graphType = GraphType.Directed;
+            if (ColorUndirected.Visibility == Visibility.Visible)
+            {
+                ColorUndirected.Visibility = Visibility.Collapsed;
+                ColorDirected.Visibility = Visibility.Visible;
+            }
             ChangeModeInSecondGraph();
         }
 
@@ -459,10 +467,77 @@ namespace Main
             UndGraph_Button.Background = colors.ActiveColor;
             DirGraph_Button.Background = colors.DisableColor;
             graphType = GraphType.Undirected;
+
+            if (ColorDirected.Visibility == Visibility.Visible)
+            {
+                ColorDirected.Visibility = Visibility.Collapsed;
+                ColorUndirected.Visibility = Visibility.Visible;
+            }
             ChangeModeInSecondGraph();
         }
 
+        private void Load(string path)
+        {
+            Canvas canv = null;
+            AdjacenceList list = null;
+            if (path.Contains(".cogu"))
+            {
 
+                DrawingCanvas_Undirected.Visibility = Visibility.Visible;
+                DrawingCanvas_Directed.Visibility = Visibility.Collapsed;
+
+
+                UndGraph_Button.Background = colors.ActiveColor;
+                DirGraph_Button.Background = colors.DisableColor;
+                canv = DrawingCanvas_Undirected;
+                list = adjacenceListUndirected;
+            }
+            else if (path.Contains(".cogd"))
+            {
+                DrawingCanvas_Undirected.Visibility = Visibility.Collapsed;
+                DrawingCanvas_Directed.Visibility = Visibility.Visible;
+
+
+                UndGraph_Button.Background = colors.DisableColor;
+                DirGraph_Button.Background = colors.ActiveColor;
+                canv = DrawingCanvas_Directed;
+                list = adjacenceListDirected;
+            }
+            FileSystem.NullData(ref canv, ref list);
+
+            FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read);
+
+            Canvas savedCanvas = XamlReader.Load(fs) as Canvas;
+            fs.Close();
+
+            while (savedCanvas.Children.Count > 0)
+            {
+                UIElement obj = savedCanvas.Children[0];
+                savedCanvas.Children.Remove(obj);
+
+                if (obj is Line l)
+                {
+                    l.Name.EdgesNames(out int f_node, out int s_node);
+                    list.AddEdge(f_node, s_node);
+                   
+                }
+                else if(obj is Shape sh && !(obj is Ellipse))
+                {
+                    sh.Name.EdgesNames(out int f_node, out int s_node);
+                    list.AddEdge(f_node, s_node);
+                }
+                else if (obj is Ellipse elip)
+                {
+                    list.AddNode(elip.Name.SingleNodeName());
+                }
+               
+
+
+                canv.Children.Add(obj); // Add to canvas
+            }
+
+            canv.InvalidateVisual();
+        }
         private void ChangeModeInSecondGraph()
         {
             var s_graph = Application.Current.Windows.OfType<SecondGraph>().FirstOrDefault();
@@ -484,28 +559,32 @@ namespace Main
         }
 
         
-        private Dictionary<int, HashSet<int>> CurrentVisibleGraphData(out Canvas canvas, out GraphType g_type)
+        private GraphType CurrentVisibleGraphData()
         {
             if(DrawingCanvas_Undirected.Visibility == Visibility.Visible)
             {
-                canvas = DrawingCanvas_Undirected;
-                g_type = GraphType.Undirected;
-                return adjacenceListUndirected.GetList;
+                return GraphType.Undirected;
             }
-            else
-            {
-                canvas = DrawingCanvas_Directed;
-                g_type= GraphType.Directed;
-                return adjacenceListDirected.GetList;
-            }
+            return GraphType.Directed;
         }
 
-        
+        private AdjacenceList CurrentVisibleGraphData(out Canvas canv)
+        {
+            if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
+            {
+                canv = DrawingCanvas_Undirected;
+                return adjacenceListUndirected;
+            }
+
+            canv = DrawingCanvas_Directed;
+            return adjacenceListDirected;
+        }
+
+
+
         private void Addition_Click(object sender, RoutedEventArgs e)
         {
-            var adj_list = CurrentVisibleGraphData(out Canvas canvas, out GraphType g_type);
-
-            SetCanvasForAddition(g_type);
+            SetCanvasForAddition(CurrentVisibleGraphData());
         }
 
         private void SetCanvasForAddition(GraphType g_type)
@@ -526,9 +605,16 @@ namespace Main
                 adjacenceListDirected.GetList = adjacenceList.GetList; 
             }
             MatrixShow win = WindowsInstances.MatrixWindowInst(this);
+            IncidenceMatrix inc_win = WindowsInstances.MatrixIncidenceWindowInst(this);
+
             if (win.Matrix != null)
             {
                 win.UpdateMatrix();
+            }
+
+            if (inc_win.Matrix != null)
+            {
+                inc_win.UpdateMatrix();
             }
 
         }
@@ -578,6 +664,42 @@ namespace Main
             window.Type = graphType;
             window.Owner = this;
             window.Show();
+        }
+
+
+
+        private void NewFile_Click(object sender, RoutedEventArgs e)
+        {
+            AdjacenceList list = CurrentVisibleGraphData(out Canvas canvas);
+            FileSystem.NullData(ref canvas, ref list);
+
+            /*if (CurrentVisibleGraphData() == GraphType.Undirected)
+            {
+                adjacenceListUndirected.GetList = list.GetList;
+            }
+            else
+            {
+                adjacenceListDirected.GetList = list.GetList;
+            }*/
+        }
+
+        private void OpenFile_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Файли графа (*.cogu; *.cogd)|*.cogu; *.cogd|Всі файли (*.*)|*.*"; // Filter files by extension
+
+            if(openFileDialog.ShowDialog() == true)
+            {
+                Load(openFileDialog.FileName);
+            }
+            
+
+        }
+
+        private void SaveFile_Click(object sender, RoutedEventArgs e)
+        {
+            CurrentVisibleGraphData(out Canvas canvas);
+            FileSystem.Save(canvas, CurrentVisibleGraphData());
         }
     }
 }

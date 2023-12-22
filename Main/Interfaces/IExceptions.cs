@@ -14,5 +14,6 @@ namespace Main.Interfaces
     {
         void MatrixEmpty();
         void WrongMatrixValue();
+
     }
 }
