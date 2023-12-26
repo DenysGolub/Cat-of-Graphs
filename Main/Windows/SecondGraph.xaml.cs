@@ -1,7 +1,10 @@
 ﻿using Main.Classes;
 using Main.Enumerators;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
@@ -77,6 +81,9 @@ namespace Main.Windows
             InitializeComponent();
             Closed += (sender, e) => WindowsInstances.WindowClosed(sender, e);
 
+            undirected_events.ClassOwner = this;
+            directed_events.ClassOwner = this;
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -106,72 +113,99 @@ namespace Main.Windows
 
         private void IncMatrixWindow_Click(object sender, RoutedEventArgs e)
         {
-            if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
-            {
-                new MatrixShow(adjacenceListUndirected, DrawingCanvas_Undirected, GraphType.Undirected).Show();
-            }
-            else
-            {
-
-                new MatrixShow(adjacenceListDirected, DrawingCanvas_Directed, GraphType.Directed).Show();
-            }
+            MatrixController.Incidence(this);
         }
 
         private void AdjMatrixWindow_Click(object sender, RoutedEventArgs e)
         {
-            MatrixShow win = WindowsInstances.MatrixWindowInst(this);
-            win.Owner = this;
-            if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
-            {
-                win.Matrix = adjacenceListUndirected;
-            }
-            else
-            {
-                new MatrixShow(adjacenceListDirected).Show();
-            }
-            win.Show();
+            MatrixController.Adjacence(this);
         }
 
         private void ShowResultGraph(object sender, RoutedEventArgs e)
         {
-            MainWindow wnd = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
+            MainWindow wnd = WindowsInstances.MainWindowInst;
 
-            Canvas result_graph=null;
-            OperationResult window=WindowsInstances.ResultWindowInst();
+            DataFromGraph.CompareTwoCanvas(wnd.GraphAdjacenceList, SecondGraphAdjacenceList, wnd.GraphCanvas, SecondGraphCanvas, out Canvas bigger, out Canvas smaller);
 
-           
+            SetWindowInfo.ResultWindow(CurrentOperation, Type, bigger, smaller, wnd.GraphAdjacenceList, SecondGraphAdjacenceList);
+          
+        }
 
-            if (CurrentOperation==CurrentGraphOperation.Unity)
+
+
+        private void NewFile_Click(object sender, RoutedEventArgs e)
+        {
+            AdjacenceList list = CurrentVisibleGraphData(out Canvas canvas);
+            FileSystem.NullData(ref canvas, ref list);
+        }
+
+        private void Load(string path)
+        {
+            Canvas canv = null;
+            AdjacenceList list = null;
+            if (path.Contains(".cogu") && Type == GraphType.Undirected)
             {
-                Canvas bigger_canvas = wnd.GraphAdjacenceList.GetList.Keys.Count > SecondGraphAdjacenceList.GetList.Keys.Count ? wnd.GraphCanvas : SecondGraphCanvas;
-                window.Title = "Результат об'єднання графів";
-
-                result_graph = graph_operations.Unity(bigger_canvas, wnd.GraphAdjacenceList.GetList, SecondGraphAdjacenceList.GetList, Type, out AdjacenceList unity);
+                DrawingCanvas_Undirected.Visibility = Visibility.Visible;
+                DrawingCanvas_Directed.Visibility = Visibility.Collapsed;
+                canv = DrawingCanvas_Undirected;
+                list = adjacenceListUndirected;
             }
-            else if(CurrentOperation==CurrentGraphOperation.Intersection)
+            else if (path.Contains(".cogd") && Type == GraphType.Directed)
             {
-                Canvas smaller_canvas = wnd.GraphAdjacenceList.GetList.Keys.Count < SecondGraphAdjacenceList.GetList.Keys.Count ? wnd.GraphCanvas : SecondGraphCanvas;
-                window.Title = "Результат перетину графів";
-
-                result_graph = graph_operations.Intersection(smaller_canvas, wnd.GraphAdjacenceList.GetList, SecondGraphAdjacenceList.GetList, Type, out AdjacenceList intersection);
+                DrawingCanvas_Undirected.Visibility = Visibility.Collapsed;
+                DrawingCanvas_Directed.Visibility = Visibility.Visible;
+                canv = DrawingCanvas_Directed;
+                list = adjacenceListDirected;
             }
-            else if(CurrentOperation==CurrentGraphOperation.CircleSum)
+            else
             {
-                Canvas bigger_canvas = wnd.GraphAdjacenceList.GetList.Keys.Count > SecondGraphAdjacenceList.GetList.Keys.Count ? wnd.GraphCanvas : SecondGraphCanvas;
-                window.Title = "Результат кільцевої суми графів";
-
-                result_graph = graph_operations.CircleSum(bigger_canvas, wnd.GraphAdjacenceList.GetList, SecondGraphAdjacenceList.GetList, Type, out AdjacenceList circlesum);
+                return;
             }
-            else if (CurrentOperation == CurrentGraphOperation.CartesianProduct)
+
+            FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read);
+
+            Canvas savedCanvas = XamlReader.Load(fs) as Canvas;
+            fs.Close();
+
+            FileSystem.Load(ref canv, savedCanvas, ref list);
+        }
+
+        private void OpenFile_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Файли графа (*.cogu; *.cogd)|*.cogu; *.cogd|Всі файли (*.*)|*.*"; // Filter files by extension
+
+            if (openFileDialog.ShowDialog() == true)
             {
-                window.Title = "Результат декартового добутку графів";
+                Load(openFileDialog.FileName);
+            }
+        }
 
-                result_graph = graph_operations.CartesianProduct(wnd.GraphAdjacenceList.GetList, SecondGraphAdjacenceList.GetList, Type);
+        private void SaveFile_Click(object sender, RoutedEventArgs e)
+        {
+            CurrentVisibleGraphData(out Canvas canvas);
+            FileSystem.Save(canvas, CurrentVisibleGraphData());
+        }
+
+        private GraphType CurrentVisibleGraphData()
+        {
+            if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
+            {
+                return GraphType.Undirected;
+            }
+            return GraphType.Directed;
+        }
+
+        private AdjacenceList CurrentVisibleGraphData(out Canvas canv)
+        {
+            if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
+            {
+                canv = DrawingCanvas_Undirected;
+                return adjacenceListUndirected;
             }
 
-            window.SetCanvas(result_graph);
-            window.Owner = this;
-            window.Show();
+            canv = DrawingCanvas_Directed;
+            return adjacenceListDirected;
         }
     }
 }

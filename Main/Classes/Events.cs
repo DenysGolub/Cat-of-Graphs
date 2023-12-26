@@ -268,6 +268,7 @@ namespace Main.Classes
 
             public class Directed : CanvasEvents, ICanvasEvents
             {
+                Window owner;  
                 Canvas canvas;
                 AdjacenceList _adjacenceList;
                 ColorPicker _colorpicker;
@@ -276,11 +277,14 @@ namespace Main.Classes
 
                 public AdjacenceList AdjacenceList { get => _adjacenceList; set => _adjacenceList = value; }
                 public ColorPicker ColorPicker { get => _colorpicker; set => _colorpicker = value; }
+                public Window ClassOwner { get => owner; set => owner = value; }
+
 
                 public void PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
                 {
-                    MatrixShow win = WindowsInstances.MatrixWindowInst(WindowsInstances.MainWinInst());
-                    IncidenceMatrix inc_win = WindowsInstances.MatrixIncidenceWindowInst(WindowsInstances.MainWinInst());
+                    AdjacenceMatrix win = WindowsInstances.AdjacenceMatrixWindowInst(ClassOwner);
+
+                    IncidenceMatrix inc_win = WindowsInstances.MatrixIncidenceWindowInst(ClassOwner);
 
                     var mouseWasDownOn = e.Source as FrameworkElement;
 
@@ -578,6 +582,7 @@ namespace Main.Classes
 
             public class Undirected : CanvasEvents, ICanvasEvents
             {
+                Window owner;
                 Canvas canvas;
                 AdjacenceList _adjacenceList;
                 ColorPicker _colorpicker;
@@ -587,12 +592,12 @@ namespace Main.Classes
                 public AdjacenceList AdjacenceList { get => _adjacenceList; set => _adjacenceList=value; }
                 public ColorPicker ColorPicker { get => _colorpicker; set => _colorpicker = value; }
 
-
+                public Window ClassOwner {get => owner; set => owner = value; }
                 public void PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
                 {
-                    MatrixShow win = WindowsInstances.MatrixWindowInst(WindowsInstances.MainWinInst());
+                    AdjacenceMatrix win = WindowsInstances.AdjacenceMatrixWindowInst(ClassOwner);
 
-                    IncidenceMatrix inc_win = WindowsInstances.MatrixIncidenceWindowInst(WindowsInstances.MainWinInst());
+                    IncidenceMatrix inc_win = WindowsInstances.MatrixIncidenceWindowInst(ClassOwner);
 
                     var mouseWasDownOn = e.Source as FrameworkElement;
 

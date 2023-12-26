@@ -21,18 +21,19 @@ using System.Windows.Shapes;
 
 namespace Main.Windows
 {
-    public delegate void AddNode();
-    public delegate void DelNode(int node, HashSet<string> lines);
+    public delegate void AddNode(Window win);
 
-    public delegate void Edge(string x, string y);
-    public delegate void DelEdge(string x, string y);
+    public delegate void DelNode(Window win, int node, HashSet<string> lines);
+
+    public delegate void Edge(Window win, string x, string y);
+    public delegate void DelEdge(Window win, string x, string y);
     public delegate void UpdateMatrix();
 
 
     /// <summary>
     /// Interaction logic for MatrixShow.xaml
     /// </summary>
-    public partial class MatrixShow : Window
+    public partial class AdjacenceMatrix : Window
     {
         public event AddNode AddNodeDelegate;
         public event Edge AddEdgeDelegate;
@@ -41,7 +42,7 @@ namespace Main.Windows
         public event DelEdge DeleteEdgeDelegate;
 
 
-        public event UpdateMatrix Update;
+        //public event UpdateMatrix Update;
 
         AdjacenceList matrix_array;
         GraphType type;
@@ -63,15 +64,14 @@ namespace Main.Windows
                 matrix.SetColumnHeadersSource(matrix_array.GetList.Keys.ToArray());
             }
         }
-        public MatrixShow() 
+        public AdjacenceMatrix() 
         {
             InitializeComponent();
             NodeAdd.AddHandler(MenuItem.ClickEvent, new RoutedEventHandler(UpdateMatrix));
             NodeDel.AddHandler(MenuItem.ClickEvent, new RoutedEventHandler(UpdateMatrix));
-
         }
 
-        public MatrixShow(AdjacenceList list)
+        public AdjacenceMatrix(AdjacenceList list)
         {
             InitializeComponent();
             //var array = list.ToAdjacenceMatrix();
@@ -79,12 +79,7 @@ namespace Main.Windows
 
         }
 
-        public MatrixShow(GraphType type)
-        {
-            this.type = type;
-        }
-
-        public MatrixShow(AdjacenceList list, Canvas c, GraphType g_type)
+        public AdjacenceMatrix(AdjacenceList list, Canvas c, GraphType g_type)
         {
             InitializeComponent();
             var array = list.ToIncidenceMatrix(g_type, ref c, out List<string> lines);
@@ -96,7 +91,6 @@ namespace Main.Windows
 
             matrix.SetColumnHeadersSource(lines);
             type = g_type;
-            Title = "Матриця інцидентності";
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -105,35 +99,22 @@ namespace Main.Windows
             GC.WaitForPendingFinalizers();
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
-        
         private void matrix_ValueInCellChanged(object sender, DataGridCellEditEndingEventArgs e)
         {
-            
-
             DataGridColumn col1 = e.Column;
             DataGridRow row1 = e.Row;
             if (((TextBox)e.EditingElement).Text == "1")
             {
-
-                /*            var b = new MatrixChangesControl();
-                            b.Change(col1, row1, this);*/
-
-
-
                 if (AddEdgeDelegate != null)
                 {
-                    AddEdgeDelegate(e.Row.Header.ToString(), e.Column.Header.ToString());
+                    AddEdgeDelegate(this.Owner, e.Row.Header.ToString(), e.Column.Header.ToString());
                 }
             }
             else if (((TextBox)e.EditingElement).Text == "0")
             {
                 if (DeleteEdgeDelegate != null)
                 {
-                    DeleteEdgeDelegate(e.Row.Header.ToString(), e.Column.Header.ToString());
+                    DeleteEdgeDelegate(this.Owner, e.Row.Header.ToString(), e.Column.Header.ToString());
                 }
             }
         }
@@ -145,7 +126,7 @@ namespace Main.Windows
 
             if (AddNodeDelegate != null)
             {
-                AddNodeDelegate();
+                AddNodeDelegate(this.Owner);
             }
         }
 
@@ -174,7 +155,30 @@ namespace Main.Windows
         {
             try
             {
-                var canv = type == GraphType.Undirected ? WindowsInstances.MainWinInst().DrawingCanvas_Undirected : WindowsInstances.MainWinInst().DrawingCanvas_Directed;
+                Canvas canv=null;
+
+                if (this.Owner is MainWindow)
+                {
+                    if (type == GraphType.Undirected)
+                    {
+                        canv = WindowsInstances.MainWindowInst.DrawingCanvas_Undirected;
+                    }
+                    else
+                    {
+                        canv = WindowsInstances.MainWindowInst.DrawingCanvas_Directed;
+                    }
+                }
+                else if(this.Owner is SecondGraph)
+                {
+                    if (type == GraphType.Undirected)
+                    {
+                        canv = WindowsInstances.SecGraphInst.DrawingCanvas_Undirected;
+                    }
+                    else
+                    {
+                        canv = WindowsInstances.SecGraphInst.DrawingCanvas_Directed;
+                    }
+                }
                 var drv = matrix.CurrentCell.Column.Header;
                 var lines = DataFromGraph.GetConnectedEdges(ref canv, matrix_array, int.Parse(drv.ToString()), type);
                 matrix_array.RemoveNode(int.Parse(drv.ToString()));
@@ -182,7 +186,7 @@ namespace Main.Windows
 
                 if (DeleteNodeDelegate != null)
                 {
-                    DeleteNodeDelegate(int.Parse(drv.ToString()), lines);
+                    DeleteNodeDelegate(this.Owner, int.Parse(drv.ToString()), lines);
                 }
             }
             catch(Exception ex)

@@ -83,44 +83,54 @@ namespace Main.Classes
             sbyte[,] incidence_matrix = new sbyte[adjacence_list.Keys.Count, lineNames.Count];
             int count = 0;
 
-                    switch (type)
-                    {
-                        case GraphType.Directed:
-                            {
-                                foreach(string line in lineNames)
-                                {
-                                    line.EdgesNames(out int f_node, out int s_node);
+            switch (type)
+            {
+                case GraphType.Directed:
+                    break;
+                case GraphType.Undirected:
+                    break;
+                default:
+                    break;
+            }
 
-                                    if (f_node == s_node)
-                                    {
-                                        incidence_matrix[f_node - 1, count] = 2;
-                                    }
-                                    else
-                                    {
-                                        incidence_matrix[f_node - 1, count] = -1;
-                                        incidence_matrix[s_node - 1, count] = 1;
-                                    }
-                                    count++;
-                                }
+            switch (type)
+            {
+                case GraphType.Directed:
+                    {
+                        foreach (string line in lineNames)
+                        {
+                            line.EdgesNames(out int f_node, out int s_node);
+
+                            if (f_node == s_node)
+                            {
+                                incidence_matrix[f_node - 1, count] = 2;
+                            }
+                            else
+                            {
+                                incidence_matrix[f_node - 1, count] = -1;
+                                incidence_matrix[s_node - 1, count] = 1;
+                            }
+                            count++;
+                        }
                         break;
                     }
                 case GraphType.Undirected:
-                            {
-                                foreach (string line in lineNames)
-                                {
+                    {
+                        foreach (string line in lineNames)
+                        {
 
-                                    line.EdgesNames(out int f_node, out int s_node);
+                            line.EdgesNames(out int f_node, out int s_node);
 
-                                    incidence_matrix[f_node - 1, count] = 1;
-                                    incidence_matrix[s_node - 1, count] = 1;
-                                    count++;
-                                }
-                                break;
-                            }
-                        default:
-                            {
-                                break;
-                            }
+                            incidence_matrix[f_node - 1, count] = 1;
+                            incidence_matrix[s_node - 1, count] = 1;
+                            count++;
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
             }
             return incidence_matrix;
         }

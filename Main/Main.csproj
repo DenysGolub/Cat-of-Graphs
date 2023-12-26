@@ -31,6 +31,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="graph_cat.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.1" />
     <PackageReference Include="Gu.Wpf.DataGrid2D" Version="0.2.4" />
   </ItemGroup>
@@ -59,7 +63,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <SplashScreen Include="Resources\splash.jpg" />
+    <Resource Include="Resources\splash.jpg" />
   </ItemGroup>
 
 	<Target Name="RemoveSatelliteAssemblies" AfterTargets="ResolveAssemblyReferences">
@@ -70,5 +74,7 @@
 	
 	<PropertyGroup>
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+		<ApplicationIcon>graph_cat.ico</ApplicationIcon>
+		<AssemblyName>Cat of Graphs</AssemblyName>
 	</PropertyGroup>
 </Project>

@@ -1,7 +1,10 @@
 ﻿using Main.Classes;
+using Main.Windows;
 using System.Configuration;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Windows;
 
 namespace Main
@@ -19,6 +22,15 @@ namespace Main
         [STAThread]
         public static void Main(string[] args)
         {
+
+            System.Windows.SplashScreen splashScreen = new System.Windows.SplashScreen(@"Resources/splash.jpg");
+            
+            splashScreen.Show(true);
+            for (int i = 0; i < 150; i++)
+            {
+                Thread.Sleep(1);
+            }
+
             var proc = Process.GetCurrentProcess();
             var processName = proc.ProcessName.Replace(".vshost", "");
             var runningProcess = Process.GetProcesses()

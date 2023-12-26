@@ -191,7 +191,18 @@ namespace Main.Classes
             return new Point(0, 0);
 
         }
-
+        public static void CompareTwoCanvas(AdjacenceList list1, AdjacenceList list2, Canvas canvas1, Canvas canvas2, out Canvas bigger, out Canvas smaller)
+        {
+            bigger = null; smaller = null;
+            if(list1.CountNodes>=list2.CountNodes)
+            {
+                bigger = canvas1; smaller = canvas2; return;
+            }
+            else if(list1.CountNodes<list2.CountNodes)
+            {
+                bigger = canvas2; smaller = canvas1; return;
+            }
+        }
 
     }
 }

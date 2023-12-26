@@ -226,7 +226,7 @@ namespace Main.Classes
         }
     }
 
-    class GraphOperationsCanvas:GraphOperations
+    class GraphOperationsCanvas: GraphOperations
     {
         public Canvas Addition(Dictionary<int, HashSet<int>> dict, ref Canvas canvas, GraphType g_type, out AdjacenceList addition)
         {

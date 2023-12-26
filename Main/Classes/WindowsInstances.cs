@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 
 namespace Main.Classes
@@ -15,11 +16,13 @@ namespace Main.Classes
         static MainWindow _mainwin= Application.Current.Windows.OfType<MainWindow>().SingleOrDefault();
         static SecondGraph _sgraph;
         static OperationResult _resgraph;
-        public static MainWindow MainWinInst()
-        {
-            return _mainwin;
-        }
-        public static bool ResultWindowExist()
+
+        public static MainWindow MainWindowInst => _mainwin;
+
+        public static SecondGraph SecGraphInst => SecondGraphInst();
+        public static OperationResult ResGraphInst => ResultWindowInst();
+        
+        private static bool ResultWindowExist()
         {
             OperationResult instance = Application.Current.Windows.OfType<OperationResult>().SingleOrDefault();
             if (instance == null)
@@ -28,7 +31,7 @@ namespace Main.Classes
             }
             return true;
         }
-        public static bool SecondGraphExist()
+        private static bool SecondGraphExist()
         {
             //SecondGraph instance = Application.Current.Windows.OfType<SecondGraph>().SingleOrDefault();
             if (_sgraph == null)
@@ -38,13 +41,15 @@ namespace Main.Classes
             return true;
         }
 
-        public static SecondGraph SecondGraphInst()
+        private static SecondGraph SecondGraphInst()
         {
             if(!SecondGraphExist())
             {
-                return new SecondGraph();
+                _sgraph = new SecondGraph();
+                return _sgraph;
             }
-            return Application.Current.Windows.OfType<SecondGraph>().SingleOrDefault();
+            _sgraph = Application.Current.Windows.OfType<SecondGraph>().SingleOrDefault();
+            return _sgraph;
         }
 
 
@@ -74,18 +79,20 @@ namespace Main.Classes
         {
             if (!ResultWindowExist())
             {
-                return new OperationResult();
+                _resgraph = new OperationResult();
+                return _resgraph;
             }
-            return Application.Current.Windows.OfType<OperationResult>().SingleOrDefault();
+            _resgraph = Application.Current.Windows.OfType<OperationResult>().SingleOrDefault();
+            return _resgraph;
         }
 
-        static public bool MatrixWindowExist(Window wnd, out int win_index)
+        static public bool AdjacenceMatrixWindowExist(Window wnd, out int win_index)
         {
             try
             {
                 for (int i = 0; i < wnd.OwnedWindows.Count; i++)
                 {
-                    if (wnd.OwnedWindows[i] is MatrixShow)
+                    if (wnd.OwnedWindows[i] is AdjacenceMatrix)
                     {
                         win_index = i;
                         return true;
@@ -100,15 +107,15 @@ namespace Main.Classes
             return false;
 
         }
-        static public MatrixShow MatrixWindowInst(Window wnd)
+        static public AdjacenceMatrix AdjacenceMatrixWindowInst(Window wnd)
         {
 
-            if(!MatrixWindowExist(wnd, out int index))
+            if(!AdjacenceMatrixWindowExist(wnd, out int index))
             {
-                return new MatrixShow();
+                return new AdjacenceMatrix();
             }
 
-            return (MatrixShow)wnd.OwnedWindows[index];
+            return (AdjacenceMatrix)wnd.OwnedWindows[index];
            
         }
 
@@ -152,10 +159,67 @@ namespace Main.Classes
 
     static class SetWindowInfo
     {
-        /* public static OperationResult SetCurrentOperation(OperationResult win, CurrentGraphOperation oper)
-         {
+        public static void SecGraphWindow(CurrentGraphOperation oper, GraphType type)
+        {
+            SecondGraph graph = WindowsInstances.SecGraphInst;
+            graph.Type = type;
+            graph.Owner = WindowsInstances.MainWindowInst;
+            graph.CurrentOperation = oper;
+            switch (oper)
+            {
+                case CurrentGraphOperation.Unity:
+                    graph.Title = "Режим об'єднання графів";
+                    break;
+                case CurrentGraphOperation.CircleSum:
+                    graph.Title = "Режим кільцевої суми графів";
+                    break;
+                case CurrentGraphOperation.Intersection:
+                    graph.Title = "Режим перетину графів";
+                    break;
+                case CurrentGraphOperation.CartesianProduct:
+                    graph.Title = "Режим декартового добутку графів";
+                    break;
+                default:
+                    break;
+            }
+            graph.Show();
+        }
 
-         }*/
+        public static void ResultWindow(CurrentGraphOperation oper, GraphType type, Canvas bigger_canvas, Canvas smaller_canvas, AdjacenceList list1, AdjacenceList list2) 
+        {
+            OperationResult window = WindowsInstances.ResGraphInst;
+            window.Owner = WindowsInstances.MainWindowInst;
+            GraphOperationsCanvas graph = new GraphOperationsCanvas();
+           
+            switch (oper)
+            {
+                case CurrentGraphOperation.Unity:
+                    window.Title = "Результат об'єднання графів";
+                    window.SetCanvas(graph.Unity(bigger_canvas, list1.GetList, list2.GetList, type, out AdjacenceList unity));
+                    break;
+                case CurrentGraphOperation.CircleSum:
+                    window.Title = "Результат кільцевої суми графів";
+                    window.SetCanvas(graph.CircleSum(bigger_canvas, list1.GetList, list2.GetList, type, out AdjacenceList circleSum));
+                    break;
+                case CurrentGraphOperation.Intersection:
+                    window.Title = "Результат перетину графів";
+                    window.SetCanvas(graph.Intersection(bigger_canvas, list1.GetList, list2.GetList, type, out AdjacenceList intersection));
+                    break;
+                case CurrentGraphOperation.CartesianProduct:
+                    window.Title = "Результат декартового добутку графів";
+                    window.SetCanvas(graph.CartesianProduct(list1.GetList, list2.GetList, type));
+                    break;
+                default:
+                    break;
+            }
+            window.Show();
+        }
+        public static void AdjacenceMatrixWindow(Window win, GraphType type)
+        {
+            AdjacenceMatrix adj = WindowsInstances.AdjacenceMatrixWindowInst(win);
+
+            adj.TypeGraph = type;
+        }
     }
 
 }

@@ -34,8 +34,6 @@ namespace Main
     {
         public delegate void ChangeGraphType(object sender, MyEventArgs e);
 
-        public delegate void FromCanvasToMatrixDelegate();
-
         public class MyEventArgs : EventArgs
         {
             public string AdditionalData { get; }
@@ -57,21 +55,6 @@ namespace Main
         Events events = new Events();
         MenuColors colors = new MenuColors();
 
-        public Events.CanvasEvents.Undirected EventsUndir
-        {
-            get
-            {
-                return undirected_events;
-            }
-        }
-
-        public Events.CanvasEvents.Directed EventsDir
-        {
-            get
-            {
-                return directed_events;
-            }
-        }
         public Canvas GraphCanvas
         {
             get
@@ -93,6 +76,15 @@ namespace Main
                 }
                 return adjacenceListDirected;
             }
+            set
+            {
+                if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
+                {
+                    adjacenceListUndirected = value;
+                    return;
+                }
+                adjacenceListDirected = value;
+            }
         }
         public GraphType graphType { get; set; }
 
@@ -101,7 +93,8 @@ namespace Main
 
             InitializeComponent();
             graphType = GraphType.Undirected;
-
+            undirected_events.ClassOwner = this;
+            directed_events.ClassOwner = this;
             this.Loaded += (s, e) =>
             {
                 MainWindow.WindowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
@@ -109,7 +102,6 @@ namespace Main
             };
 
         }
-
 
         public static IntPtr WindowHandle { get; private set; }
 
@@ -159,257 +151,17 @@ namespace Main
             return IntPtr.Zero;
         }
 
-
         private void IncMatrixWindow_Click(object sender, RoutedEventArgs e)
         {
-            IncidenceMatrix win = WindowsInstances.MatrixIncidenceWindowInst(this);
-
-            if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
-            {
-                win = new IncidenceMatrix(adjacenceListUndirected, DrawingCanvas_Undirected, GraphType.Undirected);
-
-                //win.Matrix = adjacenceListUndirected;
-                win.TypeGraph = GraphType.Undirected;
-
-            }
-            else
-            {
-                win = new IncidenceMatrix(adjacenceListDirected, DrawingCanvas_Directed, GraphType.Directed);
-
-                //win.Matrix = adjacenceListDirected;
-                win.TypeGraph = GraphType.Directed;
-
-            }
-            win.AddNodeDelegate += AddNodeToCanvas;
-            win.DeleteNodeDelegate += DeleteNodeCanvas;
-            win.AddEdgeDelegate += AddEdgeToCanvas;
-            win.DeleteEdgeDelegate += DeleteEdgeCanvas;
-            win.Owner = this;
-
-            win.Show();
+            MatrixController.Incidence(this);
         }
 
         private void AdjMatrixWindow_Click(object sender, RoutedEventArgs e)
         {
-            MatrixShow win = WindowsInstances.MatrixWindowInst(this);
-            win.Owner = this;
-            win.AddNodeDelegate += AddNodeToCanvas;
-            win.AddEdgeDelegate += AddEdgeToCanvas;
-            win.DeleteNodeDelegate += DeleteNodeCanvas;
-            win.DeleteEdgeDelegate += DeleteEdgeCanvas;
-            if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
-            {
-
-                win.Matrix = adjacenceListUndirected;
-                win.TypeGraph = GraphType.Undirected;
-
-            }
-            else
-            {
-                win.Matrix = adjacenceListDirected;
-                win.TypeGraph = GraphType.Directed;
-
-            }
-            win.Show();
+            MatrixController.Adjacence(this);
         }
 
-        private void DeleteEdgeCanvas(string x, string y)
-        {
-            Canvas canvas;
-            AdjacenceList dict;
-
-            if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
-            {
-                adjacenceListUndirected.RemoveEdge(int.Parse(x), int.Parse(y));
-                DrawingCanvas_Undirected.Children.Remove(DrawingCanvas_Undirected.Children.OfType<Line>().FirstOrDefault(e => e.Name == $"line_{x}_{y}"));
-                DrawingCanvas_Undirected.Children.Remove(DrawingCanvas_Undirected.Children.OfType<Line>().FirstOrDefault(e => e.Name == $"line_{y}_{x}"));
-
-            }
-            else
-            {
-                adjacenceListDirected.RemoveEdge(int.Parse(x), int.Parse(y));
-                DrawingCanvas_Directed.Children.Remove(DrawingCanvas_Directed.Children.OfType<Shape>().FirstOrDefault(e => e.Name == $"line_{x}_{y}"));
-            }
-        }
-
-        private void AddEdgeToCanvas(string f_node, string s_node)
-        {
-            Canvas canvas;
-            AdjacenceList dict;
-
-            if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
-            {
-                dict = adjacenceListUndirected;
-                canvas = DrawingCanvas_Undirected;
-            }
-            else
-            {
-                dict = adjacenceListDirected;
-                canvas = DrawingCanvas_Directed;
-            }
-
-            bool shapeExistsEllips1 = canvas.Children.OfType<Shape>().Any(shape => shape.Name == $"Ellipse_{f_node}");
-
-            bool shapeExistsEllips2 = canvas.Children.OfType<Shape>().Any(shape => shape.Name == $"Ellipse_{s_node}");
-            if (shapeExistsEllips1 && shapeExistsEllips2)
-            {
-
-                Ellipse sEllipse = canvas.Children.OfType<Ellipse>().FirstOrDefault(e => e.Name == $"Ellipse_{s_node}");
-
-                // Find the first ellipse
-                Ellipse fEllipse = canvas.Children.OfType<Ellipse>().FirstOrDefault(e => e.Name == $"Ellipse_{f_node}");
-
-                Point center1 = new Point(Canvas.GetLeft(fEllipse) + fEllipse.Width / 2, Canvas.GetTop(fEllipse) + fEllipse.Height / 2);
-                Point center2 = new Point(Canvas.GetLeft(sEllipse) + sEllipse.Width / 2, Canvas.GetTop(sEllipse) + sEllipse.Height / 2);
-
-
-                var intersectionPoint1 = (Point)DataFromGraph.CalculateIntersection(center1, fEllipse.Width / 2, center2);
-                var intersectionPoint2 = (Point)DataFromGraph.CalculateIntersection(center2, sEllipse.Width / 2, center1);
-                dynamic line;
-
-
-                if (DrawingCanvas_Directed.Visibility == Visibility.Visible)
-                {
-                    line = DataFromGraph.DrawLinkArrow(intersectionPoint1, intersectionPoint2);
-                    line.Name = $"line_{f_node}_{s_node}";
-
-                    if (!canvas.Children.Cast<FrameworkElement>()
-          .Any(x => x.Name != null && x.Name.ToString() == $"line_{int.Parse(f_node)}_{int.Parse(s_node)}"))
-                    {
-                        canvas.Children.Add(line);
-                        dict.AddEdge(int.Parse(f_node), int.Parse(s_node));
-
-                    }
-                }
-                else
-                {
-                    line = new Line()
-                    {
-                        Name = $"line_{f_node}_{s_node}",
-                        X1 = intersectionPoint1.X,
-                        Y1 = intersectionPoint1.Y,
-                        X2 = intersectionPoint2.X,
-                        Y2 = intersectionPoint2.Y,
-                        Stroke = System.Windows.Media.Brushes.Black,
-                        StrokeThickness = 2,
-                        Fill = System.Windows.Media.Brushes.Black,
-                    };
-
-
-                    if (ContainingChecker.Edge(canvas, Convert.ToInt32(f_node), Convert.ToInt32(s_node)) == false && f_node != s_node)
-                    {
-                        canvas.Children.Add(line);
-                        dict.AddEdge(int.Parse(f_node), int.Parse(s_node));
-
-                    }
-                }
-
-            }
-        }
-        private void AddNodeToCanvas()
-        {
-            Canvas canvas;
-            AdjacenceList dict;
-
-            if(DrawingCanvas_Undirected.Visibility == Visibility.Visible)
-            {
-                dict = adjacenceListUndirected;
-                canvas = DrawingCanvas_Undirected;
-            }
-            else
-            {
-                dict = adjacenceListDirected;
-                canvas = DrawingCanvas_Directed;
-            }
-
-            Ellipse AAACircle = new Ellipse()
-            {
-                Name = $"Ellipse_{dict.CountNodes}",
-                Height = 50,
-                Width = 50,
-                Stroke = Brushes.Black,
-                StrokeThickness = 1,
-                Fill = Brushes.White,
-
-            };
-
-            TextBlock textBlock = new TextBlock()
-            {
-                Name = "Text" + AAACircle.Name,
-                Text = (dict.CountNodes).ToString(),
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                FontSize = 16,
-                FontFamily = new FontFamily("Arial"),
-
-            };
-
-
-            // The farthest left the dot can be
-            double minLeft = 0;
-            // The farthest right the dot can be without it going off the screen
-            double maxLeft = canvas.ActualWidth - AAACircle.Width;
-            // The farthest up the dot can be
-            double minTop = 0;
-            // The farthest down the dot can be without it going off the screen
-            double maxTop = canvas.ActualHeight - AAACircle.Height;
-
-
-            double left = RandomBetween(minLeft, maxLeft);
-            double top = RandomBetween(minTop, maxTop);
-
-
-            Canvas.SetLeft(AAACircle, left);
-            Canvas.SetTop(AAACircle, top);
-
-            Point center1_for_text = DataFromGraph.AllignOfText(AAACircle, (dict.CountNodes).ToString());
-
-            Canvas.SetLeft(textBlock, center1_for_text.X);
-            Canvas.SetTop(textBlock, center1_for_text.Y);
-
-            canvas.Children.Add(AAACircle);
-            canvas.Children.Add(textBlock);
-            canvas.InvalidateVisual();
-        }
-
-        private void DeleteNodeCanvas(int node, HashSet<string> lines)
-        {
-            NamesUpdate update = new NamesUpdate();
-
-            if (DrawingCanvas_Undirected.Visibility == Visibility.Visible)
-            {
-                DrawingCanvas_Undirected.Children.Remove(DrawingCanvas_Undirected.Children.OfType<Ellipse>().FirstOrDefault(e => e.Name == $"Ellipse_{node}"));
-                DrawingCanvas_Undirected.Children.Remove(DrawingCanvas_Undirected.Children.OfType<TextBlock>().FirstOrDefault(e => e.Name == $"TextEllipse_{node}"));
-
-                foreach (string s in lines)
-                {
-                    DrawingCanvas_Undirected.Children.Remove(DrawingCanvas_Undirected.Children.OfType<Line>().FirstOrDefault(e => e.Name == s));
-                }
-                update.UpdateCanvas(ref DrawingCanvas_Undirected, node);
-
-
-
-            }
-            else
-            {
-                DrawingCanvas_Directed.Children.Remove(DrawingCanvas_Directed.Children.OfType<Ellipse>().FirstOrDefault(e => e.Name == $"Ellipse_{node}"));
-                DrawingCanvas_Directed.Children.Remove(DrawingCanvas_Directed.Children.OfType<TextBlock>().FirstOrDefault(e => e.Name == $"TextEllipse_{node}"));
-
-                foreach (string s in lines)
-                {
-                    DrawingCanvas_Directed.Children.Remove(DrawingCanvas_Directed.Children.OfType<Shape>().FirstOrDefault(e => e.Name == s));
-                }
-                update.UpdateCanvas(ref DrawingCanvas_Directed, node);
-
-
-
-
-            }
-        }
-        private double RandomBetween(double min, double max)
-        {
-            return new Random().NextDouble() * (max - min) + min;
-        }
+        
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -420,7 +172,7 @@ namespace Main
             DrawingCanvas_Directed.PreviewMouseLeftButtonDown += (sender, e) => directed_events.PreviewMouseLeftButtonDown(sender, e);
             DrawingCanvas_Directed.PreviewMouseLeftButtonUp += (sender, e) => directed_events.PreviewMouseLeftButtonUp(sender, e);
             DrawingCanvas_Directed.PreviewMouseMove += (sender, e) => directed_events.PreviewMouseMove(sender, e);
-
+           
             undirected_events.Canvas = DrawingCanvas_Undirected;
             undirected_events.AdjacenceList = adjacenceListUndirected;
             undirected_events.ColorPicker = ColorUndirected;
@@ -446,7 +198,6 @@ namespace Main
             DrawingCanvas_Directed.Visibility = Visibility.Visible;
             DrawingCanvas_Undirected.Visibility = Visibility.Collapsed;
 
-            colors.ActiveColor.Opacity = 0.5;
             UndGraph_Button.Background = colors.DisableColor;
             DirGraph_Button.Background = colors.ActiveColor;
             graphType = GraphType.Directed;
@@ -463,7 +214,6 @@ namespace Main
             DrawingCanvas_Directed.Visibility = Visibility.Collapsed;
             DrawingCanvas_Undirected.Visibility = Visibility.Visible;
 
-            colors.ActiveColor.Opacity = 0.5;
             UndGraph_Button.Background = colors.ActiveColor;
             DirGraph_Button.Background = colors.DisableColor;
             graphType = GraphType.Undirected;
@@ -482,11 +232,8 @@ namespace Main
             AdjacenceList list = null;
             if (path.Contains(".cogu"))
             {
-
                 DrawingCanvas_Undirected.Visibility = Visibility.Visible;
                 DrawingCanvas_Directed.Visibility = Visibility.Collapsed;
-
-
                 UndGraph_Button.Background = colors.ActiveColor;
                 DirGraph_Button.Background = colors.DisableColor;
                 canv = DrawingCanvas_Undirected;
@@ -496,47 +243,18 @@ namespace Main
             {
                 DrawingCanvas_Undirected.Visibility = Visibility.Collapsed;
                 DrawingCanvas_Directed.Visibility = Visibility.Visible;
-
-
                 UndGraph_Button.Background = colors.DisableColor;
                 DirGraph_Button.Background = colors.ActiveColor;
                 canv = DrawingCanvas_Directed;
                 list = adjacenceListDirected;
             }
-            FileSystem.NullData(ref canv, ref list);
 
             FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read);
 
             Canvas savedCanvas = XamlReader.Load(fs) as Canvas;
             fs.Close();
 
-            while (savedCanvas.Children.Count > 0)
-            {
-                UIElement obj = savedCanvas.Children[0];
-                savedCanvas.Children.Remove(obj);
-
-                if (obj is Line l)
-                {
-                    l.Name.EdgesNames(out int f_node, out int s_node);
-                    list.AddEdge(f_node, s_node);
-                   
-                }
-                else if(obj is Shape sh && !(obj is Ellipse))
-                {
-                    sh.Name.EdgesNames(out int f_node, out int s_node);
-                    list.AddEdge(f_node, s_node);
-                }
-                else if (obj is Ellipse elip)
-                {
-                    list.AddNode(elip.Name.SingleNodeName());
-                }
-               
-
-
-                canv.Children.Add(obj); // Add to canvas
-            }
-
-            canv.InvalidateVisual();
+            FileSystem.Load(ref canv, savedCanvas, ref list);
         }
         private void ChangeModeInSecondGraph()
         {
@@ -558,7 +276,6 @@ namespace Main
             }
         }
 
-        
         private GraphType CurrentVisibleGraphData()
         {
             if(DrawingCanvas_Undirected.Visibility == Visibility.Visible)
@@ -579,8 +296,6 @@ namespace Main
             canv = DrawingCanvas_Directed;
             return adjacenceListDirected;
         }
-
-
 
         private void Addition_Click(object sender, RoutedEventArgs e)
         {
@@ -604,7 +319,7 @@ namespace Main
                 DrawingCanvas_Undirected.InvalidateVisual();
                 adjacenceListDirected.GetList = adjacenceList.GetList; 
             }
-            MatrixShow win = WindowsInstances.MatrixWindowInst(this);
+            AdjacenceMatrix win = WindowsInstances.AdjacenceMatrixWindowInst(this);
             IncidenceMatrix inc_win = WindowsInstances.MatrixIncidenceWindowInst(this);
 
             if (win.Matrix != null)
@@ -620,67 +335,28 @@ namespace Main
         }
         private void Unity_Click(object sender, RoutedEventArgs e)
         {
-            SecondGraph window = WindowsInstances.SecondGraphInst();
-            window.Title = "Режим об'єднання графів";
-            window.CurrentOperation = CurrentGraphOperation.Unity;
-            window.Type = graphType;
-            window.Owner = this;
-            window.Show();
-        }
-
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            for (int intCounter = App.Current.Windows.Count - 1; intCounter >= 0; intCounter--)
-            {
-                App.Current.Windows[intCounter].Close();
-            }
+            SetWindowInfo.SecGraphWindow(CurrentGraphOperation.Unity, graphType);
         }
 
         private void Intersection_Click(object sender, RoutedEventArgs e)
         {
-            SecondGraph window = WindowsInstances.SecondGraphInst();
-            window.Title = "Режим перетину графів";
-            window.CurrentOperation = CurrentGraphOperation.Intersection;
-            window.Type = graphType;
-            window.Owner = this;
-            window.Show();
+            SetWindowInfo.SecGraphWindow(CurrentGraphOperation.Intersection, graphType);
         }
 
         private void CircleSum_Click(object sender, RoutedEventArgs e)
         {
-            SecondGraph window = WindowsInstances.SecondGraphInst();
-            window.Title = "Режим кільцевої суми графів";
-            window.CurrentOperation = CurrentGraphOperation.CircleSum;
-            window.Type = graphType;
-            window.Owner = this;
-            window.Show();
+            SetWindowInfo.SecGraphWindow(CurrentGraphOperation.CircleSum, graphType);
         }
 
         private void CartesianProduct_Click(object sender, RoutedEventArgs e)
         {
-            SecondGraph window = WindowsInstances.SecondGraphInst();
-            window.Title = "Режим декартового добутку графів";
-            window.CurrentOperation = CurrentGraphOperation.CartesianProduct;
-            window.Type = graphType;
-            window.Owner = this;
-            window.Show();
+            SetWindowInfo.SecGraphWindow(CurrentGraphOperation.CartesianProduct, graphType);
         }
-
-
 
         private void NewFile_Click(object sender, RoutedEventArgs e)
         {
             AdjacenceList list = CurrentVisibleGraphData(out Canvas canvas);
             FileSystem.NullData(ref canvas, ref list);
-
-            /*if (CurrentVisibleGraphData() == GraphType.Undirected)
-            {
-                adjacenceListUndirected.GetList = list.GetList;
-            }
-            else
-            {
-                adjacenceListDirected.GetList = list.GetList;
-            }*/
         }
 
         private void OpenFile_Click(object sender, RoutedEventArgs e)
@@ -692,14 +368,25 @@ namespace Main
             {
                 Load(openFileDialog.FileName);
             }
-            
-
         }
 
         private void SaveFile_Click(object sender, RoutedEventArgs e)
         {
             CurrentVisibleGraphData(out Canvas canvas);
             FileSystem.Save(canvas, CurrentVisibleGraphData());
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            for (int intCounter = App.Current.Windows.Count - 1; intCounter >= 0; intCounter--)
+            {
+                App.Current.Windows[intCounter].Close();
+            }
+        }
+
+        private void About_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

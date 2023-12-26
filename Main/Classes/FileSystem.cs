@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
+using System.Windows.Shapes;
 
 namespace Main.Classes
 {
@@ -40,7 +41,6 @@ namespace Main.Classes
             }
             // Show save file dialog box
             Nullable<bool> result = dlg.ShowDialog();
-            string filename = dlg.FileName;
 
             // Process save file dialog box results
             if (result == true)
@@ -49,6 +49,35 @@ namespace Main.Classes
                 XamlWriter.Save(canv, fs);
                 fs.Close();
             }
+        }
+
+        static public void Load(ref Canvas canv, Canvas savedCanvas, ref AdjacenceList list)
+        {
+            NullData(ref canv, ref list);
+
+
+            while (savedCanvas.Children.Count > 0)
+            {
+                UIElement obj = savedCanvas.Children[0];
+                savedCanvas.Children.Remove(obj);
+
+                if (obj is Line l)
+                {
+                    l.Name.EdgesNames(out int f_node, out int s_node);
+                    list.AddEdge(f_node, s_node);
+                }
+                else if (obj is Shape sh && !(obj is Ellipse))
+                {
+                    sh.Name.EdgesNames(out int f_node, out int s_node);
+                    list.AddEdge(f_node, s_node);
+                }
+                else if (obj is Ellipse elip)
+                {
+                    list.AddNode(elip.Name.SingleNodeName());
+                }
+                canv.Children.Add(obj); // Add to canvas
+            }
+            canv.InvalidateVisual();
         }
 
     }

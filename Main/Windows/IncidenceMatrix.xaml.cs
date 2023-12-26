@@ -20,8 +20,6 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace Main.Windows
 {
-   
-
     /// <summary>
     /// Interaction logic for IncidenceMatrix.xaml
     /// </summary>
@@ -62,6 +60,7 @@ namespace Main.Windows
             }
             set
             {
+                matrix_array = value;
                 matrix.SetArray2D(matrix_array.ToIncidenceMatrix(type, ref canv, out List<string> lines));
                 matrix.SetRowHeadersSource(matrix_array.GetList.Keys.ToArray());
                 matrix.SetColumnHeadersSource(lines);
@@ -70,32 +69,12 @@ namespace Main.Windows
 
         public IncidenceMatrix()
         {
-
-        }
-
-        public IncidenceMatrix(AdjacenceList list, Canvas c, GraphType g_type)
-        {
             InitializeComponent();
-            var array = list.ToIncidenceMatrix(g_type, ref c, out List<string> lines);
-            matrix_array = list;
-            matrix.SetArray2D(array);
-
-
-
-            matrix.SetRowHeadersSource(list.GetList.Keys.ToArray());
-
-            matrix.SetColumnHeadersSource(lines);
-            type = g_type;
             Title = "Матриця інцидентності";
             NodeAdd.AddHandler(MenuItem.ClickEvent, new RoutedEventHandler(UpdateMatrix));
             NodeDel.AddHandler(MenuItem.ClickEvent, new RoutedEventHandler(UpdateMatrix));
             EdgeAdd.AddHandler(MenuItem.ClickEvent, new RoutedEventHandler(UpdateMatrix));
             EdgeDel.AddHandler(MenuItem.ClickEvent, new RoutedEventHandler(UpdateMatrix));
-
-
-
-            canv = c;
-
         }
 
         private void AddNode_Click(object sender, RoutedEventArgs e)
@@ -104,7 +83,7 @@ namespace Main.Windows
 
             if (AddNodeDelegate != null)
             {
-                AddNodeDelegate();
+               AddNodeDelegate(this.Owner);
             }
         }
 
@@ -114,7 +93,6 @@ namespace Main.Windows
             matrix.SetArray2D(matrix_array.ToIncidenceMatrix(type, ref canv, out List<string>lines));
             matrix.SetRowHeadersSource(matrix_array.GetList.Keys.ToArray());
             matrix.SetColumnHeadersSource(lines);
-
         }
 
         public void UpdateMatrix()
@@ -124,6 +102,7 @@ namespace Main.Windows
                 matrix.SetArray2D(matrix_array.ToIncidenceMatrix(type, ref canv, out List<string> lines));
                 matrix.SetRowHeadersSource(matrix_array.GetList.Keys.ToArray());
                 matrix.SetColumnHeadersSource(lines);
+
             }
             catch (Exception ex)
             {
@@ -134,7 +113,31 @@ namespace Main.Windows
         {
             try
             {
-                var canv = type == GraphType.Undirected ? WindowsInstances.MainWinInst().DrawingCanvas_Undirected : WindowsInstances.MainWinInst().DrawingCanvas_Directed;
+                Canvas canv = null;
+
+                if (this.Owner is MainWindow)
+                {
+                    if (type == GraphType.Undirected)
+                    {
+                        canv = WindowsInstances.MainWindowInst.DrawingCanvas_Undirected;
+                    }
+                    else
+                    {
+                        canv = WindowsInstances.MainWindowInst.DrawingCanvas_Directed;
+                    }
+                }
+                else if (this.Owner is SecondGraph)
+                {
+                    if (type == GraphType.Undirected)
+                    {
+                        canv = WindowsInstances.SecGraphInst.DrawingCanvas_Undirected;
+                    }
+                    else
+                    {
+                        canv = WindowsInstances.SecGraphInst.DrawingCanvas_Directed;
+                    }
+                }
+
                 var drv = matrix.Items.IndexOf(matrix.CurrentItem)+1;
 
                 var lines = DataFromGraph.GetConnectedEdges(ref canv, matrix_array, int.Parse(drv.ToString()), type);
@@ -143,7 +146,7 @@ namespace Main.Windows
 
                 if (DeleteNodeDelegate != null)
                 {
-                    DeleteNodeDelegate(int.Parse(drv.ToString()), lines);
+                    DeleteNodeDelegate(this.Owner, int.Parse(drv.ToString()), lines);
                 }
             }
             catch (Exception ex)
@@ -162,7 +165,7 @@ namespace Main.Windows
                 {
                     if (AddEdgeDelegate != null)
                     {
-                        AddEdgeDelegate(match.Groups[1].Value, match.Groups[2].Value);
+                       AddEdgeDelegate(this.Owner, match.Groups[1].Value, match.Groups[2].Value);
                     }
                 }
             }
@@ -175,7 +178,7 @@ namespace Main.Windows
             drv.EdgesNames(out int f_node, out int s_node);
             if (DeleteEdgeDelegate != null)
             {
-                DeleteEdgeDelegate(f_node.ToString(), s_node.ToString());
+               DeleteEdgeDelegate(this.Owner, f_node.ToString(), s_node.ToString());
             }
         }
     }
