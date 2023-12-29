@@ -224,6 +224,13 @@ namespace Main.Classes
             }
             return dekart_dict;
         }
+
+        ~GraphOperations()
+        {
+            GC.Collect(); // find finalizable objects
+            GC.WaitForPendingFinalizers(); // wait until finalizers executed
+            GC.Collect(); // collect finalized objects
+        }
     }
 
     class GraphOperationsCanvas: GraphOperations
@@ -354,14 +361,19 @@ namespace Main.Classes
         private void AddNodesCartesian(Dictionary<string, HashSet<string>> cartesian, out Canvas cartesian_product)
         {
             cartesian_product = new Canvas();
-            double height;
-            double width;
+            double height=0;
+            double width=0;
 
             try{
                 width = WindowsInstances.ResultWindowInst().DisplayingData.ActualWidth;
                 height = WindowsInstances.ResultWindowInst().DisplayingData.ActualHeight;
             }
             catch(Exception ex)
+            {
+                
+            }
+
+            if(width == 0 && height == 0)
             {
                 width = WindowsInstances.ResultWindowInst().Width;
                 height = WindowsInstances.ResultWindowInst().Height;
@@ -400,11 +412,11 @@ namespace Main.Classes
                 // The farthest left the dot can be
                 double minLeft = 0;
                 // The farthest right the dot can be without it going off the screen
-                double maxLeft = WindowsInstances.ResultWindowInst().ActualWidth - AAACircle.Width;
+                double maxLeft = width - AAACircle.Width;
                 // The farthest up the dot can be
                 double minTop = 0;
                 // The farthest down the dot can be without it going off the screen
-                double maxTop = WindowsInstances.ResultWindowInst().ActualHeight - AAACircle.Height;
+                double maxTop = height - AAACircle.Height;
 
 
                 double left = RandomBetween(minLeft, maxLeft);
@@ -617,5 +629,15 @@ namespace Main.Classes
             }
             return canvas;
         }
+
+
+        ~GraphOperationsCanvas()
+        {
+            GC.Collect(); // find finalizable objects
+            GC.WaitForPendingFinalizers(); // wait until finalizers executed
+            GC.Collect(); // collect finalized objects
+        }
+
+       
     }
 }

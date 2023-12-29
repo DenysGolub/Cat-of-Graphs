@@ -27,7 +27,7 @@
     <None Remove="Resources\MenuIcons\intersection.png" />
     <None Remove="Resources\MenuIcons\union.png" />
     <None Remove="Resources\MenuIcons\xor.png" />
-    <None Remove="Resources\splash.jpg" />
+    <None Remove="Resources\splash.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -60,10 +60,7 @@
     <Resource Include="Resources\MenuIcons\intersection.png" />
     <Resource Include="Resources\MenuIcons\union.png" />
     <Resource Include="Resources\MenuIcons\xor.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Resources\splash.jpg" />
+    <Resource Include="Resources\splash.png" />
   </ItemGroup>
 
 	<Target Name="RemoveSatelliteAssemblies" AfterTargets="ResolveAssemblyReferences">
@@ -76,5 +73,8 @@
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 		<ApplicationIcon>graph_cat.ico</ApplicationIcon>
 		<AssemblyName>Cat of Graphs</AssemblyName>
+		<Authors>Denys Golub</Authors>
+		<Copyright>Denys Golub</Copyright>
+		<Description>Application for graph theory</Description>
 	</PropertyGroup>
 </Project>

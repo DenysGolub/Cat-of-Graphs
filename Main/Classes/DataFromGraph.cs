@@ -11,8 +11,18 @@ using Main.Enumerators;
 
 namespace Main.Classes
 {
+    /// <summary>
+    /// Class that gets or sets data for graph.
+    /// </summary>
     static class DataFromGraph
     {
+        /// <summary>
+        /// Calculate intersection for nodes where line should start (border of node)
+        /// </summary>
+        /// <param name="circleCenter"></param>
+        /// <param name="circleRadius"></param>
+        /// <param name="lineStart"></param>
+        /// <returns></returns>
         static public Point? CalculateIntersection(Point circleCenter, double circleRadius, Point lineStart)
         {
             if (Math.Abs(circleCenter.X - lineStart.X) < double.Epsilon)
@@ -78,6 +88,14 @@ namespace Main.Classes
             return point2 - translate;
         }
 
+        /// <summary>
+        /// Gets edges from canvas, which names are contained in edges names
+        /// </summary>
+        /// <param name="canv"></param>
+        /// <param name="adj"></param>
+        /// <param name="node"></param>
+        /// <param name="g_type"></param>
+        /// <returns></returns>
         static public HashSet<string> GetConnectedEdges(ref Canvas canv, AdjacenceList adj, int node, GraphType g_type)
         {
             var temp = new HashSet<string>();

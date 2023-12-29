@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Main.Windows"
         xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="SecondGraph" Height="450" Width="800" Loaded="Window_Loaded">
+        Title="SecondGraph" Height="450" Width="800" Loaded="Window_Loaded" Closed="Window_Closed">
     <Grid>
         <DockPanel Background="Transparent" LastChildFill="False">
             <Menu Background="Transparent" DockPanel.Dock="Top">

@@ -11,7 +11,14 @@ using Main.Windows;
 
 namespace Main.Classes
 {
-   static class DelegateCanvasEvents
+    public delegate void AddNode(Window win);
+
+    public delegate void DelNode(Window win, int node, HashSet<string> lines);
+
+    public delegate void Edge(Window win, string x, string y);
+    public delegate void DelEdge(Window win, string x, string y);
+    public delegate void UpdateMatrix();
+    static class DelegateCanvasEvents
     {
         static public void DeleteEdgeCanvas(MainWindow win, string x, string y)
         {

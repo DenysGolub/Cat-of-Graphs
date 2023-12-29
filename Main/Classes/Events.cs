@@ -156,8 +156,6 @@ namespace Main.Classes
                     Move = false;
                     Color = true;
 
-                   
-
                     color_active.Opacity = 0.5;
 
                     wnd.AddEllipse.Background = color_disable;
@@ -229,6 +227,16 @@ namespace Main.Classes
                     wnd.DrawingCanvas_Directed.Visibility = Visibility.Visible;
                     wnd.DrawingCanvas_Undirected.Visibility = Visibility.Collapsed;
                     wnd.Type = GraphType.Directed;
+
+                    if (WindowsInstances.AdjacenceMatrixWindowExist(wnd, out int ind))
+                    {
+                        MatrixController.Adjacence(wnd);
+                    }
+
+                    if (WindowsInstances.MatrixIncidenceWindowExist(wnd, out int ind1))
+                    {
+                        MatrixController.Incidence(wnd);
+                    }
                 }
                 else if (e.AdditionalData == "ChangeToUndirectedGraph")
                 {
@@ -237,11 +245,16 @@ namespace Main.Classes
                     wnd.DrawingCanvas_Undirected.Visibility = Visibility.Visible;
                     wnd.Type = GraphType.Undirected;
 
+                    if (WindowsInstances.AdjacenceMatrixWindowExist(wnd, out int ind))
+                    {
+                        MatrixController.Adjacence(wnd);
+                    }
+
+                    if (WindowsInstances.MatrixIncidenceWindowExist(wnd, out int ind1))
+                    {
+                        MatrixController.Incidence(wnd);
+                    }
                 }
-
-
-
-
             }
 
 
@@ -282,9 +295,7 @@ namespace Main.Classes
 
                 public void PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
                 {
-                    AdjacenceMatrix win = WindowsInstances.AdjacenceMatrixWindowInst(ClassOwner);
-
-                    IncidenceMatrix inc_win = WindowsInstances.MatrixIncidenceWindowInst(ClassOwner);
+                   
 
                     var mouseWasDownOn = e.Source as FrameworkElement;
 
@@ -478,14 +489,14 @@ namespace Main.Classes
 
                         }
                     }
-                    if (win.Matrix != null)
-                    {
-                        win.UpdateMatrix();
-                    }
 
-                    if (inc_win.Matrix != null)
+                    if (WindowsInstances.AdjacenceMatrixWindowExist(ClassOwner, out int index))
                     {
-                        inc_win.UpdateMatrix();
+                        WindowsInstances.AdjacenceMatrixWindowInst(ClassOwner).UpdateMatrix();
+                    }
+                    if (WindowsInstances.MatrixIncidenceWindowExist(ClassOwner, out int index1))
+                    {
+                        WindowsInstances.MatrixIncidenceWindowInst(ClassOwner).UpdateMatrix();
                     }
                 }
 
@@ -595,9 +606,7 @@ namespace Main.Classes
                 public Window ClassOwner {get => owner; set => owner = value; }
                 public void PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
                 {
-                    AdjacenceMatrix win = WindowsInstances.AdjacenceMatrixWindowInst(ClassOwner);
-
-                    IncidenceMatrix inc_win = WindowsInstances.MatrixIncidenceWindowInst(ClassOwner);
+                   
 
                     var mouseWasDownOn = e.Source as FrameworkElement;
 
@@ -807,13 +816,13 @@ namespace Main.Classes
 
                         }
                     }
-                    if (win.Matrix != null)
+                    if (WindowsInstances.AdjacenceMatrixWindowExist(ClassOwner, out int index))
                     {
-                        win.UpdateMatrix();
+                        WindowsInstances.AdjacenceMatrixWindowInst(ClassOwner).UpdateMatrix();
                     }
-                    if (inc_win.Matrix != null)
+                    if (WindowsInstances.MatrixIncidenceWindowExist(ClassOwner, out int index1))
                     {
-                        inc_win.UpdateMatrix();
+                        WindowsInstances.MatrixIncidenceWindowInst(ClassOwner).UpdateMatrix();
                     }
                 }
 

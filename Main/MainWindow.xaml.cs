@@ -207,6 +207,16 @@ namespace Main
                 ColorDirected.Visibility = Visibility.Visible;
             }
             ChangeModeInSecondGraph();
+
+            if (WindowsInstances.AdjacenceMatrixWindowExist(this, out int ind))
+            {
+                MatrixController.Adjacence(this);
+            }
+
+            if (WindowsInstances.MatrixIncidenceWindowExist(this, out int ind1))
+            {
+                MatrixController.Incidence(this);
+            }
         }
 
         private void ChangeGraphToUndirected(object sender, RoutedEventArgs e)
@@ -224,6 +234,16 @@ namespace Main
                 ColorUndirected.Visibility = Visibility.Visible;
             }
             ChangeModeInSecondGraph();
+
+            if(WindowsInstances.AdjacenceMatrixWindowExist(this, out int ind)) 
+            {
+                MatrixController.Adjacence(this);
+            }
+
+            if(WindowsInstances.MatrixIncidenceWindowExist(this, out int ind1)) 
+            {
+                MatrixController.Incidence(this);
+            }
         }
 
         private void Load(string path)

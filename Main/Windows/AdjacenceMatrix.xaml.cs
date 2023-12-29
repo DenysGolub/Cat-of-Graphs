@@ -18,18 +18,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Xceed.Wpf.Toolkit;
 
 namespace Main.Windows
 {
-    public delegate void AddNode(Window win);
-
-    public delegate void DelNode(Window win, int node, HashSet<string> lines);
-
-    public delegate void Edge(Window win, string x, string y);
-    public delegate void DelEdge(Window win, string x, string y);
-    public delegate void UpdateMatrix();
-
-
     /// <summary>
     /// Interaction logic for MatrixShow.xaml
     /// </summary>
@@ -40,9 +32,6 @@ namespace Main.Windows
 
         public event DelNode DeleteNodeDelegate;
         public event DelEdge DeleteEdgeDelegate;
-
-
-        //public event UpdateMatrix Update;
 
         AdjacenceList matrix_array;
         GraphType type;
@@ -71,39 +60,29 @@ namespace Main.Windows
             NodeDel.AddHandler(MenuItem.ClickEvent, new RoutedEventHandler(UpdateMatrix));
         }
 
-        public AdjacenceMatrix(AdjacenceList list)
-        {
-            InitializeComponent();
-            //var array = list.ToAdjacenceMatrix();
-           
-
-        }
-
-        public AdjacenceMatrix(AdjacenceList list, Canvas c, GraphType g_type)
-        {
-            InitializeComponent();
-            var array = list.ToIncidenceMatrix(g_type, ref c, out List<string> lines);
-            matrix.SetArray2D(array);
-
-
-
-            matrix.SetRowHeadersSource(list.GetList.Keys.ToArray());
-
-            matrix.SetColumnHeadersSource(lines);
-            type = g_type;
-        }
-
         private void Window_Closed(object sender, EventArgs e)
         {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+            GC.Collect(); // find finalizable objects
+            GC.WaitForPendingFinalizers(); // wait until finalizers executed
+            GC.Collect(); // collect finalized objects
+            if (this.Owner != null)
+            {
+                this.Owner.Activate();
+            }
         }
 
         private void matrix_ValueInCellChanged(object sender, DataGridCellEditEndingEventArgs e)
         {
             DataGridColumn col1 = e.Column;
             DataGridRow row1 = e.Row;
-            if (((TextBox)e.EditingElement).Text == "1")
+
+            if (((TextBox)e.EditingElement).Text != "0" && type == GraphType.Undirected && e.Column.Header.ToString() == e.Row.Header.ToString())
+            {
+                System.Windows.MessageBox.Show("У неорієнтованому графі неможливі петлі!");
+                ((TextBox)e.EditingElement).Text = "0";
+                e.Cancel = true;
+            }
+            else if (((TextBox)e.EditingElement).Text == "1")
             {
                 if (AddEdgeDelegate != null)
                 {
@@ -116,6 +95,11 @@ namespace Main.Windows
                 {
                     DeleteEdgeDelegate(this.Owner, e.Row.Header.ToString(), e.Column.Header.ToString());
                 }
+            }
+            else
+            {
+                System.Windows.MessageBox.Show("Неправильне значення! Введіть 0 або 1");
+                e.Cancel = true;
             }
         }
 

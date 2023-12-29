@@ -207,5 +207,13 @@ namespace Main.Windows
             canv = DrawingCanvas_Directed;
             return adjacenceListDirected;
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            if(Owner!=null)
+            {
+                Owner.Activate();
+            }
+        }
     }
 }

@@ -181,5 +181,16 @@ namespace Main.Windows
                DeleteEdgeDelegate(this.Owner, f_node.ToString(), s_node.ToString());
             }
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            GC.Collect(); // find finalizable objects
+            GC.WaitForPendingFinalizers(); // wait until finalizers executed
+            GC.Collect(); // collect finalized objects
+            if (this.Owner != null)
+            {
+                this.Owner.Activate();
+            }
+        }
     }
 }
