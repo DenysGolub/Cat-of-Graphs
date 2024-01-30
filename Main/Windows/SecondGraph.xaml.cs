@@ -1,4 +1,5 @@
-﻿using Main.Classes;
+﻿using Infralution.Localization.Wpf;
+using Main.Classes;
 using Main.Enumerators;
 using Microsoft.Win32;
 using System;
@@ -178,6 +179,16 @@ namespace Main.Windows
             if (openFileDialog.ShowDialog() == true)
             {
                 Load(openFileDialog.FileName);
+            }
+
+            if (WindowsInstances.AdjacenceMatrixWindowExist(this, out int ind))
+            {
+                MatrixController.Adjacence(this);
+            }
+
+            if (WindowsInstances.MatrixIncidenceWindowExist(this, out int ind1))
+            {
+                MatrixController.Incidence(this);
             }
         }
 

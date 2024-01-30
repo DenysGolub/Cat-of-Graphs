@@ -3,10 +3,12 @@ using Main.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 
 namespace Main.Classes
@@ -190,28 +192,29 @@ namespace Main.Classes
             OperationResult window = WindowsInstances.ResGraphInst;
             window.Owner = WindowsInstances.MainWindowInst;
             GraphOperationsCanvas graph = new GraphOperationsCanvas();
-           
             switch (oper)
             {
+
                 case CurrentGraphOperation.Unity:
-                    window.Title = "Результат об'єднання графів";
                     window.SetCanvas(graph.Unity(bigger_canvas, list1.GetList, list2.GetList, type, out AdjacenceList unity));
                     break;
                 case CurrentGraphOperation.CircleSum:
-                    window.Title = "Результат кільцевої суми графів";
+                    //window.SetResourceReference(Window.TitleProperty, "Resx CircleSumTitle");
                     window.SetCanvas(graph.CircleSum(bigger_canvas, list1.GetList, list2.GetList, type, out AdjacenceList circleSum));
                     break;
                 case CurrentGraphOperation.Intersection:
-                    window.Title = "Результат перетину графів";
+                    //window.SetResourceReference(Window.TitleProperty, "Resx IntersectionTitle");
                     window.SetCanvas(graph.Intersection(bigger_canvas, list1.GetList, list2.GetList, type, out AdjacenceList intersection));
                     break;
                 case CurrentGraphOperation.CartesianProduct:
-                    window.Title = "Результат декартового добутку графів";
+                    
+                    //window.SetResourceReference(Window.TitleProperty, "Resx CartesianProductTitle");
                     window.SetCanvas(graph.CartesianProduct(list1.GetList, list2.GetList, type));
                     break;
                 default:
                     break;
             }
+            window.SetOperation(oper);
             window.Show();
         }
         public static void AdjacenceMatrixWindow(Window win, GraphType type)

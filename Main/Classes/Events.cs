@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Annotations.Storage;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -460,6 +461,7 @@ namespace Main.Classes
 
                             };
 
+                            Canvas.SetZIndex(AAACircle, int.MaxValue);
                             TextBlock textBlock = new TextBlock()
                             {
                                 Name = "Text" + AAACircle.Name,
@@ -470,6 +472,8 @@ namespace Main.Classes
                                 FontFamily = new FontFamily("Arial"),
 
                             };
+                            Canvas.SetZIndex(textBlock, int.MaxValue);
+
 
                             Canvas.SetLeft(AAACircle, Mouse.GetPosition(Canvas).X);
                             Canvas.SetTop(AAACircle, Mouse.GetPosition(Canvas).Y);
@@ -566,6 +570,7 @@ namespace Main.Classes
                                 var intersectionPoint2 = (Point)DataFromGraph.CalculateIntersection(center2, sEllipse.Width / 2, center1);
 
                                 Brush color_line = storedLine.Fill;
+                                Brush color_stroke = storedLine.Stroke;
 
                                 // Remove the existing line from the canvas
                                 Canvas.Children.Remove(storedLine);
@@ -576,7 +581,7 @@ namespace Main.Classes
                                 storedLine = DataFromGraph.DrawLinkArrow(intersectionPoint1, intersectionPoint2);
                                 storedLine.Name = lineName;
                                 storedLine.Fill = color_line;
-                                storedLine.Stroke = color_line;
+                                storedLine.Stroke = color_stroke;
 
                                 // Add the newly drawn line to the canvas
                                 Canvas.Children.Add(storedLine);
@@ -786,6 +791,7 @@ namespace Main.Classes
                                 Fill = Brushes.White,
 
                             };
+                            Canvas.SetZIndex(AAACircle, int.MaxValue);
 
                             TextBlock textBlock = new TextBlock()
                             {
@@ -797,6 +803,9 @@ namespace Main.Classes
                                 FontFamily = new FontFamily("Arial"),
 
                             };
+
+                            Canvas.SetZIndex(textBlock, int.MaxValue);
+
 
                             Canvas.SetLeft(AAACircle, Mouse.GetPosition(canvas).X);
                             Canvas.SetTop(AAACircle, Mouse.GetPosition(canvas).Y);

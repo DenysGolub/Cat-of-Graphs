@@ -37,7 +37,6 @@ namespace Main.Classes
             {
                 dlg.DefaultExt = ".cogd"; // Default file extension
                 dlg.Filter = "Файли орієнтованого графа (*.cogd)|*.cogd|All files (*.*)|*.*";
-
             }
             // Show save file dialog box
             Nullable<bool> result = dlg.ShowDialog();

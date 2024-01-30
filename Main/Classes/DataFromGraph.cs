@@ -8,6 +8,7 @@ using System.Windows.Shapes;
 using System.Windows;
 using System.Windows.Media;
 using Main.Enumerators;
+using Xceed.Wpf.AvalonDock.Layout;
 
 namespace Main.Classes
 {
@@ -144,6 +145,41 @@ namespace Main.Classes
         }
         static public Shape DrawLinkArrow(Point p1, Point p2)
         {
+            if(p1==p2)
+            {
+                PathFigure pthFigure = new PathFigure();
+                pthFigure.StartPoint = p1;
+
+                ArcSegment arcSeg = new ArcSegment();
+                p2.X = p2.X + 10;
+                p2.Y = p2.Y + 10;
+                arcSeg.Point =p2;
+                arcSeg.Size = new Size(15, 15);
+                arcSeg.IsLargeArc = true;
+                arcSeg.SweepDirection = SweepDirection.Clockwise;
+                arcSeg.RotationAngle = 30;
+
+                
+                PathSegmentCollection myPathSegmentCollection = new PathSegmentCollection();
+                myPathSegmentCollection.Add(arcSeg);
+
+                pthFigure.Segments = myPathSegmentCollection;
+
+                PathFigureCollection pthFigureCollection = new PathFigureCollection();
+                pthFigureCollection.Add(pthFigure);
+
+                PathGeometry pthGeometry = new PathGeometry();
+                pthGeometry.Figures = pthFigureCollection;
+
+                Path arcPath = new Path();
+                arcPath.StrokeThickness = 1;
+                arcPath.Data = pthGeometry;
+                arcPath.Stroke = Brushes.Black;
+                arcPath.Fill = Brushes.White;
+
+                return arcPath;
+            }
+
             GeometryGroup lineGroup = new GeometryGroup();
             double theta = Math.Atan2((p2.Y - p1.Y), (p2.X - p1.X)) * 180 / Math.PI;
 
@@ -184,6 +220,7 @@ namespace Main.Classes
             path.Stroke = path.Fill = Brushes.Black;
 
             return path;
+
         }
         static public Point AllignOfText(Ellipse AAACircle, string ellipse_name)
         {

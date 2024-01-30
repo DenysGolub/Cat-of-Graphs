@@ -37,12 +37,22 @@
   <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.1" />
     <PackageReference Include="Gu.Wpf.DataGrid2D" Version="0.2.4" />
+    <PackageReference Include="Microsoft.Net.Compilers" Version="4.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Infralution.Localization.Wpf">
+      <HintPath>Infralution.Localization.Wpf.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
@@ -63,6 +73,12 @@
     <Resource Include="Resources\splash.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Update="Translations\MainWindow.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
 	<Target Name="RemoveSatelliteAssemblies" AfterTargets="ResolveAssemblyReferences">
 		<ItemGroup>
 			<ReferenceCopyLocalPaths Remove="@(ReferenceSatellitePaths)" />
@@ -77,4 +93,6 @@
 		<Copyright>Denys Golub</Copyright>
 		<Description>Application for graph theory</Description>
 	</PropertyGroup>
+
 </Project>
+

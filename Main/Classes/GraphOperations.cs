@@ -434,6 +434,10 @@ namespace Main.Classes
 
                 Canvas.SetLeft(textBlock, center1_for_text.X);
                 Canvas.SetTop(textBlock, center1_for_text.Y);
+
+                Canvas.SetZIndex(AAACircle, int.MaxValue);
+                Canvas.SetZIndex(textBlock, int.MaxValue);
+
                 cartesian_product.Children.Add(AAACircle);
                 cartesian_product.Children.Add(textBlock);
             }
@@ -497,6 +501,9 @@ namespace Main.Classes
 
                 Canvas.SetLeft(textBlock, Canvas.GetLeft(old_text));
                 Canvas.SetTop(textBlock, Canvas.GetTop(old_text));
+
+                Canvas.SetZIndex(node, int.MaxValue);
+                Canvas.SetZIndex(textBlock, int.MaxValue);
 
                 canvas.Children.Add(node);
                 canvas.Children.Add(textBlock);

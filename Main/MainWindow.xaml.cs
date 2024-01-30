@@ -1,30 +1,18 @@
-﻿using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Gu.Wpf.DataGrid2D;
 using Main.Classes;
-using System.Web;
-using Xceed.Wpf.Toolkit;
 using Main.Windows;
 using Main.Enumerators;
 using Main.Structs;
 using Main.Interfaces;
-using System;
-using Xceed.Wpf.AvalonDock.Layout;
-using System.DirectoryServices.ActiveDirectory;
-using System.Xml.Linq;
 using System.Windows.Interop;
 using System.IO;
 using System.Windows.Markup;
 using Microsoft.Win32;
-
+using Infralution.Localization.Wpf;
+//using DynamicLocalization;
+using System.Windows.Documents;
 namespace Main
 {
     /// <summary>
@@ -90,16 +78,37 @@ namespace Main
 
         public MainWindow()
         {
+            
 
             InitializeComponent();
+            foreach (MenuItem item in menuItemLanguages.Items)
+            {
+                if (item.Tag.ToString() == CultureManager.UICulture.Name)
+                {
+                    item.IsChecked = true; break;
+                }
+            }
+
+            
             graphType = GraphType.Undirected;
             undirected_events.ClassOwner = this;
             directed_events.ClassOwner = this;
+
             this.Loaded += (s, e) =>
             {
                 MainWindow.WindowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
                 HwndSource.FromHwnd(MainWindow.WindowHandle)?.AddHook(new HwndSourceHook(HandleMessages));
             };
+
+
+           /* LocUtil.SetDefaultLanguage(this);
+
+            // Adjust checked language menu item
+            foreach (MenuItem item in menuItemLanguages.Items)
+            {
+                if (item.Tag.ToString().Equals(LocUtil.GetCurrentCultureName(this)))
+                    item.IsChecked = true;
+            }*/
 
         }
 
@@ -258,6 +267,7 @@ namespace Main
                 DirGraph_Button.Background = colors.DisableColor;
                 canv = DrawingCanvas_Undirected;
                 list = adjacenceListUndirected;
+                graphType = GraphType.Undirected;
             }
             else if (path.Contains(".cogd"))
             {
@@ -267,6 +277,11 @@ namespace Main
                 DirGraph_Button.Background = colors.ActiveColor;
                 canv = DrawingCanvas_Directed;
                 list = adjacenceListDirected;
+                graphType = GraphType.Directed;
+            }
+            else
+            {
+                return;
             }
 
             FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read);
@@ -275,6 +290,16 @@ namespace Main
             fs.Close();
 
             FileSystem.Load(ref canv, savedCanvas, ref list);
+
+            if (WindowsInstances.AdjacenceMatrixWindowExist(this, out int ind))
+            {
+                MatrixController.Adjacence(this);
+            }
+
+            if (WindowsInstances.MatrixIncidenceWindowExist(this, out int ind1))
+            {
+                MatrixController.Incidence(this);
+            }
         }
         private void ChangeModeInSecondGraph()
         {
@@ -408,5 +433,40 @@ namespace Main
         {
 
         }
+
+        private void DFS_Click(object sender, RoutedEventArgs e)
+        {
+            Dictionary<int, int> visited = new Dictionary<int, int>();
+
+            foreach (var item in GraphAdjacenceList.GetList.Keys)
+            {
+                visited.Add(item, 0);
+            }
+
+            //var canvas = GraphCanvas;
+
+            // Use Dispatcher to call the recursive method on the UI thread
+            SearchAlgorithms.DFS(GraphAdjacenceList, GraphCanvas, 1, visited);
+
+        }
+
+        private void Lang_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (MenuItem item in menuItemLanguages.Items)
+            {
+                item.IsChecked = false;
+            }
+
+            MenuItem mi = sender as MenuItem; //Console.WriteLine("menu tag: " + mi.Tag.ToString());
+            mi.IsChecked = true;
+            //SwitchLanguage(mi.Tag.ToString());
+            string lang = mi.Tag.ToString();
+
+            CultureManager.UICulture = new System.Globalization.CultureInfo(lang);
+
+
+        }
+
+
     }
 }

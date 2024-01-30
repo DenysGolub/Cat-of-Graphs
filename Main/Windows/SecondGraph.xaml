@@ -1,4 +1,5 @@
-﻿<Window x:Class="Main.Windows.SecondGraph"
+﻿<Window ResxExtension.DefaultResxName="Main.Localization.SecondGraph" Language="{UICulture}" 
+        x:Class="Main.Windows.SecondGraph"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,17 +11,17 @@
     <Grid>
         <DockPanel Background="Transparent" LastChildFill="False">
             <Menu Background="Transparent" DockPanel.Dock="Top">
-                <MenuItem Header="Файл">
-                    <MenuItem Header="Новий" Click="NewFile_Click"></MenuItem>
-                    <MenuItem Header="Відкрити" Click="OpenFile_Click"></MenuItem>
-                    <MenuItem Header="Зберегти як" Click="SaveFile_Click"></MenuItem>
+                <MenuItem Header="{Resx File.Header}">
+                    <MenuItem Header="{Resx NewFile}" Click="NewFile_Click"></MenuItem>
+                    <MenuItem Header="{Resx OpenFile}" Click="OpenFile_Click"></MenuItem>
+                    <MenuItem Header="{Resx SaveFile}" Click="SaveFile_Click"></MenuItem>
                 </MenuItem>
-                <MenuItem Header="Матриця">
-                    <MenuItem Click="AdjMatrixWindow_Click" Header="суміжності"></MenuItem>
-                    <MenuItem Click="IncMatrixWindow_Click" Header="інцидентності"></MenuItem>
+                <MenuItem Header="{Resx Matrix}">
+                    <MenuItem Click="AdjMatrixWindow_Click" Header="{Resx AdjMatrix}"></MenuItem>
+                    <MenuItem Click="IncMatrixWindow_Click" Header="{Resx IncMatrix}"></MenuItem>
                 </MenuItem>
-                <MenuItem Click="ShowResultGraph" Header="Побудувати"></MenuItem>
-                <MenuItem Header="Допомога"></MenuItem>
+                <MenuItem Click="ShowResultGraph" Header="{Resx DrawGraph}"></MenuItem>
+                <MenuItem Header="{Resx Help}"></MenuItem>
             </Menu>
         </DockPanel>
         <Canvas Background="White" x:Name="DrawingCanvas_Undirected" Margin="0,24,0,0">

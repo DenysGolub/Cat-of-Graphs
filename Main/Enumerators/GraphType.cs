@@ -10,7 +10,6 @@ namespace Main.Enumerators
     {
         Directed = 1,
         Undirected = 2
-
     }
 
     public enum MatrixType

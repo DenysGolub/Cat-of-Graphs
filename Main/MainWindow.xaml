@@ -1,4 +1,5 @@
-﻿<Window x:Class="Main.MainWindow"
+﻿<Window ResxExtension.DefaultResxName="Main.Localization.MainWindow" Language="{UICulture}" 
+        x:Class="Main.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,49 +10,60 @@
         
         mc:Ignorable="d"
         Title="Cat of Graphs" Height="424" Width="771" WindowState="Maximized" Loaded="Window_Loaded" Closed="Window_Closed">
+
+
+
     <Grid>
         <DockPanel Background="Transparent" LastChildFill="False">
             <Menu Background="Transparent" DockPanel.Dock="Top">
-                <MenuItem Header="Файл">
-                    <MenuItem Header="Новий" Click="NewFile_Click"></MenuItem>
-                    <MenuItem Header="Відкрити" Click="OpenFile_Click"></MenuItem>
-                    <MenuItem Header="Зберегти як" Click="SaveFile_Click"></MenuItem>
+                <MenuItem Header="{Resx File.Header}">
+                    <MenuItem Header="{Resx NewFile}" Click="NewFile_Click"></MenuItem>
+                    <MenuItem Header="{Resx OpenFile}" Click="OpenFile_Click"></MenuItem>
+                    <MenuItem Header="{Resx SaveFile}" Click="SaveFile_Click"></MenuItem>
                 </MenuItem>
-                <MenuItem Header="Матриця">
-                    <MenuItem Click="AdjMatrixWindow_Click" Header="суміжності"></MenuItem>
-                    <MenuItem Click="IncMatrixWindow_Click" Header="інцидентності"></MenuItem>
+                <MenuItem Header="{Resx Matrix}">
+                    <MenuItem Click="AdjMatrixWindow_Click" Header="{Resx AdjMatrix}"></MenuItem>
+                    <MenuItem Click="IncMatrixWindow_Click" Header="{Resx IncMatrix}"></MenuItem>
                 </MenuItem>
-                <MenuItem Header="Операції">
-                    <MenuItem Click="Addition_Click" Header="доповнення">
-                        
+                <MenuItem Header="{Resx Operations}">
+                    <MenuItem Click="Addition_Click" Header="{Resx Addition}">
+
                     </MenuItem>
-                    <MenuItem Click="Unity_Click" Header="об'єднання">
+                    <MenuItem Click="Unity_Click" Header="{Resx Unity}">
                         <MenuItem.Icon>
                             <Image RenderOptions.BitmapScalingMode="HighQuality" 
 RenderOptions.EdgeMode="Aliased" Source="/Resources/MenuIcons/union.png"></Image>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Click="Intersection_Click" Header="перетин">
+                    <MenuItem Click="Intersection_Click" Header="{Resx Intersection}">
                         <MenuItem.Icon>
                             <Image RenderOptions.BitmapScalingMode="HighQuality" 
 RenderOptions.EdgeMode="Aliased" Source="/Resources/MenuIcons/intersection.png"></Image>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Click="CircleSum_Click" Header="кільцева сума">
+                    <MenuItem Click="CircleSum_Click" Header="{Resx CircularSum}">
                         <MenuItem.Icon>
                             <Image RenderOptions.BitmapScalingMode="HighQuality" 
 RenderOptions.EdgeMode="Aliased" Source="/Resources/MenuIcons/xor.png"></Image>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Click="CartesianProduct_Click" Header="декартовий добуток">
+                    <MenuItem Click="CartesianProduct_Click" Header="{Resx CartesianProduct}">
                         <MenuItem.Icon>
                             <Image RenderOptions.BitmapScalingMode="HighQuality" 
 RenderOptions.EdgeMode="Aliased" Source="/Resources/MenuIcons/cartesian.png"></Image>
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="Допомога">
-                    <MenuItem Header="Про програму..." Click="About_Click"></MenuItem>
+                <MenuItem Header="{Resx Traversal}">
+                    <MenuItem Click="DFS_Click" Header="{Resx DFS}"></MenuItem>
+                    <MenuItem Header="{Resx BFS}"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="{Resx Help}">
+                    <MenuItem Header="{Resx About}"  Click="About_Click"></MenuItem>
+                    <MenuItem x:Name="menuItemLanguages" Header="{Resx Language}">
+                        <MenuItem x:Name="EngLang" Tag="en-US" Header="{Resx EN_Lang}" Click="Lang_Click"></MenuItem>
+                        <MenuItem x:Name="UALang" Tag ="uk-UA" Header="{Resx UA_Lang}" Click="Lang_Click"></MenuItem>
+                    </MenuItem>
                 </MenuItem>
             </Menu>
         </DockPanel>

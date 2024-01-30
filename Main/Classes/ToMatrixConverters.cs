@@ -35,7 +35,7 @@ namespace Main.Classes
 
             return adjacence_matrix;
         }
-        static public List<string> GetLines(this Dictionary<int, HashSet<int>> adjacence_list, ref Canvas canvas)
+        static private List<string> GetLines(this Dictionary<int, HashSet<int>> adjacence_list, ref Canvas canvas)
         {
             var list = new List<string>();
 

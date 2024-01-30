@@ -5,8 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Main.Windows"
         mc:Ignorable="d"
-        Title="Про програму" Height="260" Width="252">
+        Title="Про програму" Height="367" Width="367">
     <Grid>
+        <Grid Margin="0,0,200,0">
+            <Image Source="/Resources/banner.png" Margin="-1,0,1,0"></Image>
 
+        </Grid>
+        <TextBlock Margin="167,0,0,0">GitHub: </TextBlock>
     </Grid>
 </Window>
