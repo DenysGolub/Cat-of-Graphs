@@ -117,58 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AdjMatrix" xml:space="preserve">
-    <value>adjacence</value>
+  <data name="description" xml:space="preserve">
+    <value>Cat of Graphs - програма, яка дозволить вам ефективно вивчати теорію графів на практиці. Будуйте графи, досліджуйте алгоритми - все в ваших руках!</value>
   </data>
-  <data name="CartesianProductTitle" xml:space="preserve">
-    <value>Режим декартового добутку графів</value>
-  </data>
-  <data name="CartesianProductTitleENGLISH" xml:space="preserve">
-    <value>Cartesian product mode</value>
-  </data>
-  <data name="CircleSumTitle" xml:space="preserve">
-    <value>Режим кільцевої суми графів</value>
-  </data>
-  <data name="CircleSumTitleENGLISH" xml:space="preserve">
-    <value>Circle sum mode</value>
-  </data>
-  <data name="DrawGraph" xml:space="preserve">
-    <value>Draw</value>
-  </data>
-  <data name="File.Header" xml:space="preserve">
-    <value>File</value>
-  </data>
-  <data name="Help" xml:space="preserve">
-    <value>Help</value>
-  </data>
-  <data name="IncMatrix" xml:space="preserve">
-    <value>incidence</value>
-  </data>
-  <data name="IntersectionTitle" xml:space="preserve">
-    <value>Режим перетину графів</value>
-  </data>
-  <data name="IntersectionTitleENGLISH" xml:space="preserve">
-    <value>Intersection mode</value>
-  </data>
-  <data name="Matrix" xml:space="preserve">
-    <value>Matrix</value>
-  </data>
-  <data name="NewFile" xml:space="preserve">
-    <value>new</value>
-  </data>
-  <data name="OpenFile" xml:space="preserve">
-    <value>open</value>
-  </data>
-  <data name="SaveFile" xml:space="preserve">
-    <value>save as</value>
-  </data>
-  <data name="String1" xml:space="preserve">
-    <value />
-  </data>
-  <data name="UnityTitle" xml:space="preserve">
-    <value>Режим об'єднання графів</value>
-  </data>
-  <data name="UnityTitleENGLISH" xml:space="preserve">
-    <value>Unity mode</value>
+  <data name="title" xml:space="preserve">
+    <value>Про програму</value>
   </data>
 </root>

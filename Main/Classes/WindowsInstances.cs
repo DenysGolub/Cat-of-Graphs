@@ -18,11 +18,12 @@ namespace Main.Classes
         static MainWindow _mainwin= Application.Current.Windows.OfType<MainWindow>().SingleOrDefault();
         static SecondGraph _sgraph;
         static OperationResult _resgraph;
-
+        static About _about;
         public static MainWindow MainWindowInst => _mainwin;
 
         public static SecondGraph SecGraphInst => SecondGraphInst();
         public static OperationResult ResGraphInst => ResultWindowInst();
+        public static About AboutInst => AboutWindowInst();
         
         private static bool ResultWindowExist()
         {
@@ -41,6 +42,39 @@ namespace Main.Classes
                 return false;
             }
             return true;
+        }
+
+        private static About AboutWindowInst()
+        {
+            if (!IsAboutWindowExist(MainWindowInst, out int index))
+            {
+                _about = new About();
+                return _about;
+            }
+            _about = Application.Current.Windows.OfType<About>().SingleOrDefault();
+            _about.Activate();
+            return _about;
+        }
+
+        private static bool IsAboutWindowExist(Window wnd, out int win_index)
+        {
+            try
+            {
+                for (int i = 0; i < wnd.OwnedWindows.Count; i++)
+                {
+                    if (wnd.OwnedWindows[i] is About)
+                    {
+                        win_index = i;
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            win_index = -1;
+            return false;
         }
 
         private static SecondGraph SecondGraphInst()
@@ -67,6 +101,11 @@ namespace Main.Classes
                 case SecondGraph:
                     {
                         _sgraph = null;
+                        break;
+                    }
+                case About:
+                    {
+                        _about = null;
                         break;
                     }
                 default:
@@ -161,29 +200,20 @@ namespace Main.Classes
 
     static class SetWindowInfo
     {
+        public static void AboutWindow()
+        {
+            About about = WindowsInstances.AboutInst;
+
+            about.Owner = WindowsInstances.MainWindowInst;
+            about.Show();
+        }
         public static void SecGraphWindow(CurrentGraphOperation oper, GraphType type)
         {
             SecondGraph graph = WindowsInstances.SecGraphInst;
             graph.Type = type;
             graph.Owner = WindowsInstances.MainWindowInst;
             graph.CurrentOperation = oper;
-            switch (oper)
-            {
-                case CurrentGraphOperation.Unity:
-                    graph.Title = "Режим об'єднання графів";
-                    break;
-                case CurrentGraphOperation.CircleSum:
-                    graph.Title = "Режим кільцевої суми графів";
-                    break;
-                case CurrentGraphOperation.Intersection:
-                    graph.Title = "Режим перетину графів";
-                    break;
-                case CurrentGraphOperation.CartesianProduct:
-                    graph.Title = "Режим декартового добутку графів";
-                    break;
-                default:
-                    break;
-            }
+            
             graph.Show();
         }
 
@@ -207,7 +237,7 @@ namespace Main.Classes
                     window.SetCanvas(graph.Intersection(bigger_canvas, list1.GetList, list2.GetList, type, out AdjacenceList intersection));
                     break;
                 case CurrentGraphOperation.CartesianProduct:
-                    
+
                     //window.SetResourceReference(Window.TitleProperty, "Resx CartesianProductTitle");
                     window.SetCanvas(graph.CartesianProduct(list1.GetList, list2.GetList, type));
                     break;

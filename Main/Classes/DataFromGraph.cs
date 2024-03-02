@@ -171,11 +171,17 @@ namespace Main.Classes
                 PathGeometry pthGeometry = new PathGeometry();
                 pthGeometry.Figures = pthFigureCollection;
 
+
+
+
                 Path arcPath = new Path();
                 arcPath.StrokeThickness = 1;
                 arcPath.Data = pthGeometry;
                 arcPath.Stroke = Brushes.Black;
                 arcPath.Fill = Brushes.White;
+
+
+
 
                 return arcPath;
             }

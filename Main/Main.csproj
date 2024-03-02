@@ -13,6 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\banner.png" />
+    <None Remove="Resources\github-logo.png" />
     <None Remove="Resources\MenuIcons\cartesian.png" />
     <None Remove="Resources\MenuIcons\Graph\add.png" />
     <None Remove="Resources\MenuIcons\Graph\color.png" />
@@ -28,6 +30,7 @@
     <None Remove="Resources\MenuIcons\union.png" />
     <None Remove="Resources\MenuIcons\xor.png" />
     <None Remove="Resources\splash.png" />
+    <None Remove="Resources\telegram-logo.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -56,6 +59,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\banner.png" />
+    <Resource Include="Resources\github-logo.png" />
     <Resource Include="Resources\MenuIcons\cartesian.png" />
     <Resource Include="Resources\MenuIcons\Graph\add.png" />
     <Resource Include="Resources\MenuIcons\Graph\color.png" />
@@ -71,6 +76,7 @@
     <Resource Include="Resources\MenuIcons\union.png" />
     <Resource Include="Resources\MenuIcons\xor.png" />
     <Resource Include="Resources\splash.png" />
+    <Resource Include="Resources\telegram-logo.png" />
   </ItemGroup>
 
   <ItemGroup>

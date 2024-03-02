@@ -13,6 +13,7 @@ using Microsoft.Win32;
 using Infralution.Localization.Wpf;
 //using DynamicLocalization;
 using System.Windows.Documents;
+using System.Diagnostics;
 namespace Main
 {
     /// <summary>
@@ -22,6 +23,8 @@ namespace Main
     {
         public delegate void ChangeGraphType(object sender, MyEventArgs e);
 
+        public delegate void ChangeCulture(string code);
+        
         public class MyEventArgs : EventArgs
         {
             public string AdditionalData { get; }
@@ -32,7 +35,7 @@ namespace Main
             }
         }
         public event ChangeGraphType SomethingChanged;
-        
+        public event ChangeCulture CultureChanged;
 
         AdjacenceList adjacenceListUndirected = new AdjacenceList(GraphType.Undirected);
         AdjacenceList adjacenceListDirected = new AdjacenceList(GraphType.Directed);
@@ -197,7 +200,7 @@ namespace Main
             MoveEllipse.Click += (sender, e) => events.MoveMode();
             AddEllipse.Click += (sender, e) => events.AddMode();
             Color_Button.Click += (sender, e) => events.ColorMode();
-            
+           
 
 
         }
@@ -431,7 +434,7 @@ namespace Main
 
         private void About_Click(object sender, RoutedEventArgs e)
         {
-
+            SetWindowInfo.AboutWindow();
         }
 
         private void DFS_Click(object sender, RoutedEventArgs e)
@@ -464,9 +467,26 @@ namespace Main
 
             CultureManager.UICulture = new System.Globalization.CultureInfo(lang);
 
-
+            if (CultureChanged != null)
+            {
+                CultureChanged(lang);
+            }
         }
 
+        private void Cycle_Click(object sender, RoutedEventArgs e)
+        {
+            bool isCyclic = false;
+            if (graphType == GraphType.Directed)
+            {
+                isCyclic = SearchAlgorithms.IsCycleExistInDirectedGraph(GraphAdjacenceList, 1, new HashSet<int>(), new HashSet<int>());
+            }
+            else
+            {
+                //isCyclic = SearchAlgorithms.IsCycleExistInUndirectedGraph(GraphAdjacenceList, 1, new HashSet<int>());
+            }
+            MessageBox.Show(isCyclic ? "True" : "False");
 
+
+        }
     }
 }

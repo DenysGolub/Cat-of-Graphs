@@ -82,6 +82,19 @@ namespace Main.Classes
 
         public class CanvasEvents //Class A
         {
+
+            public virtual void PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+            {
+
+            }
+            public virtual void PreviewMouseMove(object sender, MouseEventArgs e)
+            {
+
+            }
+            public virtual void PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+            {
+
+            }
             SolidColorBrush color_disable = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
             SolidColorBrush color_active = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFACD1FF"));
 
@@ -280,7 +293,7 @@ namespace Main.Classes
 
 
 
-            public class Directed : CanvasEvents, ICanvasEvents
+            public class Directed : CanvasEvents
             {
                 Window owner;  
                 Canvas canvas;
@@ -294,7 +307,7 @@ namespace Main.Classes
                 public Window ClassOwner { get => owner; set => owner = value; }
 
 
-                public void PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+                public override void PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
                 {
                    
 
@@ -504,12 +517,12 @@ namespace Main.Classes
                     }
                 }
 
-                public void PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+                public override void PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
                 {
                     ClickedObject = null;
                 }
 
-                public void PreviewMouseMove(object sender, MouseEventArgs e)
+                public override void PreviewMouseMove(object sender, MouseEventArgs e)
                 {
                     if (ClickedObject == null)
                         return;
@@ -598,6 +611,7 @@ namespace Main.Classes
 
             public class Undirected : CanvasEvents, ICanvasEvents
             {
+                
                 Window owner;
                 Canvas canvas;
                 AdjacenceList _adjacenceList;
@@ -609,7 +623,7 @@ namespace Main.Classes
                 public ColorPicker ColorPicker { get => _colorpicker; set => _colorpicker = value; }
 
                 public Window ClassOwner {get => owner; set => owner = value; }
-                public void PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+                public override void PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
                 {
                    
 
@@ -684,7 +698,7 @@ namespace Main.Classes
                                         X2 = intersectionPoint2.X,
                                         Y2 = intersectionPoint2.Y,
                                         Stroke = System.Windows.Media.Brushes.Black,
-                                        StrokeThickness = 2,
+                                        StrokeThickness = 1,
                                         Fill = System.Windows.Media.Brushes.Black,
                                     };
 
@@ -836,12 +850,12 @@ namespace Main.Classes
                 }
 
 
-                public void PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+                public override void PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
                 {
                     ClickedObject = null;
                 }
 
-                public void PreviewMouseMove(object sender, MouseEventArgs e)
+                public override void PreviewMouseMove(object sender, MouseEventArgs e)
                 {
                     if (ClickedObject == null)
                         return;
@@ -851,7 +865,7 @@ namespace Main.Classes
 
                     double deltaX = DragEndPoint.X - DragStartPoint.X;
                     double deltaY = DragEndPoint.Y - DragStartPoint.Y;
-
+                    
 
 
                     if (move == true && ClickedObject is Ellipse)

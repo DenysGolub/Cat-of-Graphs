@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,6 +29,11 @@ namespace Main.Windows
     /// </summary>
     public partial class SecondGraph : Window
     {
+        private string culture = "";
+        private string _oper = "";
+        public string Operation { get { return _oper; } }
+
+
         AdjacenceList adjacenceListUndirected = new AdjacenceList(GraphType.Undirected);
         AdjacenceList adjacenceListDirected = new AdjacenceList(GraphType.Directed);
         GraphOperationsCanvas graph_operations = new GraphOperationsCanvas();
@@ -76,7 +83,19 @@ namespace Main.Windows
                 _type = value;
             }
         }
-        public CurrentGraphOperation CurrentOperation { get; set; }
+        CurrentGraphOperation currentOper;
+        public CurrentGraphOperation CurrentOperation
+        {
+            get
+            {
+                return currentOper;
+            }
+            set
+            {
+                currentOper = value;
+                SetOperation(value);
+            }
+        }
         public SecondGraph()
         {
             InitializeComponent();
@@ -84,6 +103,8 @@ namespace Main.Windows
 
             undirected_events.ClassOwner = this;
             directed_events.ClassOwner = this;
+
+            WindowsInstances.MainWindowInst.CultureChanged += SetCurrentCulture;
 
         }
 
@@ -226,5 +247,63 @@ namespace Main.Windows
                 Owner.Activate();
             }
         }
+
+        public void SetCurrentCulture(string code)
+        {
+            if (code == "en-US")
+            {
+                _oper += "ENGLISH";
+            }
+            else if (code == "uk-UA")
+            {
+                _oper = _oper.Replace("ENGLISH", "");
+            }
+            UpdateBinding();
+        }
+        public void SetOperation(CurrentGraphOperation operation)
+        {
+            switch (operation)
+            {
+                case CurrentGraphOperation.Unity:
+                    _oper = "UnityTitle";
+                    break;
+                case CurrentGraphOperation.CircleSum:
+                    _oper = "CircleSumTitle";
+                    break;
+                case CurrentGraphOperation.Intersection:
+                    _oper = "IntersectionTitle";
+                    break;
+                case CurrentGraphOperation.CartesianProduct:
+                    _oper = "CartesianProductTitle";
+                    break;
+                default:
+                    break;
+            }
+
+            if(CultureManager.UICulture.ToString() == "en-US" && !_oper.Contains("ENGLISH"))
+            {
+                _oper += "ENGLISH";
+            }
+
+            UpdateBinding();
+
+
+        }
+
+        private void UpdateBinding()
+        {
+
+            // Create the resource manager.
+            Assembly assembly = this.GetType().Assembly;
+
+            //ResFile.Strings -> <Namespace>.<ResourceFileName i.e. Strings.resx> 
+            var resman = new ResourceManager("Main.Localization.SecondGraph", assembly);
+
+            Binding b = new Binding();
+            b.Source = resman;
+            Title = resman.GetString(_oper);
+
+        }
+
     }
 }
