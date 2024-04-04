@@ -14,6 +14,22 @@ using Infralution.Localization.Wpf;
 //using DynamicLocalization;
 using System.Windows.Documents;
 using System.Diagnostics;
+using System.Windows.Shapes;
+using System.Windows.Media;
+using Main.TestingPart;
+using System.Text.Json;
+using System.Windows.Input;
+using System.Xml;
+using System.Collections.ObjectModel;
+using System.Windows.Media.Imaging;
+using static System.Net.Mime.MediaTypeNames;
+using Application = System.Windows.Application;
+using Newtonsoft.Json;
+using System.Windows.Media.Media3D;
+using System.Data;
+using System;
+using System.Reflection.Metadata;
+using System.Collections;
 namespace Main
 {
     /// <summary>
@@ -45,6 +61,7 @@ namespace Main
         Events.CanvasEvents.Directed directed_events = new Events.CanvasEvents.Directed();
         Events events = new Events();
         MenuColors colors = new MenuColors();
+        List<Question> questions = new List<Question>();
 
         public Canvas GraphCanvas
         {
@@ -103,17 +120,59 @@ namespace Main
                 HwndSource.FromHwnd(MainWindow.WindowHandle)?.AddHook(new HwndSourceHook(HandleMessages));
             };
 
+            QuestionsListBox.ItemsSource = questions;
 
-           /* LocUtil.SetDefaultLanguage(this);
-
-            // Adjust checked language menu item
-            foreach (MenuItem item in menuItemLanguages.Items)
-            {
-                if (item.Tag.ToString().Equals(LocUtil.GetCurrentCultureName(this)))
-                    item.IsChecked = true;
-            }*/
-
+            
         }
+
+
+        private void DataGrid_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            DataGrid dataGrid = sender as DataGrid;
+
+            if (e.Key == Key.Enter)
+            {
+                var currentRowIndex = dataGrid.Items.IndexOf(dataGrid.CurrentItem);
+                var currentColumnIndex = dataGrid.CurrentColumn.DisplayIndex;
+
+                // Check if the Enter key was pressed in the last cell of the last row
+                if (currentRowIndex == dataGrid.Items.Count - 1 && currentColumnIndex == dataGrid.Columns.Count - 1)
+                {
+                    // Add a new item to the ItemsSource (assuming it's bound to a collection)
+                    (dataGrid.ItemsSource as ObservableCollection<Question>).Add(new Question());
+
+                    // Move the focus to the new row
+                    dataGrid.ScrollIntoView(dataGrid.Items[dataGrid.Items.Count - 1]);
+                    dataGrid.Focus();
+                    dataGrid.SelectedIndex = dataGrid.Items.Count - 1;
+
+                    // Begin editing the first cell of the new row
+                    dataGrid.BeginEdit();
+                }
+            }
+        }
+
+
+        private void InlineEditTextBox(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is TextBlock textBlock)
+            {
+                TextBox textBox = new TextBox();
+                textBox.Text = textBlock.Text;
+                textBox.LostFocus += (s, args) =>
+                {
+                    // Update your data object with the new value
+                    textBlock.Text = textBox.Text;
+                    // Remove the TextBox and show the TextBlock again
+                    (textBlock.Parent as ContentPresenter).Content = textBlock;
+                };
+                // Replace the TextBlock with the TextBox
+                textBlock.Parent.SetValue(ContentPresenter.ContentProperty, textBox);
+                textBox.Focus();
+                textBox.SelectAll();
+            }
+        }
+
 
         public static IntPtr WindowHandle { get; private set; }
 
@@ -135,7 +194,6 @@ namespace Main
                     mainWindow.Load(p);
                 }
             }
-            ///ДОРОБИТИ ФАЙЛОВУ СИСТЕМУ. ПЕРЕВОД ЗА МОЖЛИВОСТІ ТЕЖ
         }
 
         private static IntPtr HandleMessages
@@ -184,7 +242,19 @@ namespace Main
             DrawingCanvas_Directed.PreviewMouseLeftButtonDown += (sender, e) => directed_events.PreviewMouseLeftButtonDown(sender, e);
             DrawingCanvas_Directed.PreviewMouseLeftButtonUp += (sender, e) => directed_events.PreviewMouseLeftButtonUp(sender, e);
             DrawingCanvas_Directed.PreviewMouseMove += (sender, e) => directed_events.PreviewMouseMove(sender, e);
-           
+
+
+
+           /* undir.PreviewMouseLeftButtonUp += (sender, e) => undirected_events.PreviewMouseLeftButtonUp(sender, e);
+            undir.PreviewMouseLeftButtonDown += (sender, e) => undirected_events.PreviewMouseLeftButtonDown(sender, e);
+            undir.PreviewMouseMove += (sender, e) => undirected_events.PreviewMouseMove(sender, e);
+
+            
+
+            dir.PreviewMouseLeftButtonDown += (sender, e) => directed_events.PreviewMouseLeftButtonDown(sender, e);
+            dir.PreviewMouseLeftButtonUp += (sender, e) => directed_events.PreviewMouseLeftButtonUp(sender, e);
+            dir.PreviewMouseMove += (sender, e) => directed_events.PreviewMouseMove(sender, e);*/
+
             undirected_events.Canvas = DrawingCanvas_Undirected;
             undirected_events.AdjacenceList = adjacenceListUndirected;
             undirected_events.ColorPicker = ColorUndirected;
@@ -200,8 +270,12 @@ namespace Main
             MoveEllipse.Click += (sender, e) => events.MoveMode();
             AddEllipse.Click += (sender, e) => events.AddMode();
             Color_Button.Click += (sender, e) => events.ColorMode();
-           
 
+            DrawingCanvas_Undirected.Height = CanvasGrid.ActualHeight;
+            DrawingCanvas_Undirected.Width = CanvasGrid.ActualWidth;
+
+            DrawingCanvas_Directed.Height = CanvasGrid.ActualHeight;
+            DrawingCanvas_Directed.Width = CanvasGrid.ActualWidth;
 
         }
 
@@ -255,6 +329,27 @@ namespace Main
             if(WindowsInstances.MatrixIncidenceWindowExist(this, out int ind1)) 
             {
                 MatrixController.Incidence(this);
+            }
+        }
+
+        void ListViewItem_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            
+            XmlElement book = ((ListViewItem)sender).Content as XmlElement;
+            //var hitInfo = QuestionsListBox.InputHitTest(e.Location);
+
+            if (book == null)
+            {
+                return;
+            }
+
+            if (book.GetAttribute("Stock") == "out")
+            {
+                MessageBox.Show("Time to order more copies of " + book["Title"].InnerText);
+            }
+            else
+            {
+                MessageBox.Show(book["Title"].InnerText + " is available.");
             }
         }
 
@@ -367,8 +462,8 @@ namespace Main
                 DrawingCanvas_Undirected.InvalidateVisual();
                 adjacenceListDirected.GetList = adjacenceList.GetList; 
             }
-            AdjacenceMatrix win = WindowsInstances.AdjacenceMatrixWindowInst(this);
-            IncidenceMatrix inc_win = WindowsInstances.MatrixIncidenceWindowInst(this);
+            Main.Windows.AdjacenceMatrix win = WindowsInstances.AdjacenceMatrixWindowInst(this);
+            Main.Windows.IncidenceMatrix inc_win = WindowsInstances.MatrixIncidenceWindowInst(this);
 
             if (win.Matrix != null)
             {
@@ -488,5 +583,350 @@ namespace Main
 
 
         }
+
+        private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            /*if(CanvasGrid.ActualWidth > 0)
+            {
+                // Adjust the size of the canvas to match the size of the grid
+                GraphCanvas.Width = CanvasGrid.ActualWidth;
+                GraphCanvas.Height = CanvasGrid.ActualHeight;
+
+                // Adjust the position of each child element of the canvas
+                foreach (var child in GraphCanvas.Children)
+                {
+
+                    if (child is UIElement uiElement && child is Ellipse)
+                    {
+                        // Get the current position of the child element
+                        double currentLeft = Canvas.GetLeft(uiElement);
+                        double currentTop = Canvas.GetTop(uiElement);
+
+                        // Calculate the new position based on the change in size of the canvas
+                        double newLeft = currentLeft * CanvasGrid.ActualWidth / e.PreviousSize.Width;
+                        double newTop = currentTop * CanvasGrid.ActualHeight / e.PreviousSize.Height;
+
+                        // Update the position of the child element
+                        Canvas.SetLeft(uiElement, newLeft);
+                        Canvas.SetTop(uiElement, newTop);
+                    }
+                    else if(child is UIElement && child is TextBlock)
+                    {
+                        DataFromGraph.AllignOfText()
+                    }
+                }
+
+                GraphCanvas.InvalidateVisual();*/
+
+            /*DrawingCanvas_Undirected.Height = CanvasGrid.ActualHeight;
+            DrawingCanvas_Undirected.Width = CanvasGrid.ActualWidth;
+
+            DrawingCanvas_Directed.Height = CanvasGrid.ActualHeight;
+            DrawingCanvas_Directed.Width = CanvasGrid.ActualWidth;
+
+            undir.InvalidateVisual();
+
+            DrawingCanvas_Undirected.InvalidateMeasure();
+            DrawingCanvas_Undirected.InvalidateArrange();
+            undir.InvalidateMeasure();
+            undir.InvalidateArrange();*/
+        }
+
+        private void DrawingCanvas_Undirected_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+           /* var element = (UIElement)sender;
+            var position = e.GetPosition(element);
+            var transform = (MatrixTransform)element.RenderTransform;
+            var matrix = transform.Matrix;
+            var scale = e.Delta >= 0 ? 1.1 : (1.0 / 1.1); // choose appropriate scaling factor
+
+            matrix.ScaleAtPrepend(scale, scale, position.X, position.Y);
+            transform.Matrix = matrix;*/
+        }
+      
+        private BitmapSource ConvertCanvasToImage(Canvas canvas)
+        {
+            // Create a RenderTargetBitmap
+            var renderBitmap = new RenderTargetBitmap(
+                (int)canvas.ActualWidth,
+                (int)canvas.ActualHeight,
+                96d, 96d,
+                PixelFormats.Pbgra32
+            );
+
+            // Render the Canvas onto the RenderTargetBitmap
+            renderBitmap.Render(canvas);
+
+            // Convert the RenderTargetBitmap to a BitmapSource
+            return renderBitmap;
+        }
+
+        private void CopyCanvasToImage(object sender, RoutedEventArgs e)
+        {
+            if ((sender as MenuItem)?.Tag?.ToString() == "GraphAddToFile")
+            {
+                // Get the selected cell
+                var selectedCell = QuestionsListBox.CurrentCell;
+                if (selectedCell == null)
+                    return;
+
+                // Get the selected question item
+                var selectedQuestion = selectedCell.Item as Question;
+                if (selectedQuestion == null)
+                    return;
+
+                // Convert the GraphCanvas to an image
+                BitmapSource imageSource = ConvertCanvasToImage(GraphCanvas);
+
+                // Create a MemoryStream to hold the image data
+                MemoryStream ms = new MemoryStream();
+
+                // Create a BitmapEncoder and save the image to the MemoryStream
+                BitmapEncoder encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(imageSource));
+                encoder.Save(ms);
+
+                // Optionally, save the image to a file
+                // File.WriteAllBytes("image.png", ms.ToArray());
+
+                // Set the image source of the selected question
+                selectedQuestion.ImageSource = ms.ToArray();
+
+                // Set other properties of the selected question as needed
+                selectedQuestion.GraphType = graphType;
+
+                this.QuestionsListBox.CommitEdit();
+                this.QuestionsListBox.CommitEdit();
+
+                this.QuestionsListBox.CancelEdit();
+                this.QuestionsListBox.CancelEdit();
+
+                QuestionsListBox.Items.Refresh();
+                
+                try
+                {
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+        }
+
+        private void ImgCanvas_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var quest = QuestionsListBox.CurrentCell.Item as Question;
+
+            ImageWindow imgwin;
+            if(quest!=null && e.ClickCount == 2)
+            {
+              
+                WindowsInstances.ImageWindowInst(LoadImage(quest.ImageSource));
+               
+            }
+            
+   
+            
+        }
+
+        private static BitmapImage LoadImage(byte[] imageData)
+        {
+            if (imageData == null || imageData.Length == 0) return null;
+            var image = new BitmapImage();
+            using (var mem = new MemoryStream(imageData))
+            {
+                mem.Position = 0;
+                image.BeginInit();
+                image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.UriSource = null;
+                image.StreamSource = mem;
+                image.EndInit();
+            }
+            image.Freeze();
+            return image;
+        }
+
+        private void TestingFileSave_Click(object sender, RoutedEventArgs e)
+        {
+
+            string fileName = "C:\\Users\\User\\Desktop\\TestFile.json";
+            string jsonString = JsonConvert.SerializeObject(questions);
+
+
+            File.WriteAllText(fileName, jsonString);
+
+            ObservableCollection<Question> deserializedProduct = JsonConvert.DeserializeObject<ObservableCollection<Question>>(jsonString);
+
+            Console.WriteLine();
+        }
+
+        private void TestingFileOpen_Click(object sender, RoutedEventArgs e)
+        {
+            string fileName = "C:\\Users\\User\\Desktop\\TestFile.json";
+
+            ObservableCollection<Question> deserializedProduct = JsonConvert.DeserializeObject<ObservableCollection<Question>>(File.ReadAllText(fileName));
+
+            // QuestionsListBox.ItemsSource = deserializedProduct;
+            questions = new List<Question>(deserializedProduct); ///ДОРОБИТИ ТЕСТУВАЛЬНІ ВІКНА ТА САМ ПРОЦЕС
+            QuestionsListBox.ItemsSource = questions;  
+            QuestionsListBox.Items.Refresh();
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void NewQuestion_Click(object sender, RoutedEventArgs e)
+        {
+            var b = QuestionsListBox.Items;
+            questions.Add(new Question() { GraphType = graphType, State = new AdjMatrixStateParameter() { State = "AdjMatrix"}
+            });
+            
+            this.QuestionsListBox.CommitEdit();
+            this.QuestionsListBox.CommitEdit();
+
+            this.QuestionsListBox.CancelEdit();
+            this.QuestionsListBox.CancelEdit();
+
+
+            CorrAnswTagProp.TagPropertyName = "AdjMCorrect";
+            QuestionsListBox.Items.Refresh();
+        }
+
+        private void Points_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            // Handle cell editing ending here
+            // You can access the TextBox.Text property to get the edited value
+            var textBox = sender as TextBox;
+            var editedText = textBox.Text;
+            Console.WriteLine($"Edited text: {editedText}");
+        }
+
+        private void ComboBox_DropDownClosed(object sender, EventArgs e)
+        {
+            
+            var textBox = sender as ComboBox;
+            var editedText = textBox.SelectedItem;
+            Console.WriteLine($"Edited text: {editedText}");
+        }
+
+        private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) =>
+     QuestionsListBox.SelectedItem = ((ComboBox)sender).DataContext;
+
+        private void MatrixLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var quest = QuestionsListBox.CurrentCell.Item as Question;
+            if (quest != null && e.ClickCount == 2)
+            {
+                if ((QuestionsListBox.CurrentCell.Column as Main.TestingPart.CustomDataGridTemplateColumn).TagPropertyName == "IncM")
+                {
+                    var window = new Main.TestingPart.IncidenceMatrix();
+                    window.TypeGraph = quest.GraphType;
+                    window.Matrix = quest.IncMatrix; //ЗРОБИТИ ОКРЕМІ ВІКНА МАТРИЦЬ ДЛЯ ТЕСТУВАЛЬНОЇ ЧАСТИНИ
+                    window.Matrix.Type = quest.GraphType;
+                    window.Show();
+                }
+                else if ((QuestionsListBox.CurrentCell.Column as Main.TestingPart.CustomDataGridTemplateColumn).TagPropertyName == "AdjM")
+                {
+                    var window = new Main.TestingPart.AdjacenceMatrix();
+                    window.TypeGraph = quest.GraphType;
+                    window.Matrix = quest.AdjMatrix;
+                    window.Matrix.Type = quest.GraphType;
+                    window.Show();
+                }
+                else if ((QuestionsListBox.CurrentCell.Column as Main.TestingPart.CustomDataGridTemplateColumn).TagPropertyName == "AdjMCorrect")
+                {
+                    var window = new Main.TestingPart.AdjacenceMatrix();
+                    window.TypeGraph = quest.GraphType;
+                    window.Matrix = quest.CorrectAnswer;
+                   
+                    window.Matrix.Type = quest.GraphType;
+                    window.Show();
+                }
+            }
+        }
+
+        private void CurrentGraphMatrixToCorrect(object sender, RoutedEventArgs e)
+        {
+            var quest = QuestionsListBox.CurrentCell.Item as Question;
+
+            if(quest!=null)
+            {
+              
+                quest.CorrectAnswer.GetList = new Dictionary<int, HashSet<int>> (GraphAdjacenceList.GetList);
+
+                this.QuestionsListBox.CommitEdit();
+                this.QuestionsListBox.CommitEdit();
+
+                this.QuestionsListBox.CancelEdit();
+                this.QuestionsListBox.CancelEdit();
+
+                QuestionsListBox.Items.Refresh();
+            }
+        }
+
+        private void CurrentGraphMatrixToFile( object sender, RoutedEventArgs e)
+        {
+            var quest = QuestionsListBox.CurrentCell.Item as Question;
+
+            if (quest != null)
+            {
+
+                quest.AdjMatrix.GetList = new Dictionary<int, HashSet<int>>(GraphAdjacenceList.GetList);
+
+                this.QuestionsListBox.CommitEdit();
+                this.QuestionsListBox.CommitEdit();
+
+                this.QuestionsListBox.CancelEdit();
+                this.QuestionsListBox.CancelEdit();
+
+                quest.GraphType = graphType;
+                
+                QuestionsListBox.Items.Refresh();
+            }
+        }
+
+        private void StartTest_Click(object sender, RoutedEventArgs e)
+        {
+            string fileName = "C:\\Users\\User\\Desktop\\TestFile.json";
+
+            ObservableCollection<Question> deserializedProduct = JsonConvert.DeserializeObject<ObservableCollection<Question>>(File.ReadAllText(fileName));
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            double score = 0;
+            foreach(var quest in deserializedProduct)
+            {
+                if(quest.QuestionsType == QuestionsType.ToGraphFromAdjacenceMatrix)
+                {
+                    if(new TestingPart.QuestionsAnsweringWindows.ToGraphFromAdjMatrixWin(quest).ShowDialog() == true)
+                    {
+                        score += quest.Points;
+                    }
+                }
+                else if (quest.QuestionsType == QuestionsType.ToAdjacenceMatrixFromGraph)
+                {
+                    if (new TestingPart.QuestionsAnsweringWindows.ToAdjMatrixFromGraphWin(quest).ShowDialog() == true)
+                    {
+                        score += quest.Points;
+                    }
+                }
+
+            }
+            TimeSpan elapsedTime = stopwatch.Elapsed;
+
+            int hours = elapsedTime.Hours;
+            int minutes = elapsedTime.Minutes;
+            int seconds = elapsedTime.Seconds;
+            stopwatch.Stop();
+            MessageBox.Show($"Набрана кількість балів: {score}\nЧас виконання: {hours:D2}:{minutes:D2}:{seconds:D2}", "Результати тестування");
+        }
     }
-}
+}   

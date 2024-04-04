@@ -1,5 +1,6 @@
 ﻿using Main.Enumerators;
 using Main.Interfaces;
+using Main.TestingPart.QuestionsAnsweringWindows;
 using Main.Windows;
 using System;
 using System.Collections.Generic;
@@ -109,6 +110,58 @@ namespace Main.Classes
             {
                 wnd.SomethingChanged += HandleChangedInSecondGraph;
             } 
+
+            public void SubscribeToChangesQuest(Events win)
+            {
+                win.SomethingChanged += Win_SomethingChanged;
+            }
+
+            private void Win_SomethingChanged(object sender, MyEventArgs e)
+            {
+                ToGraphFromAdjMatrixWin wnd = Application.Current.Windows.OfType<ToGraphFromAdjMatrixWin>().FirstOrDefault();
+
+                if (e.AdditionalData == "AddMode")
+                {
+                    Edit = true;
+                    Remove = false;
+                    Move = false;
+                    Color = false;
+
+                    color_active.Opacity = 0.5;
+
+                    wnd.AddEllipse.Background = color_active;
+                    wnd.Delete.Background = color_disable;
+                    wnd.MoveEllipse.Background = color_disable;
+                }
+                else if (e.AdditionalData == "MoveMode")
+                {
+                    Edit = false;
+                    Remove = false;
+                    Move = true;
+                    Color = false;
+
+
+                    color_active.Opacity = 0.5;
+
+                    wnd.AddEllipse.Background = color_disable;
+                    wnd.Delete.Background = color_disable;
+                    wnd.MoveEllipse.Background = color_active;
+
+                }
+                else if (e.AdditionalData == "DeleteMode")
+                {
+                    Edit = false;
+                    Remove = true;
+                    Move = false;
+                    Color = false;
+
+                    color_active.Opacity = 0.5;
+
+                    wnd.AddEllipse.Background = color_disable;
+                    wnd.Delete.Background = color_active;
+                    wnd.MoveEllipse.Background = color_disable;
+                }
+            }
 
             private void HandleSomethingChanged(object sender, MyEventArgs e)
             {

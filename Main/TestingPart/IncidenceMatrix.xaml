@@ -1,0 +1,31 @@
+﻿<Window ResxExtension.DefaultResxName="Main.Localization.Matrix" Language="{UICulture}" 
+        x:Class="Main.TestingPart.IncidenceMatrix"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Main.Windows"
+        xmlns:dataGrid2D="http://gu.se/DataGrid2D"
+        mc:Ignorable="d"
+        Title="{Resx IncidenceMatrix}" SizeToContent="WidthAndHeight" Closed="Window_Closed">
+    <Grid>
+        <DataGrid x:Name="matrix" dataGrid2D:ItemsSource.Array2D="{Binding Data2D}"
+       dataGrid2D:ItemsSource.ColumnHeadersSource="{Binding ColumnHeaders}"
+       dataGrid2D:ItemsSource.RowHeadersSource="{Binding RowHeaders}"
+       CanUserSortColumns="False"  
+       IsReadOnly="True"
+       SelectionUnit="Cell">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="NodeAdd" Header="Додати вершину" Click="AddNode_Click"/>
+                    <MenuItem x:Name="NodeDel" Header="Видалити вершину" Click="DeleteNode_Click"></MenuItem>
+                    <MenuItem x:Name="EdgeAdd" Header="Додати ребро" Click="AddEdge_Click"></MenuItem>
+                    <MenuItem x:Name="EdgeDel" Header="Видалити ребро" Click="DeleteEdge_Click"></MenuItem>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+
+        </DataGrid>
+
+
+    </Grid>
+</Window>

@@ -265,5 +265,9 @@ namespace Main.Classes
             }
         }
 
+       /* public static Point AllignOfText(TextBlock block)
+        {
+            
+        }*/
     }
 }

@@ -1,0 +1,58 @@
+﻿<Window x:Class="Main.TestingPart.QuestionsAnsweringWindows.ToGraphFromAdjMatrixWin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Main.TestingPart.QuestionsAnsweringWindows"
+        xmlns:dataGrid2D="http://gu.se/DataGrid2D"
+        mc:Ignorable="d"
+        Title="ToGraphFromAdjMatrixWin" Height="697" Width="1065" Loaded="Window_Loaded">
+    <Grid Height="697" Width="1065" >
+        <Button Margin="95,226,619,407" FontSize="20" Click="Button_Click">Надіслати</Button>
+        <TextBox IsReadOnly="True" x:Name="Description" BorderThickness="0" Margin="21,19,493,513" FontSize="24" TextWrapping="Wrap">За заданою матрицею суміжності утворіть граф</TextBox>
+        <DataGrid x:Name="matrix" dataGrid2D:ItemsSource.Array2D="{Binding Data2D}"
+   dataGrid2D:ItemsSource.ColumnHeadersSource="{Binding ColumnHeaders}"
+   dataGrid2D:ItemsSource.RowHeadersSource="{Binding RowHeaders}"
+   CanUserSortColumns="False"
+           
+           SelectionUnit="Cell" Margin="593,19,16,407">
+        </DataGrid>
+
+
+        <Border Background ="Transparent"  Visibility="Visible" BorderThickness="2" Margin="0,303,0,0" BorderBrush="Black"/>
+
+
+        <Canvas x:Name="DrawingCanvas_Undirected" Background="White" Margin="0,303,0,0"/>
+        <Canvas x:Name="DrawingCanvas_Directed" Background="White" Margin="0,303,0,0"/>
+        <StackPanel x:Name="MenuStackPanel" HorizontalAlignment="Left" VerticalAlignment="Top" Height="250" Width="35" Margin="10,318,0,0" >
+
+
+            <Button x:FieldModifier="public" x:Name="AddEllipse" Background="White" Margin="3">
+                <StackPanel>
+                    <Image Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality" 
+    RenderOptions.EdgeMode="Aliased" Source ="/Resources/MenuIcons/Graph/add.png"></Image>
+                </StackPanel>
+
+            </Button>
+
+            <Button x:FieldModifier="public" x:Name="MoveEllipse" Background="White" Margin="3">
+
+                <StackPanel>
+                    <Image Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality" 
+    RenderOptions.EdgeMode="Aliased" Source ="/Resources/MenuIcons/Graph/move.png"></Image>
+                </StackPanel>
+
+            </Button>
+
+            <Button x:FieldModifier="public" x:Name="Delete" Background="White" Margin="3">
+                <StackPanel>
+                    <Image Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality" 
+    RenderOptions.EdgeMode="Aliased" Source ="/Resources/MenuIcons/Graph/delete.png"></Image>
+                </StackPanel>
+
+            </Button>
+        </StackPanel>
+
+
+    </Grid>
+</Window>

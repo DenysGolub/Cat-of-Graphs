@@ -1,4 +1,5 @@
 ﻿using Main.Enumerators;
+using Main.TestingPart;
 using Main.Windows;
 using System;
 using System.Collections.Generic;
@@ -9,16 +10,19 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 
 namespace Main.Classes
 {
     static class WindowsInstances
     {
-        static MainWindow _mainwin= Application.Current.Windows.OfType<MainWindow>().SingleOrDefault();
+        static MainWindow _mainwin = Application.Current.Windows.OfType<MainWindow>().SingleOrDefault();
         static SecondGraph _sgraph;
         static OperationResult _resgraph;
         static About _about;
+        static ImageWindow _imgwin;
+
         public static MainWindow MainWindowInst => _mainwin;
 
         public static SecondGraph SecGraphInst => SecondGraphInst();
@@ -28,6 +32,16 @@ namespace Main.Classes
         private static bool ResultWindowExist()
         {
             OperationResult instance = Application.Current.Windows.OfType<OperationResult>().SingleOrDefault();
+            if (instance == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private static bool ImgWindowExist()
+        {
+            ImageWindow instance = Application.Current.Windows.OfType<ImageWindow>().SingleOrDefault();
             if (instance == null)
             {
                 return false;
@@ -108,6 +122,11 @@ namespace Main.Classes
                         _about = null;
                         break;
                     }
+                case ImageWindow:
+                {
+                        _imgwin = null;
+                        break;
+                }
                 default:
                     {
                         break;
@@ -129,11 +148,16 @@ namespace Main.Classes
 
         static public bool AdjacenceMatrixWindowExist(Window wnd, out int win_index)
         {
+            win_index = -1;
             try
             {
+                if (wnd==null)
+                {
+                    return false;
+                }
                 for (int i = 0; i < wnd.OwnedWindows.Count; i++)
                 {
-                    if (wnd.OwnedWindows[i] is AdjacenceMatrix)
+                    if (wnd.OwnedWindows[i] is Main.Windows.AdjacenceMatrix)
                     {
                         win_index = i;
                         return true;
@@ -144,30 +168,34 @@ namespace Main.Classes
             {
 
             }
-            win_index = -1;
             return false;
 
         }
-        static public AdjacenceMatrix AdjacenceMatrixWindowInst(Window wnd)
+        static public Main.Windows.AdjacenceMatrix AdjacenceMatrixWindowInst(Window wnd)
         {
 
             if(!AdjacenceMatrixWindowExist(wnd, out int index))
             {
-                return new AdjacenceMatrix();
+                return new Main.Windows.AdjacenceMatrix();
             }
 
-            return (AdjacenceMatrix)wnd.OwnedWindows[index];
+            return (Main.Windows.AdjacenceMatrix)wnd.OwnedWindows[index];
            
         }
 
 
         static public bool MatrixIncidenceWindowExist(Window wnd, out int win_index)
         {
+            win_index = -1;
             try
-            {
+            {   
+                if(wnd==null)
+                {
+                    return false;
+                }
                 for (int i = 0; i < wnd.OwnedWindows.Count; i++)
                 {
-                    if (wnd.OwnedWindows[i] is IncidenceMatrix)
+                    if (wnd.OwnedWindows[i] is Main.Windows.IncidenceMatrix)
                     {
                         win_index = i;
                         return true;
@@ -178,20 +206,33 @@ namespace Main.Classes
             {
 
             }
-            win_index = -1;
             return false;
 
         }
-        static public IncidenceMatrix MatrixIncidenceWindowInst(Window wnd)
+        static public Main.Windows.IncidenceMatrix MatrixIncidenceWindowInst(Window wnd)
         {
 
             if (!MatrixIncidenceWindowExist(wnd, out int index))
             {
-                return new IncidenceMatrix();
+                return new Main.Windows.IncidenceMatrix();
             }
 
-            return (IncidenceMatrix)wnd.OwnedWindows[index];
+            return (Main.Windows.IncidenceMatrix)wnd.OwnedWindows[index];
 
+        }
+
+        static public ImageWindow ImageWindowInst(ImageSource source)
+        {
+            if (!ImgWindowExist())
+            {
+                _imgwin = new ImageWindow(source);
+                _imgwin.Show();
+                _imgwin.Owner = MainWindowInst;
+                return _imgwin;
+            }
+            _imgwin = Application.Current.Windows.OfType<ImageWindow>().SingleOrDefault();
+            _imgwin.Graph.Source = source;
+            return _imgwin;
         }
 
     }
@@ -249,7 +290,7 @@ namespace Main.Classes
         }
         public static void AdjacenceMatrixWindow(Window win, GraphType type)
         {
-            AdjacenceMatrix adj = WindowsInstances.AdjacenceMatrixWindowInst(win);
+            Main.Windows.AdjacenceMatrix adj = WindowsInstances.AdjacenceMatrixWindowInst(win);
 
             adj.TypeGraph = type;
         }

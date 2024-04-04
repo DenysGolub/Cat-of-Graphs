@@ -50,6 +50,11 @@ namespace Main.Classes
             }
         }
 
+        static public void Save() //For testing files
+        {
+
+        }
+
         static public void Load(ref Canvas canv, Canvas savedCanvas, ref AdjacenceList list)
         {
             NullData(ref canv, ref list);

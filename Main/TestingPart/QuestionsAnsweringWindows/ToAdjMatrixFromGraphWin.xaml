@@ -1,0 +1,36 @@
+﻿<Window x:Class="Main.TestingPart.QuestionsAnsweringWindows.ToAdjMatrixFromGraphWin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Main.TestingPart.QuestionsAnsweringWindows"
+        mc:Ignorable="d"
+        xmlns:dataGrid2D="http://gu.se/DataGrid2D"
+        Title="ToAdjMatrixFromGraphWin" Height="697" Width="1065">
+    <Grid Height="697" Width="1065" >
+        <Button Margin="95,226,619,407" FontSize="20" Click="Button_Click">Надіслати</Button>
+        <TextBox IsReadOnly="True" x:Name="Description" BorderThickness="0" Margin="21,19,493,513" FontSize="24" TextWrapping="Wrap">За заданим графом утворіть матрицю суміжності</TextBox>
+        <DataGrid x:Name="matrix" dataGrid2D:ItemsSource.Array2D="{Binding Data2D}"
+dataGrid2D:ItemsSource.ColumnHeadersSource="{Binding ColumnHeaders}"
+dataGrid2D:ItemsSource.RowHeadersSource="{Binding RowHeaders}"
+CanUserSortColumns="False"
+        
+        SelectionUnit="Cell" Margin="593,19,16,407"
+        CellEditEnding="matrix_ValueInCellChanged">
+
+
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="NodeAdd" Header="Додати вершину" Click="AddNode_Click"/>
+                    <MenuItem x:Name="NodeDel" Header="Видалити вершину" Click="DeleteNode_Click"></MenuItem>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+
+
+        <Border Background ="Transparent"  Visibility="Visible" BorderThickness="0" Margin="0,303,0,0" BorderBrush="Black">
+            <Image x:Name="GraphImage"></Image>
+        </Border>
+
+    </Grid>
+</Window>

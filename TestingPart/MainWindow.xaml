@@ -30,7 +30,7 @@
             </GridSplitter>
         </Grid>
         <!--Creating Sub-Grid in Column 2-->
-        <Grid Grid.Column="2">
+        <Grid Name="CanvasGrid" Grid.Column="2">
            
         </Grid>
         <GridSplitter HorizontalAlignment="Center"   

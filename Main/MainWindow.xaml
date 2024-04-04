@@ -6,16 +6,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:dataGrid2D="http://gu.se/DataGrid2D"
-        xmlns:local="clr-namespace:Main"
-        
+        xmlns:local="clr-namespace:Main"       
+        xmlns:templates="clr-namespace:Main.TestingPart"        
+
         mc:Ignorable="d"
         Title="Cat of Graphs" Height="424" Width="771" WindowState="Maximized" Loaded="Window_Loaded" Closed="Window_Closed">
 
 
 
-    <Grid x:Name="CanvasGrid">
-        
-        <DockPanel Background="Transparent" LastChildFill="False">
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="auto"></ColumnDefinition>
+            <ColumnDefinition Width="275"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <DockPanel Background="Transparent" LastChildFill="False" Grid.ColumnSpan="2" Margin="0,0,4,204">
             <Menu Background="Transparent" DockPanel.Dock="Top">
                 <MenuItem Header="{Resx File.Header}">
                     <MenuItem Header="{Resx NewFile}" Click="NewFile_Click"></MenuItem>
@@ -55,10 +64,7 @@ RenderOptions.EdgeMode="Aliased" Source="/Resources/MenuIcons/cartesian.png"></I
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="{Resx Traversal}">
-                    <MenuItem Click="DFS_Click" Header="{Resx DFS}"></MenuItem>
-                    <MenuItem Header="{Resx BFS}"></MenuItem>
-                </MenuItem>
+      
                 <MenuItem Header="{Resx Help}">
                     <MenuItem Header="{Resx About}"  Click="About_Click"></MenuItem>
                     <MenuItem x:Name="menuItemLanguages" Header="{Resx Language}">
@@ -66,81 +72,271 @@ RenderOptions.EdgeMode="Aliased" Source="/Resources/MenuIcons/cartesian.png"></I
                         <MenuItem x:Name="UALang" Tag ="uk-UA" Header="{Resx UA_Lang}" Click="Lang_Click"></MenuItem>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="Цикл" Click="Cycle_Click"></MenuItem>
+                <MenuItem Header="Тестування">
+                    <MenuItem Click="TestingFileSave_Click" Header="Зберегти тестовий файл"></MenuItem>
+                    <MenuItem Click="TestingFileOpen_Click" Header="відкрити тестовий файл"></MenuItem>
+                    <MenuItem Click="StartTest_Click" Header="почати тестування"></MenuItem>
+
+
+                </MenuItem>
             </Menu>
         </DockPanel>
-        <Canvas Background="White" x:Name="DrawingCanvas_Undirected" Margin="0,24,0,0"/>
+        <!--Creating Sub-Grid in Column 0-->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
 
-        <Canvas Margin="0,24,0,0" x:Name="DrawingCanvas_Directed" Visibility ="Collapsed" Background="White"/>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+
+            </Grid.RowDefinitions>
 
 
-        <toolkit:ColorPicker
+            <Grid x:Name="CanvasGrid" SizeChanged="Grid_SizeChanged" Grid.Row="0" Grid.Column="0" Margin="0,26,0,0">
+                <Viewbox x:Name="undir" Stretch="Fill" StretchDirection="Both">
+                    <Canvas Visibility="Visible" Width="500" Height="500"  Background="White" Grid.Row="0" Grid.Column="0" x:Name="DrawingCanvas_Undirected" MouseWheel="DrawingCanvas_Undirected_MouseWheel">
+                        <Canvas.RenderTransform>
+                            <MatrixTransform/>
+                        </Canvas.RenderTransform>
+                    </Canvas>
+                </Viewbox>
+
+                <Viewbox x:Name="dir" Stretch="Fill" StretchDirection="Both" Margin="0,14,0,0">
+                    <Canvas Background="White"  Grid.Row="0" Grid.Column="0" x:Name="DrawingCanvas_Directed" Visibility = "Collapsed"/>
+                </Viewbox>
+
+
+
+
+                <toolkit:ColorPicker
      Name="ColorUndirected"
      Height="30"
      DisplayColorAndName="True" 
      Visibility ="Collapsed" Canvas.Left="3" Canvas.Top="213" RenderTransformOrigin="-0.438,-1.779" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,241,0,0"/>
 
-        <toolkit:ColorPicker
+                <toolkit:ColorPicker
     Name="ColorDirected"
     Height="30"
     DisplayColorAndName="True"
     Visibility ="Collapsed" Canvas.Left="3" Canvas.Top="213" RenderTransformOrigin="-0.438,-1.779" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,241,0,0"/>
 
-        <StackPanel x:Name="MenuStackPanel" HorizontalAlignment="Left" VerticalAlignment="Top" Height="250" Width="35" Margin="0,28,0,0" >
-            <Button x:Name="UndGraph_Button" Click="ChangeGraphToUndirected" Margin="3">
-                <Button.Background>
-                    <SolidColorBrush Color = "#FFACD1FF" Opacity="0.5"></SolidColorBrush>
-                </Button.Background>
-                <StackPanel>
-                    <Image RenderOptions.BitmapScalingMode="HighQuality" 
+                <StackPanel x:Name="MenuStackPanel" HorizontalAlignment="Left" VerticalAlignment="Top" Height="250" Width="35" Margin="0,16,0,0" >
+                    <Button x:Name="UndGraph_Button" Click="ChangeGraphToUndirected" Margin="3">
+                        <Button.Background>
+                            <SolidColorBrush Color = "#FFACD1FF" Opacity="0.5"></SolidColorBrush>
+                        </Button.Background>
+                        <StackPanel>
+                            <Image RenderOptions.BitmapScalingMode="HighQuality" 
     RenderOptions.EdgeMode="Aliased" Source ="/Resources/MenuIcons/Graph/un_graph.png"></Image>
-                </StackPanel>
+                        </StackPanel>
 
-            </Button>
+                    </Button>
 
-            <Button x:Name="DirGraph_Button" Click="ChangeGraphToDirected" Background ="White" Margin="3">
-                <StackPanel>
-                    <Image RenderOptions.BitmapScalingMode="HighQuality" 
+                    <Button x:Name="DirGraph_Button" Click="ChangeGraphToDirected" Background ="White" Margin="3">
+                        <StackPanel>
+                            <Image RenderOptions.BitmapScalingMode="HighQuality" 
     RenderOptions.EdgeMode="Aliased" Source ="/Resources/MenuIcons/Graph/dir_graph.png"></Image>
-                </StackPanel>
+                        </StackPanel>
 
-            </Button>
+                    </Button>
 
-            <Button x:FieldModifier="public" x:Name="AddEllipse" Background="White" Margin="3">
-                <StackPanel>
-                    <Image Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality" 
+                    <Button x:FieldModifier="public" x:Name="AddEllipse" Background="White" Margin="3">
+                        <StackPanel>
+                            <Image Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality" 
     RenderOptions.EdgeMode="Aliased" Source ="/Resources/MenuIcons/Graph/add.png"></Image>
-                </StackPanel>
+                        </StackPanel>
 
-            </Button>
+                    </Button>
 
-            <Button x:FieldModifier="public" x:Name="MoveEllipse" Background="White" Margin="3">
+                    <Button x:FieldModifier="public" x:Name="MoveEllipse" Background="White" Margin="3">
 
-                <StackPanel>
-                    <Image Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality" 
+                        <StackPanel>
+                            <Image Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality" 
     RenderOptions.EdgeMode="Aliased" Source ="/Resources/MenuIcons/Graph/move.png"></Image>
-                </StackPanel>
+                        </StackPanel>
 
-            </Button>
+                    </Button>
 
-            <Button x:FieldModifier="public" x:Name="Delete" Background="White" Margin="3">
-                <StackPanel>
-                    <Image Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality" 
+                    <Button x:FieldModifier="public" x:Name="Delete" Background="White" Margin="3">
+                        <StackPanel>
+                            <Image Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality" 
     RenderOptions.EdgeMode="Aliased" Source ="/Resources/MenuIcons/Graph/delete.png"></Image>
-                </StackPanel>
+                        </StackPanel>
 
-            </Button>
+                    </Button>
 
-            <Button x:FieldModifier="public" x:Name="Color_Button" Background="White" Margin="3">
-                <StackPanel>
-                    <Image Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality"  
+                    <Button x:FieldModifier="public" x:Name="Color_Button" Background="White" Margin="3">
+                        <StackPanel>
+                            <Image Stretch="Fill" RenderOptions.BitmapScalingMode="HighQuality"  
     RenderOptions.EdgeMode="Aliased" Source ="/Resources/MenuIcons/Graph/color.png"></Image>
+                        </StackPanel>
+
+                    </Button>
+
+
                 </StackPanel>
+            </Grid>
+            <GridSplitter HorizontalAlignment="Stretch"   
+                          VerticalAlignment="Center"   
+                          Grid.Row="1" Height="4" Background="BlanchedAlmond">
+            </GridSplitter>
+            <DataGrid x:Name="QuestionsListBox" FontSize="14" Grid.Row="2" SelectionUnit="Cell" AutoGenerateColumns="False" CanUserAddRows="False">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Click="NewQuestion_Click" Header="Додати нове питання"></MenuItem>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
 
-            </Button>
+                <DataGrid.Resources>
+                    <DataTemplate DataType="{x:Type templates:BoolStateParameter}">
+                        <CheckBox IsChecked="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+                    </DataTemplate>
+
+                    <DataTemplate DataType="{x:Type templates:TextStateParameter}">
+                        <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+                    </DataTemplate>
+
+                    <DataTemplate DataType="{x:Type templates:ChoiceStateParameter}">
+                        <ComboBox ItemsSource="{Binding Choices}" SelectedItem="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+                    </DataTemplate>
+                    
+                    <DataTemplate DataType="{x:Type templates:AdjMatrixStateParameter}">
+                        <Canvas Background="White" MouseLeftButtonDown="MatrixLeftButtonDown" HorizontalAlignment="Stretch"/>
+                    </DataTemplate>
+                </DataGrid.Resources>
 
 
-        </StackPanel>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Опис завдання">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Description}" HorizontalAlignment="Stretch">
+                                    <TextBlock.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Col 1 Item 1"/>
+                                            <MenuItem Header="Col 1 Item 2"/>
+                                        </ContextMenu>
+                                    </TextBlock.ContextMenu>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding Description, Mode=TwoWay}" BorderThickness="0" HorizontalAlignment="Stretch" LostFocus="TextBox_LostFocus"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridComboBoxColumn Header="Тип завдання">
+                        <DataGridComboBoxColumn.ElementStyle>
+                            <Style TargetType="{x:Type ComboBox}">
+                                <Setter Property="ItemsSource" Value="{Binding Path=Types}" />
+                                <Setter Property="SelectedItem" Value="{Binding Path=QuestionsType}" />
+                            </Style>
+                        </DataGridComboBoxColumn.ElementStyle>
+                        <DataGridComboBoxColumn.EditingElementStyle>
+                            <Style TargetType="{x:Type ComboBox}">
+                                <Setter Property="ItemsSource" Value="{Binding Path=Types}" />
+                                <Setter Property="SelectedItem" Value="{Binding Path=QuestionsType}" />
+                            </Style>
+                        </DataGridComboBoxColumn.EditingElementStyle>
+                    </DataGridComboBoxColumn>
+                    <DataGridTemplateColumn Header="Граф">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Canvas MouseLeftButtonDown="ImgCanvas_MouseDown" x:Name="ImgCanvas" Background="White">
+                                    <Canvas.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem  Click="CopyCanvasToImage" Header="Додати граф у файл" Tag="GraphAddToFile"></MenuItem>
+                                        </ContextMenu>
+                                    </Canvas.ContextMenu>
+                                </Canvas>
+
+
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Тип графа">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding GraphType, Mode=TwoWay}" IsReadOnly="True" BorderThickness="0" HorizontalAlignment="Stretch"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <templates:CustomDataGridTemplateColumn TagPropertyName="AdjM" Header="Матриця суміжності">
+                        <templates:CustomDataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Canvas Background="White" MouseLeftButtonDown="MatrixLeftButtonDown" HorizontalAlignment="Stretch">
+                                    <Canvas.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Click="CurrentGraphMatrixToFile" Header="Добавити матрицю поточного графа"></MenuItem>
+                                        </ContextMenu>
+                                    </Canvas.ContextMenu>
+                                </Canvas>
+                            </DataTemplate>
+                        </templates:CustomDataGridTemplateColumn.CellTemplate>
+                    </templates:CustomDataGridTemplateColumn>
+                    <templates:CustomDataGridTemplateColumn TagPropertyName="IncM" Header="Матриця інцидентності">
+                        <templates:CustomDataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Canvas  Background="White" MouseLeftButtonDown="MatrixLeftButtonDown" HorizontalAlignment="Stretch"/>
+                            </DataTemplate>
+                        </templates:CustomDataGridTemplateColumn.CellTemplate>
+                    </templates:CustomDataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Бал">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Points}" HorizontalAlignment="Stretch"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding Points, Mode=TwoWay}" BorderThickness="0" HorizontalAlignment="Stretch" LostFocus="TextBox_LostFocus"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+                    <templates:CustomDataGridTextColumn Header="Критерій перевірки" Binding="{Binding State.State}"/>
+
+                    <templates:CustomDataGridTemplateColumn Header="Перевіркова матриця" x:Name="CorrAnswTagProp" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Canvas Background="White" MouseLeftButtonDown="MatrixLeftButtonDown" HorizontalAlignment="Stretch">
+                                    <Canvas.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Click="CurrentGraphMatrixToCorrect" Header="Добавити матрицю поточного графа"></MenuItem>
+                                        </ContextMenu>
+                                    </Canvas.ContextMenu>
+                                </Canvas>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+
+                        
+                    </templates:CustomDataGridTemplateColumn>
+                </DataGrid.Columns>
+
+            </DataGrid>
+        </Grid>
+        <!--Creating Sub-Grid in Column 2-->
+        <Grid Grid.Column="2">
+            <Menu FontSize="20" Background="White" HorizontalAlignment="Left">
+                <Menu.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel />
+                    </ItemsPanelTemplate>
+                </Menu.ItemsPanel>
+                <MenuItem Header="Пошук в глибину (DFS)"/>
+                <MenuItem Header="Пошук в ширину (BFS)"/>
+
+                <MenuItem Header="Цикл Ейлера" />
+                <MenuItem Header="Гамільтоновий цикл" />
+            </Menu>
+        </Grid>
+        <GridSplitter HorizontalAlignment="Center"   
+                      VerticalAlignment="Stretch"   
+                      Grid.Column="1" Grid.Row="0" 
+                      Grid.RowSpan="3" Width="4" Background="BlanchedAlmond">
+        </GridSplitter>
+
 
 
     </Grid>

@@ -72,6 +72,35 @@ namespace Main.Classes
 
             return list;
         }
+
+        static public List<string> GetLinesBasedOnType(this Dictionary<int, HashSet<int>> adjacence_list, GraphType type)
+        {
+            var list = new List<string>();
+
+            var matrix = adjacence_list.ToAdjacenceMatrix();
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    if (matrix[i, j] == 1)
+                    {
+                        if(i==j)
+                        {
+                           if(type != GraphType.Undirected)
+                            {
+                                list.Add($"line_{i + 1}_{j + 1}");
+                            }
+                        }
+                        else if ((!list.Contains($"line_{j + 1}_{i + 1}") && type==GraphType.Undirected) || type==GraphType.Directed)
+                        {
+                            list.Add($"line_{i + 1}_{j + 1}");
+                        }
+                    }
+                }
+            }
+
+            return list;
+        }
         /// <summary>
         /// Converts an adjacence list to Matrix of Incidence
         /// </summary>

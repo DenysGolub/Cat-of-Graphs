@@ -40,7 +40,17 @@ namespace Main.Classes
 
         public int CountNodes => adjacence_list.Count;
 
-        public GraphType Type => type;
+        public GraphType Type
+        {
+            get
+            {
+                return type;
+            }
+            set
+            {
+                type = value;
+            }
+        }
         public Dictionary<int, HashSet<int>> GetList { get { return adjacence_list; } set { adjacence_list = value; } }
         /// <summary>
         /// Adding edge (connection) between two nodes
@@ -141,14 +151,13 @@ namespace Main.Classes
         public static bool Edge(AdjacenceList adj, int first_node, int second_node)
         {
            if(adj.GetList[first_node].Contains(second_node))
-            {
+           {
                 return true;
-            } 
+           } 
            else if(adj.GetList[second_node].Contains(first_node))
-            {
+           {
                 return true;
-            }
-
+           }
             return false;
         }
 
