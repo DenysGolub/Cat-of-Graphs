@@ -90,7 +90,7 @@ namespace Main.TestingPart.QuestionsAnsweringWindows
             }
             else
             {
-                matrix_array.AddEdge(int.Parse(col1.Header.ToString()), int.Parse(row1.Header.ToString()));
+                matrix_array.AddEdge(int.Parse(row1.Header.ToString()), int.Parse(col1.Header.ToString()));
             }
         }
 
@@ -112,13 +112,29 @@ namespace Main.TestingPart.QuestionsAnsweringWindows
 
             return true;
         }
+        private void PrintMatrix(sbyte[,] m)
+        {
+            for (int i = 0; i < m.GetLength(0); i++)
+            {
+                for (int j = 0; j < m.GetLength(1); j++)
+                {
+                    Debug.Write(m[i, j] + " ");
+                }
+                Debug.WriteLine("");
+            }
+        }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
 
             var answer_matrix = matrix_array.ToAdjacenceMatrix();
-
+            PrintMatrix(answer_matrix);
+            Debug.WriteLine("");
             var quest_matrix = (_quest.AdjMatrix.ToAdjacenceMatrix());
+
+            PrintMatrix(quest_matrix);
+            Debug.WriteLine("");
+
             if (AreMatricesEqual((sbyte[,])answer_matrix, quest_matrix))
             {
                 DialogResult = true;

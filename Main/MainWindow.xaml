@@ -64,20 +64,17 @@ RenderOptions.EdgeMode="Aliased" Source="/Resources/MenuIcons/cartesian.png"></I
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
-      
+                <MenuItem Header="Тестування">
+                    <MenuItem Click="TestingFileSave_Click" Header="зберегти тестовий файл"></MenuItem>
+                    <MenuItem Click="TestingFileOpen_Click" Header="відкрити тестовий файл"></MenuItem>
+                    <MenuItem Click="StartTest_Click" Header="почати тестування"></MenuItem>
+                </MenuItem>
                 <MenuItem Header="{Resx Help}">
                     <MenuItem Header="{Resx About}"  Click="About_Click"></MenuItem>
                     <MenuItem x:Name="menuItemLanguages" Header="{Resx Language}">
                         <MenuItem x:Name="EngLang" Tag="en-US" Header="{Resx EN_Lang}" Click="Lang_Click"></MenuItem>
                         <MenuItem x:Name="UALang" Tag ="uk-UA" Header="{Resx UA_Lang}" Click="Lang_Click"></MenuItem>
                     </MenuItem>
-                </MenuItem>
-                <MenuItem Header="Тестування">
-                    <MenuItem Click="TestingFileSave_Click" Header="Зберегти тестовий файл"></MenuItem>
-                    <MenuItem Click="TestingFileOpen_Click" Header="відкрити тестовий файл"></MenuItem>
-                    <MenuItem Click="StartTest_Click" Header="почати тестування"></MenuItem>
-
-
                 </MenuItem>
             </Menu>
         </DockPanel>
@@ -324,7 +321,7 @@ RenderOptions.EdgeMode="Aliased" Source="/Resources/MenuIcons/cartesian.png"></I
                         <StackPanel />
                     </ItemsPanelTemplate>
                 </Menu.ItemsPanel>
-                <MenuItem Header="Пошук в глибину (DFS)"/>
+                <MenuItem Click="DFS_Click" Header="Пошук в глибину (DFS)"/>
                 <MenuItem Header="Пошук в ширину (BFS)"/>
 
                 <MenuItem Header="Цикл Ейлера" />

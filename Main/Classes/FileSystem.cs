@@ -1,16 +1,26 @@
 ﻿using Main.Enumerators;
+using Main.TestingPart;
+using Microsoft.Win32;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Security.AccessControl;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Shapes;
+using System.Security.Cryptography;
+using System.Windows.Input;
+using System.IO.Packaging;
 
 namespace Main.Classes
 {
@@ -50,16 +60,58 @@ namespace Main.Classes
             }
         }
 
-        static public void Save() //For testing files
+        static public void Save(List<Question> questions) //For testing files
         {
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+            dlg.FileName = "TestFile";
+            dlg.DefaultExt = "etf";
+            dlg.Filter = "редагований тестовий файл (*.etf)|*.etf";
+            
+            // Default file name
+            // Show save file dialog box
+            Nullable<bool> result = dlg.ShowDialog();
 
+            // Process save file dialog box results
+            if (result == true)
+            {
+                string jsonString = JsonConvert.SerializeObject(questions);
+
+                File.WriteAllText(dlg.FileName, jsonString);
+                dlg.FileName = dlg.FileName.Replace("etf", "ctf");
+
+                byte[] encryptedBytes = EncryptStringToBytes_Aes(jsonString);
+                File.WriteAllBytes(dlg.FileName, encryptedBytes);
+
+            }
+        }
+
+        static public List<Question> Load(bool isAssociate=false, string filepath="")
+        {
+            if(!isAssociate)
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "редагований тестовий файл (*.rts)|*.rts";
+
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    ObservableCollection<Question> deserializedProduct = JsonConvert.DeserializeObject<ObservableCollection<Question>>(File.ReadAllText(openFileDialog.FileName));
+
+                    return new List<Question>(deserializedProduct);
+                }
+            }
+            else if(isAssociate)
+            {
+                ObservableCollection<Question> deserializedProduct = JsonConvert.DeserializeObject<ObservableCollection<Question>>(File.ReadAllText(filepath));
+
+                return new List<Question>(deserializedProduct);
+            }
+           
+            return new List<Question>();
         }
 
         static public void Load(ref Canvas canv, Canvas savedCanvas, ref AdjacenceList list)
         {
             NullData(ref canv, ref list);
-
-
             while (savedCanvas.Children.Count > 0)
             {
                 UIElement obj = savedCanvas.Children[0];
@@ -84,6 +136,113 @@ namespace Main.Classes
             canv.InvalidateVisual();
         }
 
+        static public void LoadTest(bool isAssociated=false, string filepath = "")
+        {
+            ObservableCollection<Question> deserializedProduct = null;
+            if (!isAssociated)
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "контрольний тестовий файл (*.ctf)|*.ctf";
+
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    byte[] encryptedBytes = File.ReadAllBytes(openFileDialog.FileName);
+                    // Decrypt the encrypted text
+                    string decryptedText = DecryptStringFromBytes_Aes(encryptedBytes);
+                    deserializedProduct = JsonConvert.DeserializeObject<ObservableCollection<Question>>(decryptedText);
+                }
+            }
+            else if (isAssociated)
+            {
+
+                byte[] encryptedBytes = File.ReadAllBytes(filepath);
+                // Decrypt the encrypted text
+                string decryptedText = DecryptStringFromBytes_Aes(encryptedBytes);
+
+                deserializedProduct = JsonConvert.DeserializeObject<ObservableCollection<Question>>(decryptedText);
+            }
+
+
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            double score = 0;
+            foreach (var quest in deserializedProduct)
+            {
+                if (quest.QuestionsType == QuestionsType.ToGraphFromAdjacenceMatrix)
+                {
+                    if (new TestingPart.QuestionsAnsweringWindows.ToGraphFromAdjMatrixWin(quest).ShowDialog() == true)
+                    {
+                        score += quest.Points;
+                    }
+                }
+                else if (quest.QuestionsType == QuestionsType.ToAdjacenceMatrixFromGraph)
+                {
+                    if (new TestingPart.QuestionsAnsweringWindows.ToAdjMatrixFromGraphWin(quest).ShowDialog() == true)
+                    {
+                        score += quest.Points;
+                    }
+                }
+
+            }
+            TimeSpan elapsedTime = stopwatch.Elapsed;
+
+            int hours = elapsedTime.Hours;
+            int minutes = elapsedTime.Minutes;
+            int seconds = elapsedTime.Seconds;
+            stopwatch.Stop();
+            MessageBox.Show($"Набрана кількість балів: {score}\nЧас виконання: {hours:D2}:{minutes:D2}:{seconds:D2}", "Результати тестування");
+        }
+
+        private static byte[] EncryptStringToBytes_Aes(string plainText, string key="+r6r+zZj9Jnuquh6UROArP/tgDyivAfpU7cKNgiSAHA=")
+        {
+            byte[] encrypted;
+
+            using (Aes aesAlg = Aes.Create())
+            {
+                aesAlg.Key = Convert.FromBase64String(key);
+                aesAlg.IV = new byte[aesAlg.BlockSize / 8]; // IV should be the same size as the block size
+                aesAlg.Mode = CipherMode.CBC; // Set the mode to CBC
+                aesAlg.Padding = PaddingMode.PKCS7; // Use PKCS7 padding
+
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                using (MemoryStream msEncrypt = new MemoryStream())
+                {
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                    {
+                        swEncrypt.Write(plainText);
+                    }
+                    encrypted = msEncrypt.ToArray();
+                }
+            }
+
+            return encrypted;
+        }
+
+        private static string DecryptStringFromBytes_Aes(byte[] cipherText, string key = "+r6r+zZj9Jnuquh6UROArP/tgDyivAfpU7cKNgiSAHA=")
+        {
+            string plaintext = null;
+
+            using (Aes aesAlg = Aes.Create())
+            {
+                aesAlg.Key = Convert.FromBase64String(key);
+                aesAlg.IV = new byte[aesAlg.BlockSize / 8]; // IV should be the same size as the block size
+                aesAlg.Mode = CipherMode.CBC; // Set the mode to CBC
+                aesAlg.Padding = PaddingMode.PKCS7; // Use PKCS7 padding
+
+                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+                using (MemoryStream msDecrypt = new MemoryStream(cipherText))
+                using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                {
+                    plaintext = srDecrypt.ReadToEnd();
+                }
+            }
+            return plaintext;
+        }
     }
 
     internal static class UnsafeNative

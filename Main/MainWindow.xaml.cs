@@ -196,6 +196,7 @@ namespace Main
             }
         }
 
+
         private static IntPtr HandleMessages
         (IntPtr handle, int message, IntPtr wParameter, IntPtr lParameter, ref Boolean handled)
         {
@@ -332,27 +333,6 @@ namespace Main
             }
         }
 
-        void ListViewItem_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            
-            XmlElement book = ((ListViewItem)sender).Content as XmlElement;
-            //var hitInfo = QuestionsListBox.InputHitTest(e.Location);
-
-            if (book == null)
-            {
-                return;
-            }
-
-            if (book.GetAttribute("Stock") == "out")
-            {
-                MessageBox.Show("Time to order more copies of " + book["Title"].InnerText);
-            }
-            else
-            {
-                MessageBox.Show(book["Title"].InnerText + " is available.");
-            }
-        }
-
         private void Load(string path)
         {
             Canvas canv = null;
@@ -377,8 +357,16 @@ namespace Main
                 list = adjacenceListDirected;
                 graphType = GraphType.Directed;
             }
-            else
+            else if(path.Contains(".etf"))
             {
+                questions = FileSystem.Load(true, path); ///ДОРОБИТИ ТЕСТУВАЛЬНІ ВІКНА ТА САМ ПРОЦЕС
+                QuestionsListBox.ItemsSource = questions;
+                QuestionsListBox.Items.Refresh();
+                return;
+            }
+            else if(path.Contains(".ctf"))
+            {
+                FileSystem.LoadTest(true, path);
                 return;
             }
 
@@ -389,7 +377,7 @@ namespace Main
 
             FileSystem.Load(ref canv, savedCanvas, ref list);
 
-            if (WindowsInstances.AdjacenceMatrixWindowExist(this, out int ind))
+            if (WindowsInstances.AdjacenceMatrixWindowExist(this, out int ind)
             {
                 MatrixController.Adjacence(this);
             }
@@ -716,17 +704,11 @@ namespace Main
         private void ImgCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var quest = QuestionsListBox.CurrentCell.Item as Question;
-
             ImageWindow imgwin;
             if(quest!=null && e.ClickCount == 2)
             {
-              
                 WindowsInstances.ImageWindowInst(LoadImage(quest.ImageSource));
-               
             }
-            
-   
-            
         }
 
         private static BitmapImage LoadImage(byte[] imageData)
@@ -749,26 +731,12 @@ namespace Main
 
         private void TestingFileSave_Click(object sender, RoutedEventArgs e)
         {
-
-            string fileName = "C:\\Users\\User\\Desktop\\TestFile.json";
-            string jsonString = JsonConvert.SerializeObject(questions);
-
-
-            File.WriteAllText(fileName, jsonString);
-
-            ObservableCollection<Question> deserializedProduct = JsonConvert.DeserializeObject<ObservableCollection<Question>>(jsonString);
-
-            Console.WriteLine();
+            FileSystem.Save(questions);
         }
 
         private void TestingFileOpen_Click(object sender, RoutedEventArgs e)
         {
-            string fileName = "C:\\Users\\User\\Desktop\\TestFile.json";
-
-            ObservableCollection<Question> deserializedProduct = JsonConvert.DeserializeObject<ObservableCollection<Question>>(File.ReadAllText(fileName));
-
-            // QuestionsListBox.ItemsSource = deserializedProduct;
-            questions = new List<Question>(deserializedProduct); ///ДОРОБИТИ ТЕСТУВАЛЬНІ ВІКНА ТА САМ ПРОЦЕС
+            questions = FileSystem.Load(); ///ДОРОБИТИ ТЕСТУВАЛЬНІ ВІКНА ТА САМ ПРОЦЕС
             QuestionsListBox.ItemsSource = questions;  
             QuestionsListBox.Items.Refresh();
         }
@@ -895,38 +863,7 @@ namespace Main
 
         private void StartTest_Click(object sender, RoutedEventArgs e)
         {
-            string fileName = "C:\\Users\\User\\Desktop\\TestFile.json";
-
-            ObservableCollection<Question> deserializedProduct = JsonConvert.DeserializeObject<ObservableCollection<Question>>(File.ReadAllText(fileName));
-
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            double score = 0;
-            foreach(var quest in deserializedProduct)
-            {
-                if(quest.QuestionsType == QuestionsType.ToGraphFromAdjacenceMatrix)
-                {
-                    if(new TestingPart.QuestionsAnsweringWindows.ToGraphFromAdjMatrixWin(quest).ShowDialog() == true)
-                    {
-                        score += quest.Points;
-                    }
-                }
-                else if (quest.QuestionsType == QuestionsType.ToAdjacenceMatrixFromGraph)
-                {
-                    if (new TestingPart.QuestionsAnsweringWindows.ToAdjMatrixFromGraphWin(quest).ShowDialog() == true)
-                    {
-                        score += quest.Points;
-                    }
-                }
-
-            }
-            TimeSpan elapsedTime = stopwatch.Elapsed;
-
-            int hours = elapsedTime.Hours;
-            int minutes = elapsedTime.Minutes;
-            int seconds = elapsedTime.Seconds;
-            stopwatch.Stop();
-            MessageBox.Show($"Набрана кількість балів: {score}\nЧас виконання: {hours:D2}:{minutes:D2}:{seconds:D2}", "Результати тестування");
+            FileSystem.LoadTest();
         }
     }
 }   
