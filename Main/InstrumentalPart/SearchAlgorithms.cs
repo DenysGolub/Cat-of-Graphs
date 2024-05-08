@@ -1,4 +1,6 @@
-﻿using Main.Enumerators;
+﻿using Main.Classes;
+using Main.Enumerators;
+using Main.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +14,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace Main.Classes
+namespace Main.InstrumentalPart
 {
     public class SearchAlgorithms
     {
@@ -46,14 +48,14 @@ namespace Main.Classes
         {
             Stack<int> stack = new Stack<int>();
             stack.Push(startVertex);
-
-
+            DFSLogs dFSLogs = Application.Current.Windows.OfType<DFSLogs>().SingleOrDefault();
             while (stack.Count > 0)
             {
                 int vertex = stack.Pop();
 
                 if (visited[vertex] == 0)
                 {
+                    dFSLogs.Text += $"DFS({vertex})\n";
                     visited[vertex] = 1;
                     await SetAnimation(graph, vertex); 
 
@@ -65,6 +67,10 @@ namespace Main.Classes
                         if (visited[adjacentVertex] == 0)
                         {
                             stack.Push(adjacentVertex);
+                        }
+                        else
+                        {
+                            dFSLogs.Text += $"{adjacentVertex} відвідана\n";
                         }
                     }
                 }
@@ -104,28 +110,47 @@ namespace Main.Classes
 
         }
 
-        public static bool IsCycleExistInUndirectedGraph(AdjacenceList list, int child, int parent, HashSet<int> visited, bool IsCyclic=false)
+        public static bool IsCycleExistInUndirectedGraph(AdjacenceList list, int vertex, int parent, HashSet<int> visited, ref bool isCyclic)
         {
-           
+            visited.Add(vertex);
 
-            visited.Add(child);
-
-            foreach(var adjacentVertex in list[parent])
+            foreach (var adjacentVertex in list[vertex])
             {
-                
-                if(adjacentVertex!=parent && IsCycleExistInUndirectedGraph(list, adjacentVertex, parent, visited, IsCyclic))
+                if (!visited.Contains(adjacentVertex))
                 {
-                    IsCyclic = true;
-                    return IsCyclic;
+                    if (IsCycleExistInUndirectedGraph(list, adjacentVertex, vertex, visited, ref isCyclic))
+                        return true;
+                }
+                else if (adjacentVertex != parent)
+                {
+                    isCyclic = true;
+                    return true;
                 }
             }
 
-            return IsCyclic;
+            return false;
         }
 
         static public void BFS(AdjacenceList list, Canvas graph)
         {
 
         }
+
+
+
+        // Рекурсивна функція для обходу графу в глибину
+        private protected static void DFSUtil(AdjacenceList adj, int v, bool[] visited, ref string comp)
+        {
+            visited[v] = true;
+            comp += (v + " ");
+
+            // Рекурсивно відвідати всі сусідні вершини, які ще не були відвідані
+            foreach (int i in adj[v])
+            {
+                if (!visited[i])
+                    DFSUtil(adj, i, visited, ref comp);
+            }
+        }
+
     }
 }

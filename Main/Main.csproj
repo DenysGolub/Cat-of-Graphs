@@ -5,7 +5,7 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UseWPF>true</UseWPF>
+    <UseWPF>True</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +14,11 @@
 
   <ItemGroup>
     <None Remove="Resources\banner.png" />
+    <None Remove="Resources\file.png" />
     <None Remove="Resources\github-logo.png" />
+    <None Remove="Resources\graph.png" />
+    <None Remove="Resources\help.png" />
+    <None Remove="Resources\matrix.png" />
     <None Remove="Resources\MenuIcons\cartesian.png" />
     <None Remove="Resources\MenuIcons\Graph\add.png" />
     <None Remove="Resources\MenuIcons\Graph\color.png" />
@@ -31,6 +35,7 @@
     <None Remove="Resources\MenuIcons\xor.png" />
     <None Remove="Resources\splash.png" />
     <None Remove="Resources\telegram-logo.png" />
+    <None Remove="Resources\test.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -61,7 +66,11 @@
 
   <ItemGroup>
     <Resource Include="Resources\banner.png" />
+    <Resource Include="Resources\file.png" />
     <Resource Include="Resources\github-logo.png" />
+    <Resource Include="Resources\graph.png" />
+    <Resource Include="Resources\help.png" />
+    <Resource Include="Resources\matrix.png" />
     <Resource Include="Resources\MenuIcons\cartesian.png" />
     <Resource Include="Resources\MenuIcons\Graph\add.png" />
     <Resource Include="Resources\MenuIcons\Graph\color.png" />
@@ -78,16 +87,13 @@
     <Resource Include="Resources\MenuIcons\xor.png" />
     <Resource Include="Resources\splash.png" />
     <Resource Include="Resources\telegram-logo.png" />
+    <Resource Include="Resources\test.png" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Update="Translations\MainWindow.resx">
       <Generator></Generator>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="InstrumentalPart\" />
   </ItemGroup>
 
 	<Target Name="RemoveSatelliteAssemblies" AfterTargets="ResolveAssemblyReferences">

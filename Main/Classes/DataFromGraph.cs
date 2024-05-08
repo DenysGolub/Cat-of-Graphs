@@ -222,7 +222,7 @@ namespace Main.Classes
             lineGroup.Children.Add(connectorGeometry);
             System.Windows.Shapes.Path path = new System.Windows.Shapes.Path();
             path.Data = lineGroup;
-            path.StrokeThickness = 2;
+            path.StrokeThickness = 1;
             path.Stroke = path.Fill = Brushes.Black;
 
             return path;

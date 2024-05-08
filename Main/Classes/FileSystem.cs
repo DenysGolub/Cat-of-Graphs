@@ -90,7 +90,7 @@ namespace Main.Classes
             if(!isAssociate)
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "редагований тестовий файл (*.rts)|*.rts";
+                openFileDialog.Filter = "редагований тестовий файл (*.etf)|*.etf";
 
                 if (openFileDialog.ShowDialog() == true)
                 {
@@ -162,7 +162,10 @@ namespace Main.Classes
                 deserializedProduct = JsonConvert.DeserializeObject<ObservableCollection<Question>>(decryptedText);
             }
 
-
+            if(deserializedProduct==null)
+            {
+                return;
+            }
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();

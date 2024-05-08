@@ -1,0 +1,512 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Main.App" Collapsed="true">
+    <Position X="17" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>App.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Program" Collapsed="true">
+    <Position X="18.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>App.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.MainWindow" Collapsed="true">
+    <Position X="20.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>SWiLkCAAAQALpyASCMJtDpwEABQQCAKAAcZJQGABIik=</HashCode>
+      <FileName>MainWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.CustomDataGridTextColumn" Collapsed="true">
+    <Position X="10" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\CustomDataGridTextColumn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.TestingPart.AdjacenceMatrix" Collapsed="true">
+    <Position X="15.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAEhAACAIQCAAAAUAAA=</HashCode>
+      <FileName>TestingPart\AdjacenceMatrix.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.TestingPart.CustomDataGridTemplateColumn" Collapsed="true">
+    <Position X="20.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TestingPart\CustomDataGridTemplateColumn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.TestingPart.CustomDataGridTextColumn" Collapsed="true">
+    <Position X="11.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TestingPart\CustomDataGridTemplateColumn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.TestingPart.ImageWindow" Collapsed="true">
+    <Position X="13.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TestingPart\ImageWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.TestingPart.IncidenceMatrix" Collapsed="true">
+    <Position X="15.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAQAAAAAAAAAAAAAAEhAACAIQCAAAAUAYA=</HashCode>
+      <FileName>TestingPart\IncidenceMatrix.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.TestingPart.StateParameter&lt;T&gt;" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAgAAkBAAAAAA=</HashCode>
+      <FileName>TestingPart\IStateParameter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Main.TestingPart.BoolStateParameter" Collapsed="true">
+    <Position X="0.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TestingPart\IStateParameter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.TestingPart.TextStateParameter" Collapsed="true">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TestingPart\IStateParameter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.TestingPart.ChoiceStateParameter" Collapsed="true">
+    <Position X="5.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TestingPart\IStateParameter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.TestingPart.AdjMatrixStateParameter" Collapsed="true">
+    <Position X="7.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>TestingPart\IStateParameter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.TestingPart.Question" Collapsed="true">
+    <Position X="3.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAQCAAAAgoAAAIAUEAAAECAAUAAFABAAgBQAAAAA=</HashCode>
+      <FileName>TestingPart\Question.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.TestingPart.QuestionWithTwoCanvas" Collapsed="true">
+    <Position X="3.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TestingPart\Question.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Classes.DelegateCanvasEvents" Collapsed="true">
+    <Position X="17" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAACAAAAAAAAAAAAAAAAAQAAAAAAAEAABAA=</HashCode>
+      <FileName>Classes\DelegateCanvasEvents.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Classes.FileSystem" Collapsed="true">
+    <Position X="11.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgIAAAAAAAAEAAAAAAAAAABAAAAAAAAAAAAQQAAA=</HashCode>
+      <FileName>Classes\FileSystem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Classes.UnsafeNative" Collapsed="true">
+    <Position X="20.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAABAAAAAACAAAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Classes\FileSystem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Classes.GraphOperations" Collapsed="true">
+    <Position X="0.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAEACAAAAAAAAAABAAAAAAgAAAAAAAEAAAAA=</HashCode>
+      <FileName>Classes\GraphOperations.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Main.Classes.GraphOperationsCanvas" Collapsed="true">
+    <Position X="0.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAQAAEACIAAAAAAAAABAAAAAAgAAgAQAAAECAAA=</HashCode>
+      <FileName>Classes\GraphOperations.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Classes.AdjacenceList" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEABAAAAAAAgEACABAAgAAAAABAAAAAQAAAAAIAAI=</HashCode>
+      <FileName>Classes\AdjacenceList.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Main.Classes.ContainingChecker" Collapsed="true">
+    <Position X="18.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\AdjacenceList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Classes.DataFromGraph" Collapsed="true">
+    <Position X="13.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAIAAAAAAAAAAAAAAAAAAAAAAAAgAgAAA=</HashCode>
+      <FileName>Classes\DataFromGraph.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Classes.MyEventArgs" Collapsed="true">
+    <Position X="11.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\Events.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Classes.Events" Collapsed="true">
+    <Position X="10" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAgAAEAEAEAAAQAAAAAAAEACAAAAAAA=</HashCode>
+      <FileName>Classes\Events.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Classes.MatrixController" Collapsed="true">
+    <Position X="10" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAgAAAAAAAAAA=</HashCode>
+      <FileName>Classes\MatrixController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Classes.NamesParser" Collapsed="true">
+    <Position X="13.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAACAAAAAAAAAAAAAAAAAAAAIAAAABAAAA=</HashCode>
+      <FileName>Classes\NamesParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Classes.NamesUpdate" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAIAA=</HashCode>
+      <FileName>Classes\NamesUpdate.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Main.Classes.ToMatrixConverters" Collapsed="true">
+    <Position X="17" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAgAAAAAAIAAAAAAABAAAAAA=</HashCode>
+      <FileName>Classes\ToMatrixConverters.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Classes.Vizualization" Collapsed="true">
+    <Position X="10" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\Vizualization.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Classes.WindowsInstances" Collapsed="true">
+    <Position X="13.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAEAAAgAAAAAQCBAAAAgCLEBBAAABABABQIAAEA=</HashCode>
+      <FileName>Classes\WindowsInstances.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Classes.SetWindowInfo" Collapsed="true">
+    <Position X="11.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAABAAAAAAIAAAAAAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\WindowsInstances.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.Degree" Collapsed="true">
+    <Position X="15.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>InstrumentalPart\Degree.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.DFSLogs" Collapsed="true">
+    <Position X="18.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAACAAAAAA=</HashCode>
+      <FileName>InstrumentalPart\DFSLogs.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.Dijkstra" Collapsed="true">
+    <Position X="20.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAgAAACAAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>InstrumentalPart\Dijkstra.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.Euler" Collapsed="true">
+    <Position X="4" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAgAAAAAAAAAAACAACAAAAAA=</HashCode>
+      <FileName>InstrumentalPart\Euler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.EulerDirected" Collapsed="true">
+    <Position X="3" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>InstrumentalPart\Euler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.EulerUndirected" Collapsed="true">
+    <Position X="5.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>InstrumentalPart\Euler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.GraphComponents" Collapsed="true">
+    <Position X="7.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>InstrumentalPart\GraphComponents.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.RegularGraph" Collapsed="true">
+    <Position X="20.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>InstrumentalPart\RegularGraph.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.SearchAlgorithms" Collapsed="true">
+    <Position X="4" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAEBBAAAAIAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>InstrumentalPart\SearchAlgorithms.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.Tree" Collapsed="true">
+    <Position X="0.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAAIAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>InstrumentalPart\Tree.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.WeightMatrix" Collapsed="true">
+    <Position X="11.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAACAEAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>InstrumentalPart\WeightMatrix.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.TestingPart.QuestionsAnsweringWindows.ToAdjMatrixFromGraphWin" Collapsed="true">
+    <Position X="13.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAACAEAAAEBAACAJQCAAAAUAAA=</HashCode>
+      <FileName>TestingPart\QuestionsAnsweringWindows\ToAdjMatrixFromGraphWin.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.TestingPart.QuestionsAnsweringWindows.ToGraphFromAdjMatrixWin" Collapsed="true">
+    <Position X="15.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>SAAAAAEAAAAAAAQAAIBAAAkAAAAAAAIABAIBAAAAAAA=</HashCode>
+      <FileName>TestingPart\QuestionsAnsweringWindows\ToGraphFromAdjMatrixWin.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.TestingPart.QuestionsAnsweringWindows.TrueFalseWin" Collapsed="true">
+    <Position X="18.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TestingPart\QuestionsAnsweringWindows\TrueFalseWin.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Windows.About" Collapsed="true">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Windows\About.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Windows.AdjacenceMatrix" Collapsed="true">
+    <Position X="13.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAIAAAAAAAAAAAAAAAAACAAAAAEhAACAIQCAAAAUAEE=</HashCode>
+      <FileName>Windows\AdjacenceMatrix.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Windows.IncidenceMatrix" Collapsed="true">
+    <Position X="17" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAYAQAAAAAAQAAAAAAIAAAAAAAEhAACAIQCAAAAUAME=</HashCode>
+      <FileName>Windows\IncidenceMatrix.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Windows.InputBox" Collapsed="true">
+    <Position X="18.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Windows\InputBox.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Windows.OperationResult" Collapsed="true">
+    <Position X="17" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAoAAAAABAAAIAAAAAAAAAAEAAAAAACA=</HashCode>
+      <FileName>Windows\OperationResult.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.Windows.SecondGraph" Collapsed="true">
+    <Position X="10" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAECgAAhAAAKAoQAAIJBEAgIAAAAAAKAEQNBAKABAAA=</HashCode>
+      <FileName>Windows\SecondGraph.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Main.Structs.MenuColors" Collapsed="true">
+    <Position X="10" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAQACAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Structs\MenuColors.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Interface Name="Main.TestingPart.IStateParameter" Collapsed="true">
+    <Position X="18.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgBAAAAAA=</HashCode>
+      <FileName>TestingPart\IStateParameter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Main.Interfaces.IAdjacenceList" Collapsed="true">
+    <Position X="10" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAEACAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>Interfaces\IAdjacenceList.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Main.Interfaces.ICanvasEvents" Collapsed="true">
+    <Position X="11.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACAAAIACABAAAAAAAAAAIAQAAAAAAA=</HashCode>
+      <FileName>Interfaces\ICanvasEvents.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Main.Interfaces.IExceptions" Collapsed="true">
+    <Position X="13.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAAAAAAEAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Main.Interfaces.IGraphOperations" Collapsed="true">
+    <Position X="15.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAEACAAAAAAAAAABAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IGraphOperations.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Main.Interfaces.INamesUpdate" Collapsed="true">
+    <Position X="17" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAIAA=</HashCode>
+      <FileName>Interfaces\INamesUpdate.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Main.Interfaces.ITestingPart" Collapsed="true">
+    <Position X="20.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\ITestingPart.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Main.TestingPart.QuestionsType" Collapsed="true">
+    <Position X="17" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAEAQAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>TestingPart\QuestionsType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Main.Enumerators.ButtonStatus" Collapsed="true">
+    <Position X="10" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAgAAAAAAA=</HashCode>
+      <FileName>Enumerators\ButtonStatus.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Main.Enumerators.CurrentGraphOperation" Collapsed="true">
+    <Position X="11.75" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAEACAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Enumerators\CurrentGraphOperation.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Main.Enumerators.GraphType" Collapsed="true">
+    <Position X="13.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAIAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Enumerators\GraphType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Main.Enumerators.MatrixType" Collapsed="true">
+    <Position X="15.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAgAAAAAAAAAA=</HashCode>
+      <FileName>Enumerators\GraphType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="Main.Classes.AddNode" Collapsed="true">
+    <Position X="10" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Classes\DelegateCanvasEvents.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Main.Classes.DelNode" Collapsed="true">
+    <Position X="15.25" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAAAAACAABAAAAAAA=</HashCode>
+      <FileName>Classes\DelegateCanvasEvents.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Main.Classes.Edge" Collapsed="true">
+    <Position X="17" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAABAAAAAAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Classes\DelegateCanvasEvents.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Main.Classes.DelEdge" Collapsed="true">
+    <Position X="13.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAABAAAAAAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Classes\DelegateCanvasEvents.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Main.Classes.UpdateMatrix" Collapsed="true">
+    <Position X="18.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\DelegateCanvasEvents.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Main.Classes.ChangeModeEventHandler" Collapsed="true">
+    <Position X="11.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\Events.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

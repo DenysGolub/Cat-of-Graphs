@@ -19,7 +19,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition Width="auto"></ColumnDefinition>
-            <ColumnDefinition Width="275"></ColumnDefinition>
+            <ColumnDefinition Width="auto"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
@@ -27,15 +27,26 @@
         <DockPanel Background="Transparent" LastChildFill="False" Grid.ColumnSpan="2" Margin="0,0,4,204">
             <Menu Background="Transparent" DockPanel.Dock="Top">
                 <MenuItem Header="{Resx File.Header}">
+                    <MenuItem.Icon>
+                        <Image RenderOptions.BitmapScalingMode="HighQuality" 
+RenderOptions.EdgeMode="Aliased" Source="/Resources/file.png"></Image>
+                    </MenuItem.Icon>
                     <MenuItem Header="{Resx NewFile}" Click="NewFile_Click"></MenuItem>
                     <MenuItem Header="{Resx OpenFile}" Click="OpenFile_Click"></MenuItem>
                     <MenuItem Header="{Resx SaveFile}" Click="SaveFile_Click"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="{Resx Matrix}">
+                    <MenuItem.Icon>
+                        <Image RenderOptions.BitmapScalingMode="HighQuality" Source="/Resources/matrix.png"></Image>
+                    </MenuItem.Icon>
                     <MenuItem Click="AdjMatrixWindow_Click" Header="{Resx AdjMatrix}"></MenuItem>
                     <MenuItem Click="IncMatrixWindow_Click" Header="{Resx IncMatrix}"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="{Resx Operations}">
+                    <MenuItem.Icon>
+                        <Image RenderOptions.BitmapScalingMode="HighQuality" 
+RenderOptions.EdgeMode="Aliased" Source="/Resources/graph.png"></Image>
+                    </MenuItem.Icon>
                     <MenuItem Click="Addition_Click" Header="{Resx Addition}">
 
                     </MenuItem>
@@ -65,11 +76,19 @@ RenderOptions.EdgeMode="Aliased" Source="/Resources/MenuIcons/cartesian.png"></I
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Тестування">
+                    <MenuItem.Icon>
+                        <Image RenderOptions.BitmapScalingMode="HighQuality" 
+RenderOptions.EdgeMode="Aliased" Source="/Resources/test.png"></Image>
+                    </MenuItem.Icon>
                     <MenuItem Click="TestingFileSave_Click" Header="зберегти тестовий файл"></MenuItem>
                     <MenuItem Click="TestingFileOpen_Click" Header="відкрити тестовий файл"></MenuItem>
                     <MenuItem Click="StartTest_Click" Header="почати тестування"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="{Resx Help}">
+                    <MenuItem.Icon>
+                        <Image RenderOptions.BitmapScalingMode="HighQuality" 
+RenderOptions.EdgeMode="Aliased" Source="/Resources/help.png"></Image>
+                    </MenuItem.Icon>
                     <MenuItem Header="{Resx About}"  Click="About_Click"></MenuItem>
                     <MenuItem x:Name="menuItemLanguages" Header="{Resx Language}">
                         <MenuItem x:Name="EngLang" Tag="en-US" Header="{Resx EN_Lang}" Click="Lang_Click"></MenuItem>
@@ -90,17 +109,10 @@ RenderOptions.EdgeMode="Aliased" Source="/Resources/MenuIcons/cartesian.png"></I
 
 
             <Grid x:Name="CanvasGrid" SizeChanged="Grid_SizeChanged" Grid.Row="0" Grid.Column="0" Margin="0,26,0,0">
-                <Viewbox x:Name="undir" Stretch="Fill" StretchDirection="Both">
-                    <Canvas Visibility="Visible" Width="500" Height="500"  Background="White" Grid.Row="0" Grid.Column="0" x:Name="DrawingCanvas_Undirected" MouseWheel="DrawingCanvas_Undirected_MouseWheel">
-                        <Canvas.RenderTransform>
-                            <MatrixTransform/>
-                        </Canvas.RenderTransform>
-                    </Canvas>
-                </Viewbox>
+                <Canvas Visibility="Visible" Background="White" Grid.Row="0" Grid.Column="0" x:Name="DrawingCanvas_Undirected" MouseWheel="DrawingCanvas_Undirected_MouseWheel">
+                </Canvas>
 
-                <Viewbox x:Name="dir" Stretch="Fill" StretchDirection="Both" Margin="0,14,0,0">
-                    <Canvas Background="White"  Grid.Row="0" Grid.Column="0" x:Name="DrawingCanvas_Directed" Visibility = "Collapsed"/>
-                </Viewbox>
+                <Canvas Background="White"  Grid.Row="0" Grid.Column="0" x:Name="DrawingCanvas_Directed" Visibility = "Collapsed"/>
 
 
 
@@ -208,12 +220,6 @@ RenderOptions.EdgeMode="Aliased" Source="/Resources/MenuIcons/cartesian.png"></I
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Description}" HorizontalAlignment="Stretch">
-                                    <TextBlock.ContextMenu>
-                                        <ContextMenu>
-                                            <MenuItem Header="Col 1 Item 1"/>
-                                            <MenuItem Header="Col 1 Item 2"/>
-                                        </ContextMenu>
-                                    </TextBlock.ContextMenu>
                                 </TextBlock>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -314,18 +320,24 @@ RenderOptions.EdgeMode="Aliased" Source="/Resources/MenuIcons/cartesian.png"></I
             </DataGrid>
         </Grid>
         <!--Creating Sub-Grid in Column 2-->
-        <Grid Grid.Column="2">
-            <Menu FontSize="20" Background="White" HorizontalAlignment="Left">
+        <Grid x:Name="Instr" SizeChanged="Instr_SizeChanged" Grid.Column="2">
+            <Menu x:Name="Instr_Menu" FontSize="20" Background="White" TabIndex="0" HorizontalAlignment="Left">
                 <Menu.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel />
                     </ItemsPanelTemplate>
                 </Menu.ItemsPanel>
                 <MenuItem Click="DFS_Click" Header="Пошук в глибину (DFS)"/>
-                <MenuItem Header="Пошук в ширину (BFS)"/>
+                <MenuItem Click="Components_Click" Header="Компоненти зв'язності"></MenuItem>
+                <MenuItem Click="CheckTree_Click" Header="Перевірка на дерево"></MenuItem>
+                <MenuItem Click="Cycle_Click" Header="Перевірка на ациклічність"></MenuItem>
+                <MenuItem Click="Euler_Click" Header="Ейлеровий граф"></MenuItem>
+                <MenuItem Click="RegularGraphClick" Header="Перевірка на регулярний граф"></MenuItem>
+                <MenuItem Click="SizeAndOrder_Click" Header="Порядок і розмір графа"></MenuItem>
+                <MenuItem Click="Degree_Click"  Header="Степені вершин"></MenuItem>
+                <MenuItem Click="Djkstra_Click" Header="Пошук найкоротшого шляху&#x0a;алгоритмом Дейкстри"></MenuItem>
 
-                <MenuItem Header="Цикл Ейлера" />
-                <MenuItem Header="Гамільтоновий цикл" />
+
             </Menu>
         </Grid>
         <GridSplitter HorizontalAlignment="Center"   

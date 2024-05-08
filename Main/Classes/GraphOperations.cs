@@ -332,7 +332,7 @@ namespace Main.Classes
                             X2 = intersectionPoint2.X,
                             Y2 = intersectionPoint2.Y,
                             Stroke = System.Windows.Media.Brushes.Black,
-                            StrokeThickness = 2,
+                            StrokeThickness = 1,
                             Fill = System.Windows.Media.Brushes.Black,
                         };
                     }
@@ -545,7 +545,7 @@ namespace Main.Classes
                             X2 = intersectionPoint2.X,
                             Y2 = intersectionPoint2.Y,
                             Stroke = System.Windows.Media.Brushes.Black,
-                            StrokeThickness = 2,
+                            StrokeThickness = 1,
                             Fill = System.Windows.Media.Brushes.Black,
                         };
                     }
@@ -609,7 +609,7 @@ namespace Main.Classes
                                 X2 = intersectionPoint2.X,
                                 Y2 = intersectionPoint2.Y,
                                 Stroke = System.Windows.Media.Brushes.Black,
-                                StrokeThickness = 2,
+                                StrokeThickness = 1,
                                 Fill = System.Windows.Media.Brushes.Black,
                             };
                         }

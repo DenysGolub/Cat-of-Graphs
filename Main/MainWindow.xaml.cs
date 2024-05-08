@@ -30,6 +30,8 @@ using System.Data;
 using System;
 using System.Reflection.Metadata;
 using System.Collections;
+using Main.InstrumentalPart;
+using static Main.InstrumentalPart.Euler;
 namespace Main
 {
     /// <summary>
@@ -124,55 +126,6 @@ namespace Main
 
             
         }
-
-
-        private void DataGrid_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            DataGrid dataGrid = sender as DataGrid;
-
-            if (e.Key == Key.Enter)
-            {
-                var currentRowIndex = dataGrid.Items.IndexOf(dataGrid.CurrentItem);
-                var currentColumnIndex = dataGrid.CurrentColumn.DisplayIndex;
-
-                // Check if the Enter key was pressed in the last cell of the last row
-                if (currentRowIndex == dataGrid.Items.Count - 1 && currentColumnIndex == dataGrid.Columns.Count - 1)
-                {
-                    // Add a new item to the ItemsSource (assuming it's bound to a collection)
-                    (dataGrid.ItemsSource as ObservableCollection<Question>).Add(new Question());
-
-                    // Move the focus to the new row
-                    dataGrid.ScrollIntoView(dataGrid.Items[dataGrid.Items.Count - 1]);
-                    dataGrid.Focus();
-                    dataGrid.SelectedIndex = dataGrid.Items.Count - 1;
-
-                    // Begin editing the first cell of the new row
-                    dataGrid.BeginEdit();
-                }
-            }
-        }
-
-
-        private void InlineEditTextBox(object sender, MouseButtonEventArgs e)
-        {
-            if (sender is TextBlock textBlock)
-            {
-                TextBox textBox = new TextBox();
-                textBox.Text = textBlock.Text;
-                textBox.LostFocus += (s, args) =>
-                {
-                    // Update your data object with the new value
-                    textBlock.Text = textBox.Text;
-                    // Remove the TextBox and show the TextBlock again
-                    (textBlock.Parent as ContentPresenter).Content = textBlock;
-                };
-                // Replace the TextBlock with the TextBox
-                textBlock.Parent.SetValue(ContentPresenter.ContentProperty, textBox);
-                textBox.Focus();
-                textBox.SelectAll();
-            }
-        }
-
 
         public static IntPtr WindowHandle { get; private set; }
 
@@ -377,7 +330,7 @@ namespace Main
 
             FileSystem.Load(ref canv, savedCanvas, ref list);
 
-            if (WindowsInstances.AdjacenceMatrixWindowExist(this, out int ind)
+            if (WindowsInstances.AdjacenceMatrixWindowExist(this, out int ind))
             {
                 MatrixController.Adjacence(this);
             }
@@ -532,6 +485,10 @@ namespace Main
             //var canvas = GraphCanvas;
 
             // Use Dispatcher to call the recursive method on the UI thread
+            if(Application.Current.Windows.OfType<DFSLogs>().SingleOrDefault() == null)
+            {
+                new DFSLogs().Show();
+            }
             SearchAlgorithms.DFS(GraphAdjacenceList, GraphCanvas, 1, visited);
 
         }
@@ -559,65 +516,31 @@ namespace Main
         private void Cycle_Click(object sender, RoutedEventArgs e)
         {
             bool isCyclic = false;
+            if(GraphAdjacenceList.GetList.Count==0) 
+            {
+                MessageBox.Show("Граф не містить цикл");
+                return;
+            }
             if (graphType == GraphType.Directed)
             {
                 isCyclic = SearchAlgorithms.IsCycleExistInDirectedGraph(GraphAdjacenceList, 1, new HashSet<int>(), new HashSet<int>());
             }
             else
             {
-                //isCyclic = SearchAlgorithms.IsCycleExistInUndirectedGraph(GraphAdjacenceList, 1, new HashSet<int>());
+                isCyclic = SearchAlgorithms.IsCycleExistInUndirectedGraph(GraphAdjacenceList, 1, 1, new HashSet<int>(), ref isCyclic);
             }
-            MessageBox.Show(isCyclic ? "True" : "False");
+            MessageBox.Show(isCyclic ? "Граф містить цикл" : "Граф не містить цикл");
 
 
         }
 
         private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            /*if(CanvasGrid.ActualWidth > 0)
-            {
-                // Adjust the size of the canvas to match the size of the grid
-                GraphCanvas.Width = CanvasGrid.ActualWidth;
-                GraphCanvas.Height = CanvasGrid.ActualHeight;
-
-                // Adjust the position of each child element of the canvas
-                foreach (var child in GraphCanvas.Children)
-                {
-
-                    if (child is UIElement uiElement && child is Ellipse)
-                    {
-                        // Get the current position of the child element
-                        double currentLeft = Canvas.GetLeft(uiElement);
-                        double currentTop = Canvas.GetTop(uiElement);
-
-                        // Calculate the new position based on the change in size of the canvas
-                        double newLeft = currentLeft * CanvasGrid.ActualWidth / e.PreviousSize.Width;
-                        double newTop = currentTop * CanvasGrid.ActualHeight / e.PreviousSize.Height;
-
-                        // Update the position of the child element
-                        Canvas.SetLeft(uiElement, newLeft);
-                        Canvas.SetTop(uiElement, newTop);
-                    }
-                    else if(child is UIElement && child is TextBlock)
-                    {
-                        DataFromGraph.AllignOfText()
-                    }
-                }
-
-                GraphCanvas.InvalidateVisual();*/
-
-            /*DrawingCanvas_Undirected.Height = CanvasGrid.ActualHeight;
+            DrawingCanvas_Undirected.Height = CanvasGrid.ActualHeight;
             DrawingCanvas_Undirected.Width = CanvasGrid.ActualWidth;
 
             DrawingCanvas_Directed.Height = CanvasGrid.ActualHeight;
             DrawingCanvas_Directed.Width = CanvasGrid.ActualWidth;
-
-            undir.InvalidateVisual();
-
-            DrawingCanvas_Undirected.InvalidateMeasure();
-            DrawingCanvas_Undirected.InvalidateArrange();
-            undir.InvalidateMeasure();
-            undir.InvalidateArrange();*/
         }
 
         private void DrawingCanvas_Undirected_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
@@ -749,7 +672,7 @@ namespace Main
         private void NewQuestion_Click(object sender, RoutedEventArgs e)
         {
             var b = QuestionsListBox.Items;
-            questions.Add(new Question() { GraphType = graphType, State = new AdjMatrixStateParameter() { State = "AdjMatrix"}
+            questions.Add(new Question() { GraphType = graphType, State = new AdjMatrixStateParameter() { State = "AdjMatrix"}, Description= "За заданою матрицею суміжності утворіть граф"
             });
             
             this.QuestionsListBox.CommitEdit();
@@ -864,6 +787,160 @@ namespace Main
         private void StartTest_Click(object sender, RoutedEventArgs e)
         {
             FileSystem.LoadTest();
+        }
+
+        private void Components_Click(object sender, RoutedEventArgs e)
+        {
+            GraphComponents.ConnectedComponents(GraphAdjacenceList, GraphAdjacenceList.CountNodes);
+        }
+
+        private void CheckTree_Click(object sender, RoutedEventArgs e)
+        {
+            var isTree = Tree.isTree(GraphAdjacenceList, GraphAdjacenceList.GetList.GetLinesBasedOnType(graphType).Count, GraphAdjacenceList.CountNodes);
+
+            string message = isTree ? "Граф є деревом" : "Граф є лісом";
+            MessageBox.Show(message);
+
+        }
+
+        private void ShortestPath(object sender, RoutedEventArgs e)
+        {
+            int[,] graph
+                 = new int[,] { { 0, 4, 0, 0, 0, 0, 0, 8, 0 },
+                            { 4, 0, 8, 0, 0, 0, 0, 11, 0 },
+                            { 0, 8, 0, 7, 0, 4, 0, 0, 2 },
+                            { 0, 0, 7, 0, 9, 14, 0, 0, 0 },
+                            { 0, 0, 0, 9, 0, 10, 0, 0, 0 },
+                            { 0, 0, 4, 14, 10, 0, 2, 0, 0 },
+                            { 0, 0, 0, 0, 0, 2, 0, 1, 6 },
+                            { 8, 11, 0, 0, 0, 0, 1, 0, 7 },
+                            { 0, 0, 2, 0, 0, 0, 6, 7, 0 } };
+
+            // Function call
+            Dijkstra.FindShortestWay(graph, 1);
+        }
+
+        private void RegularGraphClick(object sender, RoutedEventArgs e)
+        {
+            bool isReg = RegularGraph.IsRegular(GraphAdjacenceList, out string seq);
+
+            MessageBox.Show(seq);
+        }
+
+        private void SizeAndOrder_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show($"Порядок: {GraphAdjacenceList.CountNodes}\nРозмір: " +
+                $"{ToMatrixConverters.GetLinesBasedOnType(GraphAdjacenceList.GetList,graphType).Count}",
+                "Порядок та розмір графа");
+
+
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var textBox = sender as ComboBox;
+            var editedText = textBox.SelectedItem;
+            Console.WriteLine($"Edited text: {editedText}");
+
+            var quest = QuestionsListBox.CurrentCell.Item as Question;
+
+            if (quest == null || editedText == null)
+            {
+                return;
+            }
+
+            var editedString = editedText.ToString();
+
+            if (editedString == QuestionsType.ToIncidenceMatrixFromGraph.ToString())
+            {
+                quest.Description = "Утворити матрицю інцидентності за графом";
+            }
+            else if (editedString == QuestionsType.ToAdjacenceMatrixFromGraph.ToString())
+            {
+                quest.Description = "Утворити матрицю суміжності за графом";
+            }
+            else if (editedString == QuestionsType.ToGraphFromAdjacenceMatrix.ToString())
+            {
+                quest.Description = "Утворити граф за матрицею суміжності";
+            }
+            else if (editedString == QuestionsType.ToGraphFromIncidenceMatrix.ToString())
+            {
+                quest.Description = "Утворити граф за матрицею інцидентності";
+            }
+
+            this.QuestionsListBox.CommitEdit();
+            this.QuestionsListBox.CommitEdit();
+
+            this.QuestionsListBox.CancelEdit();
+            this.QuestionsListBox.CancelEdit();
+
+            QuestionsListBox.Items.Refresh();
+            // Refresh DataGridView
+
+
+
+        }
+
+        private void ComboBox_DropDownClosed_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Instr_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Instr_Menu.Height = Instr.ActualHeight;
+            Instr_Menu.Width = Instr.ActualWidth;
+        }
+
+        private void Degree_Click(object sender, RoutedEventArgs e)
+        {
+            var deg = Degree.GetDegree(GraphAdjacenceList);
+
+            string message = "";
+
+            foreach(var kvp in deg)
+            {
+                message += $"{kvp.Key}:{kvp.Value}\n";
+            }
+
+            MessageBox.Show(message, "Степені вершин");
+        }
+
+        private void Euler_Click(object sender, RoutedEventArgs e)
+        {
+            Euler eul = null;
+
+            if(graphType == GraphType.Directed)
+            {
+                eul = new EulerDirected();
+            }
+            else
+            {
+                eul = new EulerUndirected();
+            }
+            List<int> eulerianPathCircuit = eul.FindEulerianPathCircuit(GraphAdjacenceList);
+            string str = "";
+            if (eulerianPathCircuit != null)
+            {
+                foreach (int node in eulerianPathCircuit)
+                {
+                    str += (node + "->");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Граф не є Ейлеровим");
+                return;
+            }
+
+            str = str.Substring(0, str.Length - 2);
+            MessageBox.Show(str, "Ейлерів маршрут або цикл");
+
+        }
+
+        private void Djkstra_Click(object sender, RoutedEventArgs e)
+        {
+            new WeightMatrix(GraphAdjacenceList).Show();
         }
     }
 }   

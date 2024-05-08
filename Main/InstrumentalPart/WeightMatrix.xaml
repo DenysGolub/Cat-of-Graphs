@@ -1,0 +1,26 @@
+﻿<Window x:Class="Main.InstrumentalPart.WeightMatrix"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Main.InstrumentalPart"
+        mc:Ignorable="d"
+        xmlns:dataGrid2D="http://gu.se/DataGrid2D"
+        Title="WeightMatrix" SizeToContent="WidthAndHeight" Height="295" Width="450" ResizeMode="NoResize">
+    <Grid Height="313" Width="450">
+        <DataGrid x:Name="matrix" dataGrid2D:ItemsSource.Array2D="{Binding Data2D}"
+          dataGrid2D:ItemsSource.ColumnHeadersSource="{Binding ColumnHeaders}"
+          dataGrid2D:ItemsSource.RowHeadersSource="{Binding RowHeaders}"
+          CanUserSortColumns="False"
+                  CellEditEnding="matrix_ValueInCellChanged"
+                  
+                  SelectionUnit="Cell" Margin="0,0,0,84">
+
+
+
+        </DataGrid>
+        <Label Content="Номер вершини, &#x0a;для якої шукається шлях" Margin="0,234,297,39" ></Label>
+        <TextBox x:Name="source_tt" Margin="153,241,184,47"></TextBox>
+        <Button Content="Знайти шлях" Margin="286,241,74,47" Click="Button_Click"></Button>
+    </Grid>
+</Window>
