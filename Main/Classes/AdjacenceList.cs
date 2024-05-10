@@ -29,8 +29,8 @@ namespace Main.Classes
         {
             this.type = old_list.Type;
             this.adjacence_list = new Dictionary<int, HashSet<int>>(old_list.GetList);
-           
         }
+
         public AdjacenceList(GraphType type)
         {
             this.type = type;

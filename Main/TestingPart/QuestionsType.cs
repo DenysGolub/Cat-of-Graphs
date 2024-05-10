@@ -12,7 +12,5 @@ namespace Main.TestingPart
         ToAdjacenceMatrixFromGraph,
         ToGraphFromIncidenceMatrix,
         ToIncidenceMatrixFromGraph,
-        //TrueFalse,
-        //CheckBox
     }
 }

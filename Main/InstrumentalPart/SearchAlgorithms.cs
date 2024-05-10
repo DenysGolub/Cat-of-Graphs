@@ -136,20 +136,9 @@ namespace Main.InstrumentalPart
 
         }
 
-
-
-        // Рекурсивна функція для обходу графу в глибину
-        private protected static void DFSUtil(AdjacenceList adj, int v, bool[] visited, ref string comp)
+        private protected virtual void DepthFirstSearch(AdjacenceList adj, int v, bool[] visited, ref string comp)
         {
-            visited[v] = true;
-            comp += (v + " ");
-
-            // Рекурсивно відвідати всі сусідні вершини, які ще не були відвідані
-            foreach (int i in adj[v])
-            {
-                if (!visited[i])
-                    DFSUtil(adj, i, visited, ref comp);
-            }
+            
         }
 
     }

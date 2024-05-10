@@ -1,22 +1,11 @@
 ﻿using Main.Classes;
 using Main.Enumerators;
-using Main.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace Main.TestingPart
 {
-    public class Question//: ITestingPart
+    public class Question
     {
-
         readonly HashSet<QuestionsType> valuesAsList = Enum.GetValues(typeof(QuestionsType)).Cast<QuestionsType>().ToHashSet();
         protected string description = "";
         protected QuestionsType question_type;
@@ -34,11 +23,6 @@ namespace Main.TestingPart
 
         public HashSet<QuestionsType> Types => valuesAsList;
         public GraphType GraphType { get => graphType; set => graphType = value; }
-
-        /*public override string ToString()
-        {
-            return question_type.ToString();
-        }*/
 
         private byte[] img_bytes = null;
 

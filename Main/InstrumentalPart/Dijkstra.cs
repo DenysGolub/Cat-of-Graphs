@@ -20,6 +20,7 @@ namespace Main.InstrumentalPart
         public static string FindShortestWay(int[,] adjacencyMatrix,
                                             int startVertex)
         {
+            startVertex -= 1;
             int nVertices = adjacencyMatrix.GetLength(0);
 
             // shortestDistances[i] will hold the 
@@ -34,7 +35,7 @@ namespace Main.InstrumentalPart
 
             // Initialize all distances as 
             // INFINITE and added[] as false 
-            for (int vertexIndex = 1; vertexIndex < nVertices;
+            for (int vertexIndex = 0; vertexIndex < nVertices;
                                                 vertexIndex++)
             {
                 shortestDistances[vertexIndex] = int.MaxValue;
@@ -55,7 +56,7 @@ namespace Main.InstrumentalPart
 
             // Find shortest path for all 
             // vertices 
-            for (int i = 1; i < nVertices; i++)
+            for (int i = 0; i < nVertices; i++)
             {
 
                 // Pick the minimum distance vertex 
@@ -65,7 +66,7 @@ namespace Main.InstrumentalPart
                 // first iteration. 
                 int nearestVertex = -1;
                 int shortestDistance = int.MaxValue;
-                for (int vertexIndex = 1;
+                for (int vertexIndex = 0;
                         vertexIndex < nVertices;
                         vertexIndex++)
                 {
@@ -85,7 +86,7 @@ namespace Main.InstrumentalPart
                 // Update dist value of the 
                 // adjacent vertices of the 
                 // picked vertex. 
-                for (int vertexIndex = 1;
+                for (int vertexIndex = 0;
                         vertexIndex < nVertices;
                         vertexIndex++)
                 {
@@ -114,17 +115,17 @@ namespace Main.InstrumentalPart
         {
             string str = "";
             int nVertices = distances.Length;
-            str += ("Vertex\t Distance\tPath");
+            str += ("Vertex\t\tDistance\t\tPath");
 
-            for (int vertexIndex = 1;
+            for (int vertexIndex = 0;
                     vertexIndex < nVertices;
                     vertexIndex++)
             {
                 if (vertexIndex != startVertex)
                 {
-                    str+=("\n" + startVertex + " -> ");
-                    str+=(vertexIndex + " \t\t ");
-                    str += (distances[vertexIndex] + "\t\t");
+                    str += $"\n{startVertex + 1}->";
+                    str += $"{vertexIndex + 1}\t\t";
+                    str += $"{distances[vertexIndex]}\t\t";
                     printPath(vertexIndex, parents, ref str);
                 }
             }
@@ -145,7 +146,7 @@ namespace Main.InstrumentalPart
                 return;
             }
             printPath(parents[currentVertex], parents, ref str);
-            str+=(currentVertex + " ");
+            str += $"{currentVertex + 1} ";
         }
     }
 }

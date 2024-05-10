@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Main.InstrumentalPart.Degree" Collapsed="true">
+    <Position X="9.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>InstrumentalPart\Degree.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.DFSLogs" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAACAAAAAA=</HashCode>
+      <FileName>InstrumentalPart\DFSLogs.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Main.InstrumentalPart.Dijkstra" Collapsed="true">
+    <Position X="13.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAgAAACAAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>InstrumentalPart\Dijkstra.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.Euler" Collapsed="true">
+    <Position X="6" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAgAAAAAAAAAAACAACAAAAAA=</HashCode>
+      <FileName>InstrumentalPart\Euler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.EulerDirected" Collapsed="true">
+    <Position X="5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>InstrumentalPart\Euler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.EulerUndirected" Collapsed="true">
+    <Position X="7.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>InstrumentalPart\Euler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.GraphComponents" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAAAAAAAAAAAAAQAAAAAAAAAAAAE=</HashCode>
+      <FileName>InstrumentalPart\GraphComponents.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.RegularGraph" Collapsed="true">
+    <Position X="9.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>InstrumentalPart\RegularGraph.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.SearchAlgorithms" Collapsed="true">
+    <Position X="3.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAEBBAAAAAAAAAAAAAAAAAAAgAAE=</HashCode>
+      <FileName>InstrumentalPart\SearchAlgorithms.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.Tree" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAgAAAE=</HashCode>
+      <FileName>InstrumentalPart\Tree.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Main.InstrumentalPart.WeightMatrix" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAACAEAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>InstrumentalPart\WeightMatrix.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

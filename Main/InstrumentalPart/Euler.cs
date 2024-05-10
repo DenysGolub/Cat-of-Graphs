@@ -115,7 +115,6 @@ namespace Main.InstrumentalPart
             return circuit;
         }
 
-        // Function to check if the graph is connected and has an Eulerian path or circuit
         private protected override bool IsConnectedOrHasEulerianCircuit(AdjacenceList graph)
         {
             int inOutDegreeDiffCount = 0;
@@ -143,10 +142,8 @@ namespace Main.InstrumentalPart
                 return false;
         }
 
-        // Function to find the starting node for the Eulerian path or circuit
         private override protected int FindStartNode(AdjacenceList graph)
         {
-            // If there's a node with out-degree greater than in-degree, start from it; otherwise start from any node
             foreach (var nodeEdges in graph.GetList)
             {
                 int inDegree = 0, outDegree = nodeEdges.Value.Count;
@@ -243,7 +240,6 @@ namespace Main.InstrumentalPart
             return circuit;
         }
 
-        // Function to check if the graph is connected and has an Eulerian path or circuit
         private protected override bool IsConnectedOrHasEulerianCircuit(AdjacenceList graph)
         {
             int oddDegreeCount = 0;
@@ -265,7 +261,6 @@ namespace Main.InstrumentalPart
                 return false;
         }
 
-        // Function to find the starting node for the Eulerian path or circuit
         private protected override int FindStartNode(AdjacenceList graph)
         {
             // If there's a node with odd degree, start from it; otherwise start from any node

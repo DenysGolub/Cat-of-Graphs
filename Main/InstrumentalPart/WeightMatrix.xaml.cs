@@ -3,6 +3,7 @@ using Main.Classes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,6 +24,22 @@ namespace Main.InstrumentalPart
     public partial class WeightMatrix : Window
     {
         int[,] table = new int[0, 0];
+        AdjacenceList list = new AdjacenceList();
+        public AdjacenceList AdjacenceList 
+        {
+            set
+            {
+                table = new int[value.CountNodes, value.CountNodes];
+                matrix.SetArray2D(table);
+                matrix.SetRowHeadersSource(value.GetList.Keys.ToArray());
+                matrix.SetColumnHeadersSource(value.GetList.Keys.ToArray());
+                list = value;
+            }
+            get
+            {
+                return list;
+            }
+        }
         public WeightMatrix()
         {
             InitializeComponent();
@@ -32,7 +49,7 @@ namespace Main.InstrumentalPart
         {
             InitializeComponent();
             table = new int[list.CountNodes, list.CountNodes];
-
+            this.list = list;
             matrix.SetArray2D(table);
 
             matrix.SetRowHeadersSource(list.GetList.Keys.ToArray());
@@ -41,11 +58,18 @@ namespace Main.InstrumentalPart
 
         private void matrix_ValueInCellChanged(object sender, DataGridCellEditEndingEventArgs e)
         {
-            DataGridColumn col1 = e.Column;
-            DataGridRow row1 = e.Row;
-            int weight = int.Parse(((TextBox)e.EditingElement).Text);
+            try
+            {
+                DataGridColumn col1 = e.Column;
+                DataGridRow row1 = e.Row;
+                int weight = int.Parse(((TextBox)e.EditingElement).Text);                
+                table[matrix.Items.IndexOf(matrix.CurrentItem), matrix.SelectedCells[0].Column.DisplayIndex] = weight;
+            }
+            catch(Exception ex)
+            {
 
-            table[matrix.Items.IndexOf(matrix.CurrentItem), matrix.SelectedCells[0].Column.DisplayIndex] = weight;
+            }
+            
         }
 
         private void OnTextBoxTextChanged(object sender, TextChangedEventArgs e)
@@ -55,6 +79,11 @@ namespace Main.InstrumentalPart
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if(int.Parse(source_tt.Text) > AdjacenceList.CountNodes || int.Parse(source_tt.Text) == 0)
+            {
+                MessageBox.Show("Граф не містить такої вершини");
+                return;
+            }
             var str = Dijkstra.FindShortestWay(table, int.Parse(source_tt.Text));
             MessageBox.Show(str);
         }

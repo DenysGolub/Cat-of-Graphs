@@ -31,7 +31,6 @@ using System;
 using System.Reflection.Metadata;
 using System.Collections;
 using Main.InstrumentalPart;
-using static Main.InstrumentalPart.Euler;
 namespace Main
 {
     /// <summary>
@@ -482,12 +481,10 @@ namespace Main
                 visited.Add(item, 0);
             }
 
-            //var canvas = GraphCanvas;
-
-            // Use Dispatcher to call the recursive method on the UI thread
-            if(Application.Current.Windows.OfType<DFSLogs>().SingleOrDefault() == null)
+           
+            if (Application.Current.Windows.OfType<DFSLogs>().SingleOrDefault() == null)
             {
-                new DFSLogs().Show();
+                new DFSLogs() { Owner=this}.Show();
             }
             SearchAlgorithms.DFS(GraphAdjacenceList, GraphCanvas, 1, visited);
 
@@ -545,7 +542,7 @@ namespace Main
 
         private void DrawingCanvas_Undirected_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
-           /* var element = (UIElement)sender;
+ /*           var element = (UIElement)sender;
             var position = e.GetPosition(element);
             var transform = (MatrixTransform)element.RenderTransform;
             var matrix = transform.Matrix;
@@ -791,35 +788,22 @@ namespace Main
 
         private void Components_Click(object sender, RoutedEventArgs e)
         {
-            GraphComponents.ConnectedComponents(GraphAdjacenceList, GraphAdjacenceList.CountNodes);
+            GraphComponents graphComp = new GraphComponents();
+
+            string comp = graphComp.ConnectedComponents(GraphAdjacenceList, GraphAdjacenceList.CountNodes);
+            MessageBox.Show(comp, "Компоненти зв'язності");
         }
 
         private void CheckTree_Click(object sender, RoutedEventArgs e)
         {
-            var isTree = Tree.isTree(GraphAdjacenceList, GraphAdjacenceList.GetList.GetLinesBasedOnType(graphType).Count, GraphAdjacenceList.CountNodes);
+            var isTree = new Tree().isTree(GraphAdjacenceList, GraphAdjacenceList.GetList.GetLinesBasedOnType(graphType).Count, GraphAdjacenceList.CountNodes);
 
             string message = isTree ? "Граф є деревом" : "Граф є лісом";
             MessageBox.Show(message);
 
         }
 
-        private void ShortestPath(object sender, RoutedEventArgs e)
-        {
-            int[,] graph
-                 = new int[,] { { 0, 4, 0, 0, 0, 0, 0, 8, 0 },
-                            { 4, 0, 8, 0, 0, 0, 0, 11, 0 },
-                            { 0, 8, 0, 7, 0, 4, 0, 0, 2 },
-                            { 0, 0, 7, 0, 9, 14, 0, 0, 0 },
-                            { 0, 0, 0, 9, 0, 10, 0, 0, 0 },
-                            { 0, 0, 4, 14, 10, 0, 2, 0, 0 },
-                            { 0, 0, 0, 0, 0, 2, 0, 1, 6 },
-                            { 8, 11, 0, 0, 0, 0, 1, 0, 7 },
-                            { 0, 0, 2, 0, 0, 0, 6, 7, 0 } };
-
-            // Function call
-            Dijkstra.FindShortestWay(graph, 1);
-        }
-
+       
         private void RegularGraphClick(object sender, RoutedEventArgs e)
         {
             bool isReg = RegularGraph.IsRegular(GraphAdjacenceList, out string seq);
@@ -940,7 +924,15 @@ namespace Main
 
         private void Djkstra_Click(object sender, RoutedEventArgs e)
         {
-            new WeightMatrix(GraphAdjacenceList).Show();
+            if(Application.Current.Windows.OfType<WeightMatrix>().SingleOrDefault() == null)
+            {
+                new WeightMatrix(GraphAdjacenceList) { Owner = this }.Show();
+            }
+            else
+            {
+                var wnd = Application.Current.Windows.OfType<WeightMatrix>().SingleOrDefault();
+                wnd.AdjacenceList = GraphAdjacenceList;
+            }
         }
     }
 }   
