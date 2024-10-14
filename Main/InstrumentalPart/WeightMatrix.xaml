@@ -22,5 +22,6 @@
         <Label Content="Номер вершини, &#x0a;для якої шукається шлях" Margin="0,234,297,39" ></Label>
         <TextBox x:Name="source_tt" Margin="153,241,184,47"></TextBox>
         <Button Content="Знайти шлях" Margin="286,241,74,47" Click="Button_Click"></Button>
+        <Button Content="Рандом" Click="Random_Click" Margin="394,242,10,47"></Button>
     </Grid>
 </Window>

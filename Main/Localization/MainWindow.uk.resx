@@ -120,11 +120,23 @@
   <data name="About" xml:space="preserve">
     <value>Про програму...</value>
   </data>
+  <data name="Acyclic" xml:space="preserve">
+    <value>Перевірити граф на ациклічність</value>
+  </data>
   <data name="Addition" xml:space="preserve">
     <value>доповнення</value>
   </data>
+  <data name="AdjI" xml:space="preserve">
+    <value>Матриця інцидентності</value>
+  </data>
+  <data name="AdjM" xml:space="preserve">
+    <value>Матриця суміжності</value>
+  </data>
   <data name="AdjMatrix" xml:space="preserve">
     <value>суміжності</value>
+  </data>
+  <data name="AdjMatrixToFile" xml:space="preserve">
+    <value>додати матрицю суміжності поточного графа</value>
   </data>
   <data name="BFS" xml:space="preserve">
     <value>пошук в ширину</value>
@@ -135,20 +147,51 @@
   <data name="CircularSum" xml:space="preserve">
     <value>кільцева сума</value>
   </data>
+  <data name="Degree" xml:space="preserve">
+    <value>Степені вершин</value>
+  </data>
   <data name="DFS" xml:space="preserve">
-    <value>пошук в глибину</value>
+    <value>Пошук в глибину (DFS)</value>
+  </data>
+  <data name="Dkstra" xml:space="preserve">
+    <value>Пошук найкоротшого шляху
+алгоритмом Дейкстри</value>
+  </data>
+  <data name="EditTest" xml:space="preserve">
+    <value>відкрити тестовий файл</value>
   </data>
   <data name="EN_Lang" xml:space="preserve">
     <value>English</value>
   </data>
+  <data name="Euler" xml:space="preserve">
+    <value>Ейлеровий маршрут (цикл)</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>експортувати</value>
+  </data>
   <data name="File.Header" xml:space="preserve">
     <value>Файл</value>
+  </data>
+  <data name="Graph" xml:space="preserve">
+    <value>Граф</value>
+  </data>
+  <data name="GraphComponents" xml:space="preserve">
+    <value>Компоненти зв'язності</value>
+  </data>
+  <data name="GraphToFile" xml:space="preserve">
+    <value>додати поточний граф у файл</value>
+  </data>
+  <data name="GraphType" xml:space="preserve">
+    <value>Тип графа</value>
   </data>
   <data name="Help" xml:space="preserve">
     <value>Допомога</value>
   </data>
   <data name="IncMatrix" xml:space="preserve">
     <value>інцидентності</value>
+  </data>
+  <data name="IncMatrixToFile" xml:space="preserve">
+    <value>додати матрицю інцидентності поточного графа</value>
   </data>
   <data name="Intersection" xml:space="preserve">
     <value>перетин</value>
@@ -162,22 +205,64 @@
   <data name="NewFile" xml:space="preserve">
     <value>новий </value>
   </data>
+  <data name="NewQuest" xml:space="preserve">
+    <value>додати нове питання</value>
+  </data>
   <data name="OpenFile" xml:space="preserve">
     <value>відкрити</value>
+  </data>
+  <data name="OpenTest" xml:space="preserve">
+    <value>почати тестування</value>
   </data>
   <data name="Operations" xml:space="preserve">
     <value>Операції</value>
   </data>
+  <data name="Point" xml:space="preserve">
+    <value>Бали</value>
+  </data>
+  <data name="QType" xml:space="preserve">
+    <value>Тип питання</value>
+  </data>
+  <data name="QuestionDescr" xml:space="preserve">
+    <value>Опис завдання</value>
+  </data>
+  <data name="RegularGraph" xml:space="preserve">
+    <value>Перевірити чи є граф регулярним</value>
+  </data>
   <data name="SaveFile" xml:space="preserve">
     <value>зберегти</value>
   </data>
+  <data name="SaveTest" xml:space="preserve">
+    <value>зберегти тестовий файл</value>
+  </data>
+  <data name="SizeOrder" xml:space="preserve">
+    <value>Розмір та порядок графа</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TestingMenu" xml:space="preserve">
+    <value>Тестування</value>
+  </data>
   <data name="Traversal" xml:space="preserve">
     <value>Дослідження</value>
+  </data>
+  <data name="Tree" xml:space="preserve">
+    <value>Перевірити чи є граф деревом</value>
+  </data>
+  <data name="Tree1" xml:space="preserve">
+    <value>Перевіри чи є граф деревом</value>
   </data>
   <data name="UA_Lang" xml:space="preserve">
     <value>Українська</value>
   </data>
   <data name="Unity" xml:space="preserve">
     <value>об'єднання</value>
+  </data>
+  <data name="VerCrit" xml:space="preserve">
+    <value>Критерій перевірки</value>
+  </data>
+  <data name="VerMatrix" xml:space="preserve">
+    <value>Перевіркова матриця</value>
   </data>
 </root>

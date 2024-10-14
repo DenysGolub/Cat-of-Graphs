@@ -120,11 +120,23 @@
   <data name="About" xml:space="preserve">
     <value>About</value>
   </data>
+  <data name="Acyclic" xml:space="preserve">
+    <value>Check if graph is acyclic</value>
+  </data>
   <data name="Addition" xml:space="preserve">
     <value>addition</value>
   </data>
+  <data name="AdjI" xml:space="preserve">
+    <value>Incidency matrix</value>
+  </data>
+  <data name="AdjM" xml:space="preserve">
+    <value>Adjacency matrix</value>
+  </data>
   <data name="AdjMatrix" xml:space="preserve">
     <value>adjacence</value>
+  </data>
+  <data name="AdjMatrixToFile" xml:space="preserve">
+    <value>add current graph adjacency matrix</value>
   </data>
   <data name="BFS" xml:space="preserve">
     <value>BFS</value>
@@ -135,20 +147,50 @@
   <data name="CircularSum" xml:space="preserve">
     <value>circle sum</value>
   </data>
+  <data name="Degree" xml:space="preserve">
+    <value>Nodes degree</value>
+  </data>
   <data name="DFS" xml:space="preserve">
-    <value>DFS</value>
+    <value>Depth-first-search (DFS)</value>
+  </data>
+  <data name="Dkstra" xml:space="preserve">
+    <value>Find shortest path by using Djkstra</value>
+  </data>
+  <data name="EditTest" xml:space="preserve">
+    <value>edit test file</value>
   </data>
   <data name="EN_Lang" xml:space="preserve">
     <value>English</value>
   </data>
+  <data name="Euler" xml:space="preserve">
+    <value>Euler's path (cycle)</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>export as</value>
+  </data>
   <data name="File.Header" xml:space="preserve">
     <value>File</value>
+  </data>
+  <data name="Graph" xml:space="preserve">
+    <value>Graph</value>
+  </data>
+  <data name="GraphComponents" xml:space="preserve">
+    <value>Graph Components</value>
+  </data>
+  <data name="GraphToFile" xml:space="preserve">
+    <value>add current graph to file</value>
+  </data>
+  <data name="GraphType" xml:space="preserve">
+    <value>Graph type</value>
   </data>
   <data name="Help" xml:space="preserve">
     <value>Help</value>
   </data>
   <data name="IncMatrix" xml:space="preserve">
     <value>incidence</value>
+  </data>
+  <data name="IncMatrixToFile" xml:space="preserve">
+    <value>add current graph incidency matrix</value>
   </data>
   <data name="Intersection" xml:space="preserve">
     <value>intersection</value>
@@ -159,25 +201,64 @@
   <data name="Matrix" xml:space="preserve">
     <value>Matrix</value>
   </data>
+  <data name="MatrixToFile" xml:space="preserve">
+    <value />
+  </data>
   <data name="NewFile" xml:space="preserve">
     <value>new</value>
+  </data>
+  <data name="NewQuest" xml:space="preserve">
+    <value>add new question</value>
   </data>
   <data name="OpenFile" xml:space="preserve">
     <value>open</value>
   </data>
+  <data name="OpenTest" xml:space="preserve">
+    <value>start test session</value>
+  </data>
   <data name="Operations" xml:space="preserve">
     <value>Operations</value>
+  </data>
+  <data name="Point" xml:space="preserve">
+    <value>Points</value>
+  </data>
+  <data name="QType" xml:space="preserve">
+    <value>Question type</value>
+  </data>
+  <data name="QuestionDescr" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="RegularGraph" xml:space="preserve">
+    <value>Check if graph is regular</value>
   </data>
   <data name="SaveFile" xml:space="preserve">
     <value>save as</value>
   </data>
+  <data name="SaveTest" xml:space="preserve">
+    <value>save test file</value>
+  </data>
+  <data name="SizeOrder" xml:space="preserve">
+    <value>Size and order of graph</value>
+  </data>
+  <data name="TestingMenu" xml:space="preserve">
+    <value>Testing</value>
+  </data>
   <data name="Traversal" xml:space="preserve">
     <value>Traversal</value>
+  </data>
+  <data name="Tree" xml:space="preserve">
+    <value>Check if graph is a tree</value>
   </data>
   <data name="UA_Lang" xml:space="preserve">
     <value>Українська</value>
   </data>
   <data name="Unity" xml:space="preserve">
     <value>unity</value>
+  </data>
+  <data name="VerCrit" xml:space="preserve">
+    <value>Verification criterion</value>
+  </data>
+  <data name="VerMatrix" xml:space="preserve">
+    <value>Verification matrix</value>
   </data>
 </root>

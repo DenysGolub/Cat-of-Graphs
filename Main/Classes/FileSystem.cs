@@ -186,6 +186,13 @@ namespace Main.Classes
                         score += quest.Points;
                     }
                 }
+                else if(quest.QuestionsType == QuestionsType.ToIncidenceMatrixFromGraph)
+                {
+                    if (new TestingPart.QuestionsAnsweringWindows.ToIncMatrixFromGraphWin(quest).ShowDialog() == true)
+                    {
+                        score += quest.Points;
+                    }
+                }
 
             }
             TimeSpan elapsedTime = stopwatch.Elapsed;

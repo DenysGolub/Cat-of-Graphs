@@ -31,6 +31,11 @@ using System;
 using System.Reflection.Metadata;
 using System.Collections;
 using Main.InstrumentalPart;
+using System.Printing;
+using System.Windows.Controls.Primitives;
+using System.Reflection;
+using System.Globalization;
+using System.Collections.Generic;
 namespace Main
 {
     /// <summary>
@@ -102,15 +107,13 @@ namespace Main
             
 
             InitializeComponent();
-            foreach (MenuItem item in menuItemLanguages.Items)
-            {
-                if (item.Tag.ToString() == CultureManager.UICulture.Name)
-                {
-                    item.IsChecked = true; break;
-                }
-            }
-
             
+
+
+
+
+
+
             graphType = GraphType.Undirected;
             undirected_events.ClassOwner = this;
             directed_events.ClassOwner = this;
@@ -122,8 +125,6 @@ namespace Main
             };
 
             QuestionsListBox.ItemsSource = questions;
-
-            
         }
 
         public static IntPtr WindowHandle { get; private set; }
@@ -230,6 +231,18 @@ namespace Main
             DrawingCanvas_Directed.Height = CanvasGrid.ActualHeight;
             DrawingCanvas_Directed.Width = CanvasGrid.ActualWidth;
 
+            foreach (MenuItem item in menuItemLanguages.Items)
+            {
+                if (item.Tag.ToString() == CultureManager.UICulture.Name)
+                {
+                    item.IsChecked = true;
+                    CultureManager.UICulture = new System.Globalization.CultureInfo(item.Tag.ToString());
+                    //CultureManager.I
+                    break;
+                }
+            }
+
+            QuestionsListBox.Items.Refresh();
         }
 
         private void ChangeGraphToDirected(object sender, RoutedEventArgs e)
@@ -585,7 +598,7 @@ namespace Main
 
                 // Convert the GraphCanvas to an image
                 BitmapSource imageSource = ConvertCanvasToImage(GraphCanvas);
-
+                //selectedQuestion.ImageUri = imageSource;
                 // Create a MemoryStream to hold the image data
                 MemoryStream ms = new MemoryStream();
 
@@ -669,7 +682,7 @@ namespace Main
         private void NewQuestion_Click(object sender, RoutedEventArgs e)
         {
             var b = QuestionsListBox.Items;
-            questions.Add(new Question() { GraphType = graphType, State = new AdjMatrixStateParameter() { State = "AdjMatrix"}, Description= "За заданою матрицею суміжності утворіть граф"
+            questions.Add(new Question() { GraphType = graphType, State = new AdjMatrixStateParameter() { State = "AdjMatrix"}, Description= "Утворити граф за матрицею суміжності"
             });
             
             this.QuestionsListBox.CommitEdit();
@@ -822,45 +835,68 @@ namespace Main
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var textBox = sender as ComboBox;
-            var editedText = textBox.SelectedItem;
-            Console.WriteLine($"Edited text: {editedText}");
-
-            var quest = QuestionsListBox.CurrentCell.Item as Question;
-
-            if (quest == null || editedText == null)
+            var comboBox = sender as ComboBox;
+            if (comboBox == null)
             {
+                Console.WriteLine("ComboBox is null");
                 return;
             }
 
-            var editedString = editedText.ToString();
+            var selectedItem = comboBox.SelectedItem;
+            if (selectedItem == null)
+            {
+                Console.WriteLine("SelectedItem is null");
+                return;
+            }
+            Console.WriteLine($"Edited text: {selectedItem}");
 
-            if (editedString == QuestionsType.ToIncidenceMatrixFromGraph.ToString())
+            var dataGridCellInfo = QuestionsListBox.CurrentCell;
+            if (dataGridCellInfo == null)
             {
-                quest.Description = "Утворити матрицю інцидентності за графом";
-            }
-            else if (editedString == QuestionsType.ToAdjacenceMatrixFromGraph.ToString())
-            {
-                quest.Description = "Утворити матрицю суміжності за графом";
-            }
-            else if (editedString == QuestionsType.ToGraphFromAdjacenceMatrix.ToString())
-            {
-                quest.Description = "Утворити граф за матрицею суміжності";
-            }
-            else if (editedString == QuestionsType.ToGraphFromIncidenceMatrix.ToString())
-            {
-                quest.Description = "Утворити граф за матрицею інцидентності";
+                Console.WriteLine("CurrentCell is null");
+                return;
             }
 
-            this.QuestionsListBox.CommitEdit();
-            this.QuestionsListBox.CommitEdit();
+            var quest = dataGridCellInfo.Item as Question;
 
-            this.QuestionsListBox.CancelEdit();
-            this.QuestionsListBox.CancelEdit();
+            if (quest == null)
+            {
+                Console.WriteLine("CurrentCell.Item is null or not a Question");
+                return;
+            }
 
-            QuestionsListBox.Items.Refresh();
-            // Refresh DataGridView
+            var editedString = selectedItem.ToString();
+            if (editedString == null)
+            {
+                Console.WriteLine("editedString is null");
+                return;
+            }
 
+
+            foreach(Question q in questions)
+            {
+                if(quest == q)
+                {
+                    if (editedString == QuestionsType.ToIncidenceMatrixFromGraph.ToString())
+                    {
+                        q.Description = "Утворити матрицю інцидентності за графом";
+                    }
+                    else if (editedString == QuestionsType.ToAdjacenceMatrixFromGraph.ToString())
+                    {
+                        q.Description = "Утворити матрицю суміжності за графом";
+                    }
+                    else if (editedString == QuestionsType.ToGraphFromAdjacenceMatrix.ToString())
+                    {
+                        q.Description = "Утворити граф за матрицею суміжності";
+                    }
+                    else if (editedString == QuestionsType.ToGraphFromIncidenceMatrix.ToString())
+                    {
+                        q.Description = "Утворити граф за матрицею інцидентності";
+                    }
+                }
+            }
+
+          
 
 
         }
@@ -884,7 +920,7 @@ namespace Main
 
             foreach(var kvp in deg)
             {
-                message += $"{kvp.Key}:{kvp.Value}\n";
+                message += $"{kvp.Key}: {kvp.Value}\t";
             }
 
             MessageBox.Show(message, "Степені вершин");
@@ -933,6 +969,86 @@ namespace Main
                 var wnd = Application.Current.Windows.OfType<WeightMatrix>().SingleOrDefault();
                 wnd.AdjacenceList = GraphAdjacenceList;
             }
+        }
+
+        private void ExportFile_Click(object sender, RoutedEventArgs e)
+        {
+            CurrentVisibleGraphData(out Canvas canv);
+            SaveCanvasToPDF(canv);
+        }
+
+        public void SaveCanvasToPDF(Canvas myCanvas)
+        {
+            PrintDialog pd = new PrintDialog();
+            pd.PrintQueue = new PrintQueue(new PrintServer(), "Microsoft Print to PDF");
+            pd.PrintTicket.PageOrientation = PageOrientation.Landscape;
+            pd.PrintTicket.PageScalingFactor = 100;
+            pd.PrintVisual(myCanvas, "Nomograph");
+        }
+
+        private void ExportFilePNG_Click(object sender, RoutedEventArgs e)
+        {
+            CurrentVisibleGraphData(out Canvas canvas);
+            RenderTargetBitmap rtb = new RenderTargetBitmap((int)canvas.RenderSize.Width,
+    (int)canvas.RenderSize.Height, 96d, 96d, System.Windows.Media.PixelFormats.Default);
+            rtb.Render(canvas);
+
+
+            BitmapEncoder pngEncoder = new PngBitmapEncoder();
+            pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "зображення (*.png)|*.png";
+            saveFileDialog.DefaultExt = ".png";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                using (var fs = System.IO.File.OpenWrite(saveFileDialog.FileName))
+                {
+                    pngEncoder.Save(fs);
+                }
+            }
+
+           
+        }
+
+        private void popup_MouseEnter(object sender, MouseEventArgs e)
+        {
+        }
+
+        private void popup_MouseLeave(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void QuestionsListBox_CurrentCellChanged(object sender, EventArgs e)
+        {
+            this.QuestionsListBox.CommitEdit();
+            this.QuestionsListBox.CommitEdit();
+
+            this.QuestionsListBox.CancelEdit();
+            this.QuestionsListBox.CancelEdit();
+
+            QuestionsListBox.Items.Refresh();
+        }
+
+        private void ComboBoxDG(object sender, SelectionChangedEventArgs e)
+        {
+            this.QuestionsListBox.CommitEdit();
+            this.QuestionsListBox.CommitEdit();
+
+            this.QuestionsListBox.CancelEdit();
+            this.QuestionsListBox.CancelEdit();
+
+            QuestionsListBox.Items.Refresh();
+        }
+
+        private void QuestionsListBox_CurrentCellChanged_1(object sender, EventArgs e)
+        {
+            this.QuestionsListBox.CommitEdit();
+            this.QuestionsListBox.CommitEdit();
+
+
+            QuestionsListBox.Items.Refresh();
         }
     }
 }   

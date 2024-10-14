@@ -1,6 +1,7 @@
 ﻿using Main.Classes;
 using Main.Enumerators;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 
 namespace Main.TestingPart
 {
@@ -36,6 +37,8 @@ namespace Main.TestingPart
         public AdjacenceList AdjMatrix { get => _adj; set => _adj = value; }
         private AdjacenceList _adj = new AdjacenceList();
 
+        public sbyte[,] MatrixAdj { get => _adj.ToAdjacenceMatrix(); }
+
         public dynamic State { get; set; }
         private AdjacenceList corr_adj_matrix = new AdjacenceList();
         public dynamic CorrectAnswer
@@ -49,6 +52,7 @@ namespace Main.TestingPart
                 corr_adj_matrix = value;
             }
         }
+
     }
 
     public class QuestionWithTwoCanvas:Question

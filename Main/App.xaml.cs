@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 using System.Windows;
 
 namespace Main
@@ -20,6 +21,7 @@ namespace Main
     public static class Program
     {
         [STAThread]
+        [HandleProcessCorruptedStateExceptions]
         public static void Main(string[] args)
         {
 
@@ -42,14 +44,23 @@ namespace Main
 
             if (runningProcess == null)
             {
-                var app = new App();
-                app.InitializeComponent();
-                var window = new MainWindow();
-                MainWindow.HandleParameter(args);
-                app.Run(window);
+                try
+                {
+                    var app = new App();
+                    app.InitializeComponent();
+                    var window = new MainWindow();
+                    MainWindow.HandleParameter(args);
+                    app.Run(window);
 
-                MainWindow.HandleParameter(args);
-                return; // In this case we just proceed on loading the program
+                    MainWindow.HandleParameter(args);
+                    return; // In this case we just proceed on loading the program
+
+                }
+                catch (NullReferenceException ex)
+                {
+
+                }
+
             }
 
             if (args.Length > 0)

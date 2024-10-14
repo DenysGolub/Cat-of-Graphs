@@ -12,8 +12,6 @@
         mc:Ignorable="d"
         Title="Cat of Graphs" Height="424" Width="771" WindowState="Maximized" Loaded="Window_Loaded" Closed="Window_Closed">
 
-
-
     <Grid>
 
         <Grid.ColumnDefinitions>
@@ -24,6 +22,7 @@
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
+        
         <DockPanel Background="Transparent" LastChildFill="False" Grid.ColumnSpan="2" Margin="0,0,4,204">
             <Menu Background="Transparent" DockPanel.Dock="Top">
                 <MenuItem Header="{Resx File.Header}">
@@ -34,6 +33,10 @@ RenderOptions.EdgeMode="Aliased" Source="/Resources/file.png"></Image>
                     <MenuItem Header="{Resx NewFile}" Click="NewFile_Click"></MenuItem>
                     <MenuItem Header="{Resx OpenFile}" Click="OpenFile_Click"></MenuItem>
                     <MenuItem Header="{Resx SaveFile}" Click="SaveFile_Click"></MenuItem>
+                    <MenuItem Header="{Resx Export}">
+                        <MenuItem Header="PDF" Click="ExportFile_Click"></MenuItem>
+                        <MenuItem Header="PNG" Click="ExportFilePNG_Click"></MenuItem>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="{Resx Matrix}">
                     <MenuItem.Icon>
@@ -75,14 +78,14 @@ RenderOptions.EdgeMode="Aliased" Source="/Resources/MenuIcons/cartesian.png"></I
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="Тестування">
+                <MenuItem Header="{Resx TestingMenu}">
                     <MenuItem.Icon>
                         <Image RenderOptions.BitmapScalingMode="HighQuality" 
 RenderOptions.EdgeMode="Aliased" Source="/Resources/test.png"></Image>
                     </MenuItem.Icon>
-                    <MenuItem Click="TestingFileSave_Click" Header="зберегти тестовий файл"></MenuItem>
-                    <MenuItem Click="TestingFileOpen_Click" Header="відкрити тестовий файл"></MenuItem>
-                    <MenuItem Click="StartTest_Click" Header="почати тестування"></MenuItem>
+                    <MenuItem Click="TestingFileSave_Click" Header="{Resx SaveTest}"></MenuItem>
+                    <MenuItem Click="TestingFileOpen_Click" Header="{Resx EditTest}"></MenuItem>
+                    <MenuItem Click="StartTest_Click" Header="{Resx OpenTest}"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="{Resx Help}">
                     <MenuItem.Icon>
@@ -189,10 +192,14 @@ RenderOptions.EdgeMode="Aliased" Source="/Resources/help.png"></Image>
                           VerticalAlignment="Center"   
                           Grid.Row="1" Height="4" Background="BlanchedAlmond">
             </GridSplitter>
-            <DataGrid x:Name="QuestionsListBox" FontSize="14" Grid.Row="2" SelectionUnit="Cell" AutoGenerateColumns="False" CanUserAddRows="False">
+            <DataGrid CurrentCellChanged="QuestionsListBox_CurrentCellChanged_1" x:Name="QuestionsListBox" FontSize="14" Grid.Row="2" SelectionUnit="Cell" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Click="NewQuestion_Click" Header="Додати нове питання"></MenuItem>
+                        <MenuItem Click="NewQuestion_Click">
+                            <MenuItem.Header>
+                                <TextBlock Text="{Resx ResxName=Main.Localization.MainWindow, Key=NewQuest}"/>
+                            </MenuItem.Header>
+                        </MenuItem>
                     </ContextMenu>
                 </DataGrid.ContextMenu>
 
@@ -212,25 +219,32 @@ RenderOptions.EdgeMode="Aliased" Source="/Resources/help.png"></Image>
                     <DataTemplate DataType="{x:Type templates:AdjMatrixStateParameter}">
                         <Canvas Background="White" MouseLeftButtonDown="MatrixLeftButtonDown" HorizontalAlignment="Stretch"/>
                     </DataTemplate>
+
+                   
                 </DataGrid.Resources>
 
 
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="Опис завдання">
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.Header>
+                            <TextBlock Text="{Resx QuestionDescr}"></TextBlock>
+                        </DataGridTemplateColumn.Header>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Description}" HorizontalAlignment="Stretch">
-                                </TextBlock>
+                                <TextBlock Text="{Binding Description}" HorizontalAlignment="Stretch" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                         <DataGridTemplateColumn.CellEditingTemplate>
                             <DataTemplate>
-                                <TextBox Text="{Binding Description, Mode=TwoWay}" BorderThickness="0" HorizontalAlignment="Stretch" LostFocus="TextBox_LostFocus"/>
+                                <TextBox Text="{Binding Description, Mode=TwoWay}" BorderThickness="0" HorizontalAlignment="Stretch" LostFocus="TextBox_LostFocus" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridComboBoxColumn Header="Тип завдання">
+                    <DataGridComboBoxColumn>
+                        <DataGridComboBoxColumn.Header>
+                            <TextBlock Text="{Resx QType}" />
+                        </DataGridComboBoxColumn.Header>
                         <DataGridComboBoxColumn.ElementStyle>
                             <Style TargetType="{x:Type ComboBox}">
                                 <Setter Property="ItemsSource" Value="{Binding Path=Types}" />
@@ -241,17 +255,22 @@ RenderOptions.EdgeMode="Aliased" Source="/Resources/help.png"></Image>
                             <Style TargetType="{x:Type ComboBox}">
                                 <Setter Property="ItemsSource" Value="{Binding Path=Types}" />
                                 <Setter Property="SelectedItem" Value="{Binding Path=QuestionsType}" />
+                                <EventSetter Event="SelectionChanged" Handler="ComboBox_SelectionChanged" />
                             </Style>
                         </DataGridComboBoxColumn.EditingElementStyle>
                     </DataGridComboBoxColumn>
-                    <DataGridTemplateColumn Header="Граф">
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.Header>
+                            <TextBlock Text="{Resx Graph}"></TextBlock>
+                        </DataGridTemplateColumn.Header>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Canvas MouseLeftButtonDown="ImgCanvas_MouseDown" x:Name="ImgCanvas" Background="White">
                                     <Canvas.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem  Click="CopyCanvasToImage" Header="Додати граф у файл" Tag="GraphAddToFile"></MenuItem>
+                                            <MenuItem  Click="CopyCanvasToImage" Header="{Resx ResxName=Main.Localization.MainWindow, Key=GraphToFile}" Tag="GraphAddToFile"></MenuItem>
                                         </ContextMenu>
+
                                     </Canvas.ContextMenu>
                                 </Canvas>
 
@@ -259,34 +278,47 @@ RenderOptions.EdgeMode="Aliased" Source="/Resources/help.png"></Image>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Тип графа">
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.Header>
+                            <TextBlock Text="{Resx GraphType}"></TextBlock>
+                        </DataGridTemplateColumn.Header>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBox Text="{Binding GraphType, Mode=TwoWay}" IsReadOnly="True" BorderThickness="0" HorizontalAlignment="Stretch"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <templates:CustomDataGridTemplateColumn TagPropertyName="AdjM" Header="Матриця суміжності">
+                    <templates:CustomDataGridTemplateColumn TagPropertyName="AdjM">
+                        <DataGridTemplateColumn.Header>
+                            <TextBlock Text="{Resx AdjM}"></TextBlock>
+                        </DataGridTemplateColumn.Header>
                         <templates:CustomDataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Canvas Background="White" MouseLeftButtonDown="MatrixLeftButtonDown" HorizontalAlignment="Stretch">
                                     <Canvas.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem Click="CurrentGraphMatrixToFile" Header="Добавити матрицю поточного графа"></MenuItem>
+                                            <MenuItem Click="CurrentGraphMatrixToFile" Header="{Resx ResxName=Main.Localization.MainWindow, Key=AdjMatrixToFile}"></MenuItem>
                                         </ContextMenu>
                                     </Canvas.ContextMenu>
+
                                 </Canvas>
                             </DataTemplate>
                         </templates:CustomDataGridTemplateColumn.CellTemplate>
                     </templates:CustomDataGridTemplateColumn>
-                    <templates:CustomDataGridTemplateColumn TagPropertyName="IncM" Header="Матриця інцидентності">
+                    <templates:CustomDataGridTemplateColumn TagPropertyName="IncM">
+                        <DataGridTemplateColumn.Header>
+                            <TextBlock Text="{Resx AdjI}"></TextBlock>
+                        </DataGridTemplateColumn.Header>
                         <templates:CustomDataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Canvas  Background="White" MouseLeftButtonDown="MatrixLeftButtonDown" HorizontalAlignment="Stretch"/>
                             </DataTemplate>
                         </templates:CustomDataGridTemplateColumn.CellTemplate>
                     </templates:CustomDataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Бал">
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.Header>
+                            <TextBlock Text="{Resx Point}"></TextBlock>
+                        </DataGridTemplateColumn.Header>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Points}" HorizontalAlignment="Stretch"/>
@@ -298,15 +330,23 @@ RenderOptions.EdgeMode="Aliased" Source="/Resources/help.png"></Image>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
-                    <templates:CustomDataGridTextColumn Header="Критерій перевірки" Binding="{Binding State.State}"/>
+                    <templates:CustomDataGridTextColumn  Binding="{Binding State.State}">
+                        <DataGridTextColumn.Header>
+                            <TextBlock Text="{Resx VerCrit}"></TextBlock>
+                        </DataGridTextColumn.Header>
+                    </templates:CustomDataGridTextColumn>
+                    
 
-                    <templates:CustomDataGridTemplateColumn Header="Перевіркова матриця" x:Name="CorrAnswTagProp" Width="*">
+                    <templates:CustomDataGridTemplateColumn x:Name="CorrAnswTagProp" Width="*">
+                        <DataGridTemplateColumn.Header>
+                            <TextBlock Text="{Resx VerMatrix}"></TextBlock>
+                        </DataGridTemplateColumn.Header>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Canvas Background="White" MouseLeftButtonDown="MatrixLeftButtonDown" HorizontalAlignment="Stretch">
                                     <Canvas.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem Click="CurrentGraphMatrixToCorrect" Header="Добавити матрицю поточного графа"></MenuItem>
+                                            <MenuItem Click="CurrentGraphMatrixToCorrect" Header="{Resx ResxName=Main.Localization.MainWindow, Key=AdjMatrixToFile}"></MenuItem>
                                         </ContextMenu>
                                     </Canvas.ContextMenu>
                                 </Canvas>
@@ -327,17 +367,15 @@ RenderOptions.EdgeMode="Aliased" Source="/Resources/help.png"></Image>
                         <StackPanel />
                     </ItemsPanelTemplate>
                 </Menu.ItemsPanel>
-                <MenuItem Click="DFS_Click" Header="Пошук в глибину (DFS)"/>
-                <MenuItem Click="Components_Click" Header="Компоненти зв'язності"></MenuItem>
-                <MenuItem Click="CheckTree_Click" Header="Перевірка на дерево"></MenuItem>
-                <MenuItem Click="Cycle_Click" Header="Перевірка на ациклічність"></MenuItem>
-                <MenuItem Click="Euler_Click" Header="Ейлеровий граф"></MenuItem>
-                <MenuItem Click="RegularGraphClick" Header="Перевірка на регулярний граф"></MenuItem>
-                <MenuItem Click="SizeAndOrder_Click" Header="Порядок і розмір графа"></MenuItem>
-                <MenuItem Click="Degree_Click"  Header="Степені вершин"></MenuItem>
-                <MenuItem Click="Djkstra_Click" Header="Пошук найкоротшого шляху&#x0a;алгоритмом Дейкстри"></MenuItem>
-
-
+                <MenuItem Click="DFS_Click" Header="{Resx DFS}"/>
+                <MenuItem Click="Components_Click" Header="{Resx GraphComponents}"></MenuItem>
+                <MenuItem Click="CheckTree_Click" Header="{Resx Tree}"></MenuItem>
+                <MenuItem Click="Cycle_Click" Header="{Resx Acyclic}"></MenuItem>
+                <MenuItem Click="Euler_Click" Header="{Resx Euler}"></MenuItem>
+                <MenuItem Click="RegularGraphClick" Header="{Resx RegularGraph}"></MenuItem>
+                <MenuItem Click="SizeAndOrder_Click" Header="{Resx SizeOrder}"></MenuItem>
+                <MenuItem Click="Degree_Click"  Header="{Resx Degree}"></MenuItem>
+                <MenuItem Click="Djkstra_Click" Header="{Resx Dkstra}"></MenuItem>
             </Menu>
         </Grid>
         <GridSplitter HorizontalAlignment="Center"   

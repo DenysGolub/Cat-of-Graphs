@@ -115,7 +115,7 @@ namespace Main.InstrumentalPart
         {
             string str = "";
             int nVertices = distances.Length;
-            str += ("Vertex\t\tDistance\t\tPath");
+            str += ("Вершина\t\tДистанція\t\tШлях");
 
             for (int vertexIndex = 0;
                     vertexIndex < nVertices;

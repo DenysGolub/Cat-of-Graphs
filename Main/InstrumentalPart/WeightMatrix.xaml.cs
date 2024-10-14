@@ -1,5 +1,7 @@
 ﻿using Gu.Wpf.DataGrid2D;
 using Main.Classes;
+using Main.Enumerators;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,13 +81,55 @@ namespace Main.InstrumentalPart
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if(int.Parse(source_tt.Text) > AdjacenceList.CountNodes || int.Parse(source_tt.Text) == 0)
+            if (source_tt.Text == "")
+            {
+                MessageBox.Show("Введіть вершину!");
+                return;
+            }
+
+            if (int.Parse(source_tt.Text) > AdjacenceList.CountNodes || int.Parse(source_tt.Text) == 0)
             {
                 MessageBox.Show("Граф не містить такої вершини");
                 return;
             }
-            var str = Dijkstra.FindShortestWay(table, int.Parse(source_tt.Text));
-            MessageBox.Show(str);
+            
+            try
+            {
+                var str = Dijkstra.FindShortestWay(table, int.Parse(source_tt.Text));
+                MessageBox.Show(str);
+            }
+            catch(Exception ex)
+            {
+              
+
+            }
+        }
+
+        private void Random_Click(object sender, RoutedEventArgs e)
+        {
+            Random rnd = new Random();
+            table = new int[list.CountNodes, list.CountNodes];
+            for (int i = 0; i < table.GetLength(0); i++)
+            {
+                for (int j = 0; j < table.GetLength(1); j++)
+                {
+                    if (table[i, j] != 0)
+                    {
+                        table[j, i] = table[i, j];
+                    }
+
+                    if (i != j)
+                    {
+                        table[i, j] = rnd.Next(1, 65);
+                    }
+                }
+            }
+
+            matrix.SetRowHeadersSource(list.GetList.Keys.ToArray());
+            matrix.SetColumnHeadersSource(list.GetList.Keys.ToArray());
+            matrix.SetArray2D(table);
+            matrix.InvalidateVisual();
+
         }
     }
 }
